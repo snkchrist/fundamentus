@@ -1,32 +1,33 @@
 package com.snk.fundamentus.models;
 
 public class Demonstrativo12Meses {
-	private String receitaLiquida;
-	private String eBit;
-	private String lucroLiquido;
 
-	public String getReceitaLiquida() {
-		return receitaLiquida;
-	}
+    private Long receitaLiquida;
+    private Long eBit;
+    private Long lucroLiquido;
 
-	public void setReceitaLiquida(String receitaLiquida) {
-		this.receitaLiquida = receitaLiquida;
-	}
+    public Long getReceitaLiquida() {
+        return receitaLiquida;
+    }
 
-	public String getEBit() {
-		return eBit;
-	}
+    public void setReceitaLiquida(Long receitaLiquida) {
+        this.receitaLiquida = receitaLiquida;
+    }
 
-	public void setEbit(String eBit) {
-		this.eBit = eBit;
-	}
+    public Long getEBit() {
+        return eBit;
+    }
 
-	public String getLucroLiquido() {
-		return lucroLiquido;
-	}
+    public void setEbit(Long eBit) {
+        this.eBit = eBit;
+    }
 
-	public void setLucroLiquido(String lucroLiquido) {
-		this.lucroLiquido = lucroLiquido;
-	}
+    public Long getLucroLiquido() {
+        return lucroLiquido;
+    }
+
+    public void setLucroLiquido(Long lucroLiquido) {
+        this.lucroLiquido = lucroLiquido;
+    }
 
 }

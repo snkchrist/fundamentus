@@ -2,47 +2,47 @@ package com.snk.fundamentus.models;
 
 
 public class Balanco {
-	private String ativos;
-	private String disponibilidades;
-	private String ativosCirculantes;
-	private String dividaBruta;
-	private String dividaLiquida;
-	private String patrimonioLiquido;
+	private Long ativos;
+	private Long disponibilidades;
+	private Long ativosCirculantes;
+	private Long dividaBruta;
+	private Long dividaLiquida;
+	private Long patrimonioLiquido;
 	
-	public String getAtivos() {
+	public Long getAtivos() {
 		return ativos;
 	}
-	public void setAtivos(String ativos) {
+	public void setAtivos(Long ativos) {
 		this.ativos = ativos;
 	}
-	public String getDisponibilidades() {
+	public Long getDisponibilidades() {
 		return disponibilidades;
 	}
-	public void setDisponibilidades(String disponibilidades) {
+	public void setDisponibilidades(Long disponibilidades) {
 		this.disponibilidades = disponibilidades;
 	}
-	public String getAtivosCirculantes() {
+	public Long getAtivosCirculantes() {
 		return ativosCirculantes;
 	}
-	public void setAtivosCirculantes(String ativosCirculantes) {
+	public void setAtivosCirculantes(Long ativosCirculantes) {
 		this.ativosCirculantes = ativosCirculantes;
 	}
-	public String getDividaBruta() {
+	public Long getDividaBruta() {
 		return dividaBruta;
 	}
-	public void setDividaBruta(String dividaBruta) {
+	public void setDividaBruta(Long dividaBruta) {
 		this.dividaBruta = dividaBruta;
 	}
-	public String getDividaLiquida() {
+	public Long getDividaLiquida() {
 		return dividaLiquida;
 	}
-	public void setDividaLiquida(String dividaLiquida) {
+	public void setDividaLiquida(Long dividaLiquida) {
 		this.dividaLiquida = dividaLiquida;
 	}
-	public String getPatrimonioLiquido() {
+	public Long getPatrimonioLiquido() {
 		return patrimonioLiquido;
 	}
-	public void setPatrimonioLiquido(String patrimonioLiquido) {
+	public void setPatrimonioLiquido(Long patrimonioLiquido) {
 		this.patrimonioLiquido = patrimonioLiquido;
 	}
 }
