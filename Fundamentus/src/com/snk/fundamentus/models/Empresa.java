@@ -1,9 +1,9 @@
 package com.snk.fundamentus.models;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-
 
 @Entity
 public class Empresa {
@@ -40,16 +40,20 @@ public class Empresa {
 
     private Long valorEmpresa;
 
+    @Embedded
     private Balanco balanco;
+    @Embedded
     private Oscilacoes oscilacoes;
+    @Embedded
     private Demonstrativo3Meses demonstracao3meses;
+    @Embedded
     private Demonstrativo12Meses demonstracao12meses;
 
     public long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(final long id) {
         this.id = id;
     }
 
@@ -57,7 +61,7 @@ public class Empresa {
         return sigla;
     }
 
-    public void setSigla(String sigla) {
+    public void setSigla(final String sigla) {
         this.sigla = sigla;
     }
 
@@ -65,7 +69,7 @@ public class Empresa {
         return tipo;
     }
 
-    public void setTipo(String tipo) {
+    public void setTipo(final String tipo) {
         this.tipo = tipo;
     }
 
@@ -73,7 +77,7 @@ public class Empresa {
         return nome;
     }
 
-    public void setNome(String nome) {
+    public void setNome(final String nome) {
         this.nome = nome;
     }
 
@@ -81,7 +85,7 @@ public class Empresa {
         return setor;
     }
 
-    public void setSetor(String setor) {
+    public void setSetor(final String setor) {
         this.setor = setor;
     }
 
@@ -89,7 +93,7 @@ public class Empresa {
         return subSetor;
     }
 
-    public void setSubSetor(String subSetor) {
+    public void setSubSetor(final String subSetor) {
         this.subSetor = subSetor;
     }
 
@@ -97,7 +101,7 @@ public class Empresa {
         return cotacao;
     }
 
-    public void setCotacao(Double cotacao) {
+    public void setCotacao(final Double cotacao) {
         this.cotacao = cotacao;
     }
 
@@ -105,7 +109,7 @@ public class Empresa {
         return dataUltimaCotacao;
     }
 
-    public void setDataUltimaCotacao(String dataUltimaCotacao) {
+    public void setDataUltimaCotacao(final String dataUltimaCotacao) {
         this.dataUltimaCotacao = dataUltimaCotacao;
     }
 
@@ -113,7 +117,7 @@ public class Empresa {
         return minimo52Semanas;
     }
 
-    public void setMinimo52Semanas(Double minimo52Semanas) {
+    public void setMinimo52Semanas(final Double minimo52Semanas) {
         this.minimo52Semanas = minimo52Semanas;
     }
 
@@ -121,7 +125,7 @@ public class Empresa {
         return maximo52Semanas;
     }
 
-    public void setMaximo52Semanas(Double maximo52Semanas) {
+    public void setMaximo52Semanas(final Double maximo52Semanas) {
         this.maximo52Semanas = maximo52Semanas;
     }
 
@@ -129,7 +133,7 @@ public class Empresa {
         return volumeMedio2Meses;
     }
 
-    public void setVolumeMedio2Meses(Long volumeMedio2Meses) {
+    public void setVolumeMedio2Meses(final Long volumeMedio2Meses) {
         this.volumeMedio2Meses = volumeMedio2Meses;
     }
 
@@ -137,7 +141,7 @@ public class Empresa {
         return ultimoBalancoProcessado;
     }
 
-    public void setUltimoBalancoProcessado(String ultimoBalancoProcessado) {
+    public void setUltimoBalancoProcessado(final String ultimoBalancoProcessado) {
         this.ultimoBalancoProcessado = ultimoBalancoProcessado;
     }
 
@@ -145,7 +149,7 @@ public class Empresa {
         return numeroDeAcoes;
     }
 
-    public void setNumeroDeAcoes(Long numeroDeAcoes) {
+    public void setNumeroDeAcoes(final Long numeroDeAcoes) {
         this.numeroDeAcoes = numeroDeAcoes;
     }
 
@@ -153,7 +157,7 @@ public class Empresa {
         return valorMercado;
     }
 
-    public void setValorMercado(Long valorMercado) {
+    public void setValorMercado(final Long valorMercado) {
         this.valorMercado = valorMercado;
     }
 
@@ -161,7 +165,7 @@ public class Empresa {
         return valorEmpresa;
     }
 
-    public void setValorEmpresa(Long valorEmpresa) {
+    public void setValorEmpresa(final Long valorEmpresa) {
         this.valorEmpresa = valorEmpresa;
     }
 
@@ -169,7 +173,7 @@ public class Empresa {
         return balanco;
     }
 
-    public void setBalanco(Balanco balanco) {
+    public void setBalanco(final Balanco balanco) {
         this.balanco = balanco;
     }
 
@@ -177,7 +181,7 @@ public class Empresa {
         return oscilacoes;
     }
 
-    public void setOscilacoes(Oscilacoes oscilacoes) {
+    public void setOscilacoes(final Oscilacoes oscilacoes) {
         this.oscilacoes = oscilacoes;
     }
 
@@ -185,7 +189,7 @@ public class Empresa {
         return demonstracao3meses;
     }
 
-    public void setDemonstracao3meses(Demonstrativo3Meses demonstracao3meses) {
+    public void setDemonstracao3meses(final Demonstrativo3Meses demonstracao3meses) {
         this.demonstracao3meses = demonstracao3meses;
     }
 
@@ -193,7 +197,7 @@ public class Empresa {
         return demonstracao12meses;
     }
 
-    public void setDemonstracao12meses(Demonstrativo12Meses demonstracao12meses) {
+    public void setDemonstracao12meses(final Demonstrativo12Meses demonstracao12meses) {
         this.demonstracao12meses = demonstracao12meses;
     }
 }

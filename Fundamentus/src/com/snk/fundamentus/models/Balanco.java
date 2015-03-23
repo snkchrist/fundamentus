@@ -1,16 +1,9 @@
 package com.snk.fundamentus.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.Embeddable;
 
-
-@Entity
+@Embeddable
 public class Balanco {
-
-    @Id
-    @GeneratedValue
-    private long id;
 
     private Long ativos;
     private Long disponibilidades;
@@ -19,19 +12,11 @@ public class Balanco {
     private Long dividaLiquida;
     private Long patrimonioLiquido;
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public Long getAtivos() {
         return ativos;
     }
 
-    public void setAtivos(Long ativos) {
+    public void setAtivos(final Long ativos) {
         this.ativos = ativos;
     }
 
@@ -39,7 +24,7 @@ public class Balanco {
         return disponibilidades;
     }
 
-    public void setDisponibilidades(Long disponibilidades) {
+    public void setDisponibilidades(final Long disponibilidades) {
         this.disponibilidades = disponibilidades;
     }
 
@@ -47,7 +32,7 @@ public class Balanco {
         return ativosCirculantes;
     }
 
-    public void setAtivosCirculantes(Long ativosCirculantes) {
+    public void setAtivosCirculantes(final Long ativosCirculantes) {
         this.ativosCirculantes = ativosCirculantes;
     }
 
@@ -55,7 +40,7 @@ public class Balanco {
         return dividaBruta;
     }
 
-    public void setDividaBruta(Long dividaBruta) {
+    public void setDividaBruta(final Long dividaBruta) {
         this.dividaBruta = dividaBruta;
     }
 
@@ -63,7 +48,7 @@ public class Balanco {
         return dividaLiquida;
     }
 
-    public void setDividaLiquida(Long dividaLiquida) {
+    public void setDividaLiquida(final Long dividaLiquida) {
         this.dividaLiquida = dividaLiquida;
     }
 
@@ -71,7 +56,7 @@ public class Balanco {
         return patrimonioLiquido;
     }
 
-    public void setPatrimonioLiquido(Long patrimonioLiquido) {
+    public void setPatrimonioLiquido(final Long patrimonioLiquido) {
         this.patrimonioLiquido = patrimonioLiquido;
     }
 }

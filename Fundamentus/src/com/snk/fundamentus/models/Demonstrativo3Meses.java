@@ -1,34 +1,19 @@
 package com.snk.fundamentus.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.Embeddable;
 
-
-@Entity
+@Embeddable
 public class Demonstrativo3Meses {
-
-    @Id
-    @GeneratedValue
-    private long id;
 
     private Long receitaLiquida;
     private Long eBit;
     private Long lucroLiquido;
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public Long getReceitaLiquida() {
         return receitaLiquida;
     }
 
-    public void setReceitaLiquida(Long receitaLiquida) {
+    public void setReceitaLiquida(final Long receitaLiquida) {
         this.receitaLiquida = receitaLiquida;
     }
 
@@ -36,7 +21,7 @@ public class Demonstrativo3Meses {
         return eBit;
     }
 
-    public void seteBit(Long eBit) {
+    public void seteBit(final Long eBit) {
         this.eBit = eBit;
     }
 
@@ -44,7 +29,7 @@ public class Demonstrativo3Meses {
         return lucroLiquido;
     }
 
-    public void setLucroLiquido(Long lucroLiquido) {
+    public void setLucroLiquido(final Long lucroLiquido) {
         this.lucroLiquido = lucroLiquido;
     }
 

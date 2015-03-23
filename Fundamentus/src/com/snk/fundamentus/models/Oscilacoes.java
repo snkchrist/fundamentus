@@ -1,17 +1,9 @@
 package com.snk.fundamentus.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.Embeddable;
 
-
-@Entity
+@Embeddable
 public class Oscilacoes {
-
-    @Id
-    @GeneratedValue
-    private long id;
-
     private Double dia;
     private Double mes;
     private Double ultimos30Dias;
@@ -23,19 +15,11 @@ public class Oscilacoes {
     private Double ano2011;
     private Double ano2010;
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public Double getDia() {
         return dia;
     }
 
-    public void setDia(Double dia) {
+    public void setDia(final Double dia) {
         this.dia = dia;
     }
 
@@ -43,7 +27,7 @@ public class Oscilacoes {
         return mes;
     }
 
-    public void setMes(Double mes) {
+    public void setMes(final Double mes) {
         this.mes = mes;
     }
 
@@ -51,7 +35,7 @@ public class Oscilacoes {
         return ultimos30Dias;
     }
 
-    public void setUltimos30Dias(Double ultimos30Dias) {
+    public void setUltimos30Dias(final Double ultimos30Dias) {
         this.ultimos30Dias = ultimos30Dias;
     }
 
@@ -59,7 +43,7 @@ public class Oscilacoes {
         return ultimos12Meses;
     }
 
-    public void setUltimos12Meses(Double ultimos12Meses) {
+    public void setUltimos12Meses(final Double ultimos12Meses) {
         this.ultimos12Meses = ultimos12Meses;
     }
 
@@ -67,7 +51,7 @@ public class Oscilacoes {
         return ano2015;
     }
 
-    public void setAno2015(Double ano2015) {
+    public void setAno2015(final Double ano2015) {
         this.ano2015 = ano2015;
     }
 
@@ -75,7 +59,7 @@ public class Oscilacoes {
         return ano2014;
     }
 
-    public void setAno2014(Double ano2014) {
+    public void setAno2014(final Double ano2014) {
         this.ano2014 = ano2014;
     }
 
@@ -83,7 +67,7 @@ public class Oscilacoes {
         return ano2013;
     }
 
-    public void setAno2013(Double ano2013) {
+    public void setAno2013(final Double ano2013) {
         this.ano2013 = ano2013;
     }
 
@@ -91,7 +75,7 @@ public class Oscilacoes {
         return ano2012;
     }
 
-    public void setAno2012(Double ano2012) {
+    public void setAno2012(final Double ano2012) {
         this.ano2012 = ano2012;
     }
 
@@ -99,7 +83,7 @@ public class Oscilacoes {
         return ano2011;
     }
 
-    public void setAno2011(Double ano2011) {
+    public void setAno2011(final Double ano2011) {
         this.ano2011 = ano2011;
     }
 
@@ -107,7 +91,7 @@ public class Oscilacoes {
         return ano2010;
     }
 
-    public void setAno2010(Double ano2010) {
+    public void setAno2010(final Double ano2010) {
         this.ano2010 = ano2010;
     }
 }
