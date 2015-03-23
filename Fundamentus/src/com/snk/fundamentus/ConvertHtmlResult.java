@@ -1,7 +1,10 @@
 package com.snk.fundamentus;
 
+import java.net.UnknownHostException;
+import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
+import com.snk.fundamentus.database.Database;
 import com.snk.fundamentus.models.Balanco;
 import com.snk.fundamentus.models.Demonstrativo12Meses;
 import com.snk.fundamentus.models.Demonstrativo3Meses;
@@ -22,16 +25,27 @@ public class ConvertHtmlResult {
     }
 
     public static void main(String[] args)
-        throws ParserConfigurationException, XPathExpressionException {
-        ConvertHtmlResult obj = new ConvertHtmlResult(Messages.getString("RegExClasses.HTML"));
+        throws ParserConfigurationException, XPathExpressionException,
+        UnknownHostException {
 
-        Empresa htmlToEmpresaObject = obj.htmlToEmpresaObject();
-        Balanco htmlToBalancoObject = obj.htmlToBalancoObject();
-        Oscilacoes htmlToOscilacoes = obj.htmlToOscilacoes();
-        Demonstrativo3Meses htmlToDemonstrativo3Meses = obj.htmlToDemonstrativo3Meses();
-        Demonstrativo12Meses htmlToDemonstrativo12Meses = obj.htmlToDemonstrativo12Meses();
+    }
 
-        System.out.println(htmlToEmpresaObject.toString());
+    public Empresa getEmpresa()
+        throws XPathExpressionException, ParserConfigurationException {
+
+        Empresa empresa = htmlToEmpresaObject();
+        Balanco htmlToBalancoObject = htmlToBalancoObject();
+        Oscilacoes htmlToOscilacoes = htmlToOscilacoes();
+        Demonstrativo3Meses htmlToDemonstrativo3Meses = htmlToDemonstrativo3Meses();
+        Demonstrativo12Meses htmlToDemonstrativo12Meses = htmlToDemonstrativo12Meses();
+
+        empresa.setBalanco(htmlToBalancoObject);
+        empresa.setOscilacoes(htmlToOscilacoes);
+        empresa.setDemonstracao3meses(htmlToDemonstrativo3Meses);
+        empresa.setDemonstracao12meses(htmlToDemonstrativo12Meses);
+
+        return empresa;
+
     }
 
     private Empresa htmlToEmpresaObject()

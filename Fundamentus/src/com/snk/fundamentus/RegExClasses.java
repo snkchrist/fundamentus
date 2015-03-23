@@ -100,10 +100,15 @@ public class RegExClasses {
         TagNode tagNode = new HtmlCleaner().clean(html);
         org.w3c.dom.Document doc = new DomSerializer(new CleanerProperties()).createDOM(tagNode);
 
-        XPath xpath = XPathFactory.newInstance().newXPath();
-        String str = (String) xpath.evaluate(x, doc, XPathConstants.STRING);
-
-        str = removeInvalidChars(str);
+        String str = "";
+        try {
+            XPath xpath = XPathFactory.newInstance().newXPath();
+            str = (String) xpath.evaluate(x, doc, XPathConstants.STRING);
+            str = removeInvalidChars(str);
+        }
+        catch (Exception exp) {
+            System.out.println(exp.getMessage());
+        }
 
         return str;
     }
@@ -125,8 +130,8 @@ public class RegExClasses {
     public static Double getFieldFromXpathDouble(String html, String x)
         throws XPathExpressionException, ParserConfigurationException {
 
-        Double value = 0.0; 
-        
+        Double value = 0.0;
+
         try {
             String fieldFromXpath = getFieldFromXpath(html, x);
             value = Double.parseDouble(fieldFromXpath);
@@ -135,7 +140,7 @@ public class RegExClasses {
             exp.printStackTrace();
             System.out.println("Error parsing Double" + exp.getMessage());
         }
-        
+
         return value;
     }
 

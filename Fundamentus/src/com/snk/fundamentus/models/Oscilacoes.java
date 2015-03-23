@@ -1,6 +1,16 @@
 package com.snk.fundamentus.models;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+
+@Entity
 public class Oscilacoes {
+
+    @Id
+    @GeneratedValue
+    private long id;
 
     private Double dia;
     private Double mes;
@@ -12,6 +22,14 @@ public class Oscilacoes {
     private Double ano2012;
     private Double ano2011;
     private Double ano2010;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public Double getDia() {
         return dia;

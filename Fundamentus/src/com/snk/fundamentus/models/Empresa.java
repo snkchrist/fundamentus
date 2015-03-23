@@ -1,6 +1,16 @@
 package com.snk.fundamentus.models;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+
+@Entity
 public class Empresa {
+
+    @Id
+    @GeneratedValue
+    private long id;
 
     private String sigla;
 
@@ -29,6 +39,19 @@ public class Empresa {
     private Long valorMercado;
 
     private Long valorEmpresa;
+
+    private Balanco balanco;
+    private Oscilacoes oscilacoes;
+    private Demonstrativo3Meses demonstracao3meses;
+    private Demonstrativo12Meses demonstracao12meses;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getSigla() {
         return sigla;
@@ -140,5 +163,37 @@ public class Empresa {
 
     public void setValorEmpresa(Long valorEmpresa) {
         this.valorEmpresa = valorEmpresa;
+    }
+
+    public Balanco getBalanco() {
+        return balanco;
+    }
+
+    public void setBalanco(Balanco balanco) {
+        this.balanco = balanco;
+    }
+
+    public Oscilacoes getOscilacoes() {
+        return oscilacoes;
+    }
+
+    public void setOscilacoes(Oscilacoes oscilacoes) {
+        this.oscilacoes = oscilacoes;
+    }
+
+    public Demonstrativo3Meses getDemonstracao3meses() {
+        return demonstracao3meses;
+    }
+
+    public void setDemonstracao3meses(Demonstrativo3Meses demonstracao3meses) {
+        this.demonstracao3meses = demonstracao3meses;
+    }
+
+    public Demonstrativo12Meses getDemonstracao12meses() {
+        return demonstracao12meses;
+    }
+
+    public void setDemonstracao12meses(Demonstrativo12Meses demonstracao12meses) {
+        this.demonstracao12meses = demonstracao12meses;
     }
 }
