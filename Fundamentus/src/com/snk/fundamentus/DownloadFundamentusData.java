@@ -64,8 +64,23 @@ public class DownloadFundamentusData {
                     empresa.getOscilacoes().getAno2014() +
                     empresa.getOscilacoes().getAno2015();
 
-            if (osc > 0.0) {
-                System.out.println("Positivo últimos 5 anos: " + osc + " [" + empresa.getSigla() + "] " + empresa.getNome());
+            if ((osc / 5) > 13.5) {
+
+                double numeroDeAcoes = empresa.getNumeroDeAcoes();
+                double lpa = ((double) empresa.getDemonstracao12meses().getLucroLiquido() / numeroDeAcoes);
+                double pl = empresa.getCotacao() / lpa;
+                double vpa = (double) empresa.getBalanco().getPatrimonioLiquido() / numeroDeAcoes;
+                double pvpa = empresa.getCotacao() / vpa;
+
+                if (pl < 10) {
+                    System.out.println("[" + empresa.getSigla() + "]");
+                    System.out.println("Nome:" + empresa.getNome());
+                    System.out.println("Oscilação nos últimos 5 anos: " + osc);
+                    System.out.println("LPA: " + lpa);
+                    System.out.println("P/L: " + pl);
+                    System.out.println("VPA: " + vpa);
+                    System.out.println("P/VPA: " + pvpa);
+                }
             }
 
         }
