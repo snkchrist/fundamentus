@@ -11,14 +11,14 @@
 	<url>http://maven.apache.org</url>
 
 	<repositories>
-
 		<repository>
 			<id>objectdb</id>
 			<name>ObjectDB Repository</name>
 			<url>http://m2.objectdb.com</url>
 		</repository>
-
 	</repositories>
+
+
 
 	<dependencies>
 		<dependency>

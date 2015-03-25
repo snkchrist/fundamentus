@@ -2,7 +2,6 @@ package com.snk.fundamentus.models;
 
 import java.util.Date;
 
-
 public class BalancoPatrimonial {
 
     public double adiantamentoParaFuturoAumentoCapital;
@@ -56,7 +55,7 @@ public class BalancoPatrimonial {
     }
 
     public void setAdiantamentoParaFuturoAumentoCapital(
-        double adiantamentoParaFuturoAumentoCapital) {
+            final double adiantamentoParaFuturoAumentoCapital) {
         this.adiantamentoParaFuturoAumentoCapital += adiantamentoParaFuturoAumentoCapital;
     }
 
@@ -64,7 +63,7 @@ public class BalancoPatrimonial {
         return ajustesAcumuladosDeConversao;
     }
 
-    public void setAjustesAcumuladosDeConversao(double ajustesAcumuladosDeConversao) {
+    public void setAjustesAcumuladosDeConversao(final double ajustesAcumuladosDeConversao) {
         this.ajustesAcumuladosDeConversao += ajustesAcumuladosDeConversao;
     }
 
@@ -72,7 +71,7 @@ public class BalancoPatrimonial {
         return ajustesDeAvaliacaoPatrimonial;
     }
 
-    public void setAjustesDeAvaliacaoPatrimonial(double ajustesDeAvaliacaoPatrimonial) {
+    public void setAjustesDeAvaliacaoPatrimonial(final double ajustesDeAvaliacaoPatrimonial) {
         this.ajustesDeAvaliacaoPatrimonial += ajustesDeAvaliacaoPatrimonial;
     }
 
@@ -80,7 +79,7 @@ public class BalancoPatrimonial {
         return aplicacoesFinanceiras;
     }
 
-    public void setAplicacoesFinanceiras(double aplicacoesFinanceiras) {
+    public void setAplicacoesFinanceiras(final double aplicacoesFinanceiras) {
         this.aplicacoesFinanceiras += aplicacoesFinanceiras;
     }
 
@@ -89,7 +88,7 @@ public class BalancoPatrimonial {
     }
 
     public void setAplicacoesFinanceirasAvaliadasAValorJusto(
-        double aplicacoesFinanceirasAvaliadasAValorJusto) {
+            final double aplicacoesFinanceirasAvaliadasAValorJusto) {
         this.aplicacoesFinanceirasAvaliadasAValorJusto += aplicacoesFinanceirasAvaliadasAValorJusto;
     }
 
@@ -98,7 +97,7 @@ public class BalancoPatrimonial {
     }
 
     public void setAplicacoesFinanceirasAvaliadasAoCustoAmortizado(
-        double aplicacoesFinanceirasAvaliadasAoCustoAmortizado) {
+            final double aplicacoesFinanceirasAvaliadasAoCustoAmortizado) {
         this.aplicacoesFinanceirasAvaliadasAoCustoAmortizado += aplicacoesFinanceirasAvaliadasAoCustoAmortizado;
     }
 
@@ -106,7 +105,7 @@ public class BalancoPatrimonial {
         return ativosBiologicos;
     }
 
-    public void setAtivosBiologicos(double ativosBiologicos) {
+    public void setAtivosBiologicos(final double ativosBiologicos) {
         this.ativosBiologicos += ativosBiologicos;
     }
 
@@ -114,7 +113,7 @@ public class BalancoPatrimonial {
         return caixaEEquivalentesDeCaixa;
     }
 
-    public void setCaixaEEquivalentesDeCaixa(double caixaEEquivalentesDeCaixa) {
+    public void setCaixaEEquivalentesDeCaixa(final double caixaEEquivalentesDeCaixa) {
         this.caixaEEquivalentesDeCaixa += caixaEEquivalentesDeCaixa;
     }
 
@@ -122,7 +121,7 @@ public class BalancoPatrimonial {
         return capitalSocialRealizado;
     }
 
-    public void setCapitalSocialRealizado(double capitalSocialRealizado) {
+    public void setCapitalSocialRealizado(final double capitalSocialRealizado) {
         this.capitalSocialRealizado += capitalSocialRealizado;
     }
 
@@ -130,7 +129,7 @@ public class BalancoPatrimonial {
         return contasAReceber;
     }
 
-    public void setContasAReceber(double contasAReceber) {
+    public void setContasAReceber(final double contasAReceber) {
         this.contasAReceber += contasAReceber;
     }
 
@@ -138,7 +137,7 @@ public class BalancoPatrimonial {
         return creditosComPartesRelacionadas;
     }
 
-    public void setCreditosComPartesRelacionadas(double creditosComPartesRelacionadas) {
+    public void setCreditosComPartesRelacionadas(final double creditosComPartesRelacionadas) {
         this.creditosComPartesRelacionadas += creditosComPartesRelacionadas;
     }
 
@@ -146,7 +145,7 @@ public class BalancoPatrimonial {
         return despesasAntecipadas;
     }
 
-    public void setDespesasAntecipadas(double despesasAntecipadas) {
+    public void setDespesasAntecipadas(final double despesasAntecipadas) {
         this.despesasAntecipadas += despesasAntecipadas;
     }
 
@@ -154,7 +153,7 @@ public class BalancoPatrimonial {
         return diferido;
     }
 
-    public void setDiferido(double diferido) {
+    public void setDiferido(final double diferido) {
         this.diferido += diferido;
     }
 
@@ -162,7 +161,7 @@ public class BalancoPatrimonial {
         return dividendosEJCPAPagar;
     }
 
-    public void setDividendosEJCPAPagar(double dividendosEJCPAPagar) {
+    public void setDividendosEJCPAPagar(final double dividendosEJCPAPagar) {
         this.dividendosEJCPAPagar += dividendosEJCPAPagar;
     }
 
@@ -170,7 +169,7 @@ public class BalancoPatrimonial {
         return emprestimosEFinanciamentos;
     }
 
-    public void setEmprestimosEFinanciamentos(double emprestimosEFinanciamentos) {
+    public void setEmprestimosEFinanciamentos(final double emprestimosEFinanciamentos) {
         this.emprestimosEFinanciamentos += emprestimosEFinanciamentos;
     }
 
@@ -178,7 +177,7 @@ public class BalancoPatrimonial {
         return estoques;
     }
 
-    public void setEstoques(double estoques) {
+    public void setEstoques(final double estoques) {
         this.estoques += estoques;
     }
 
@@ -186,7 +185,7 @@ public class BalancoPatrimonial {
         return fornecedores;
     }
 
-    public void setFornecedores(double fornecedores) {
+    public void setFornecedores(final double fornecedores) {
         this.fornecedores += fornecedores;
     }
 
@@ -194,7 +193,7 @@ public class BalancoPatrimonial {
         return imobilizado;
     }
 
-    public void setImobilizado(double imobilizado) {
+    public void setImobilizado(final double imobilizado) {
         this.imobilizado += imobilizado;
     }
 
@@ -202,7 +201,7 @@ public class BalancoPatrimonial {
         return intangivel;
     }
 
-    public void setIntangivel(double intangivel) {
+    public void setIntangivel(final double intangivel) {
         this.intangivel += intangivel;
     }
 
@@ -210,7 +209,7 @@ public class BalancoPatrimonial {
         return investimentos;
     }
 
-    public void setInvestimentos(double investimentos) {
+    public void setInvestimentos(final double investimentos) {
         this.investimentos += investimentos;
     }
 
@@ -218,7 +217,7 @@ public class BalancoPatrimonial {
         return lucrosEReceitasAApropriar;
     }
 
-    public void setLucrosEReceitasAApropriar(double lucrosEReceitasAApropriar) {
+    public void setLucrosEReceitasAApropriar(final double lucrosEReceitasAApropriar) {
         this.lucrosEReceitasAApropriar += lucrosEReceitasAApropriar;
     }
 
@@ -226,7 +225,7 @@ public class BalancoPatrimonial {
         return lucros_PrejuizosAcumulados;
     }
 
-    public void setLucros_PrejuizosAcumulados(double lucros_PrejuizosAcumulados) {
+    public void setLucros_PrejuizosAcumulados(final double lucros_PrejuizosAcumulados) {
         this.lucros_PrejuizosAcumulados += lucros_PrejuizosAcumulados;
     }
 
@@ -234,7 +233,7 @@ public class BalancoPatrimonial {
         return obrigacoesFiscais;
     }
 
-    public void setObrigacoesFiscais(double obrigacoesFiscais) {
+    public void setObrigacoesFiscais(final double obrigacoesFiscais) {
         this.obrigacoesFiscais += obrigacoesFiscais;
     }
 
@@ -242,7 +241,7 @@ public class BalancoPatrimonial {
         return obrigacoesSociaisETrabalhistas;
     }
 
-    public void setObrigacoesSociaisETrabalhistas(double obrigacoesSociaisETrabalhistas) {
+    public void setObrigacoesSociaisETrabalhistas(final double obrigacoesSociaisETrabalhistas) {
         this.obrigacoesSociaisETrabalhistas += obrigacoesSociaisETrabalhistas;
     }
 
@@ -250,7 +249,7 @@ public class BalancoPatrimonial {
         return outros;
     }
 
-    public void setOutros(double outros) {
+    public void setOutros(final double outros) {
         this.outros += outros;
     }
 
@@ -258,7 +257,7 @@ public class BalancoPatrimonial {
         return outrosResultadosAbrangentes;
     }
 
-    public void setOutrosResultadosAbrangentes(double outrosResultadosAbrangentes) {
+    public void setOutrosResultadosAbrangentes(final double outrosResultadosAbrangentes) {
         this.outrosResultadosAbrangentes += outrosResultadosAbrangentes;
     }
 
@@ -267,7 +266,7 @@ public class BalancoPatrimonial {
     }
 
     public void setParticipacaoDosAcionistasNaoControladores(
-        double participacaoDosAcionistasNaoControladores) {
+            final double participacaoDosAcionistasNaoControladores) {
         this.participacaoDosAcionistasNaoControladores += participacaoDosAcionistasNaoControladores;
     }
 
@@ -275,7 +274,7 @@ public class BalancoPatrimonial {
         return passivosComPartesRelacionadas;
     }
 
-    public void setPassivosComPartesRelacionadas(double passivosComPartesRelacionadas) {
+    public void setPassivosComPartesRelacionadas(final double passivosComPartesRelacionadas) {
         this.passivosComPartesRelacionadas += passivosComPartesRelacionadas;
     }
 
@@ -284,7 +283,7 @@ public class BalancoPatrimonial {
     }
 
     public void setPassivosSobreAtivosNaoCorrentesAVendaEDescontinuados(
-        double passivosSobreAtivosNaoCorrentesAVendaEDescontinuados) {
+            final double passivosSobreAtivosNaoCorrentesAVendaEDescontinuados) {
         this.passivosSobreAtivosNaoCorrentesAVendaEDescontinuados += passivosSobreAtivosNaoCorrentesAVendaEDescontinuados;
     }
 
@@ -292,7 +291,7 @@ public class BalancoPatrimonial {
         return patrimônioLiquido;
     }
 
-    public void setPatrimônioLiquido(double patrimônioLiquido) {
+    public void setPatrimônioLiquido(final double patrimônioLiquido) {
         this.patrimônioLiquido += patrimônioLiquido;
     }
 
@@ -300,7 +299,7 @@ public class BalancoPatrimonial {
         return provisoes;
     }
 
-    public void setProvisoes(double provisoes) {
+    public void setProvisoes(final double provisoes) {
         this.provisoes += provisoes;
     }
 
@@ -308,7 +307,7 @@ public class BalancoPatrimonial {
         return reservasDeCapital;
     }
 
-    public void setReservasDeCapital(double reservasDeCapital) {
+    public void setReservasDeCapital(final double reservasDeCapital) {
         this.reservasDeCapital += reservasDeCapital;
     }
 
@@ -316,7 +315,7 @@ public class BalancoPatrimonial {
         return reservasDeLucros;
     }
 
-    public void setReservasDeLucros(double reservasDeLucros) {
+    public void setReservasDeLucros(final double reservasDeLucros) {
         this.reservasDeLucros += reservasDeLucros;
     }
 
@@ -324,7 +323,7 @@ public class BalancoPatrimonial {
         return reservasDeReavaliacao;
     }
 
-    public void setReservasDeReavaliacao(double reservasDeReavaliacao) {
+    public void setReservasDeReavaliacao(final double reservasDeReavaliacao) {
         this.reservasDeReavaliacao += reservasDeReavaliacao;
     }
 
@@ -332,7 +331,7 @@ public class BalancoPatrimonial {
         return tributosARecuperar;
     }
 
-    public void setTributosARecuperar(double tributosARecuperar) {
+    public void setTributosARecuperar(final double tributosARecuperar) {
         this.tributosARecuperar += tributosARecuperar;
     }
 
@@ -340,7 +339,7 @@ public class BalancoPatrimonial {
         return tributosDiferidos;
     }
 
-    public void setTributosDiferidos(double tributosDiferidos) {
+    public void setTributosDiferidos(final double tributosDiferidos) {
         this.tributosDiferidos += tributosDiferidos;
     }
 
@@ -348,7 +347,7 @@ public class BalancoPatrimonial {
         return dataDoBalanco;
     }
 
-    public void setDataDoBalanco(Date dataDoBalanco) {
+    public void setDataDoBalanco(final Date dataDoBalanco) {
         this.dataDoBalanco = dataDoBalanco;
     }
 
@@ -356,7 +355,7 @@ public class BalancoPatrimonial {
         return ativoTotal;
     }
 
-    public void setAtivoTotal(double ativoTotal) {
+    public void setAtivoTotal(final double ativoTotal) {
         this.ativoTotal += ativoTotal;
     }
 
@@ -364,7 +363,7 @@ public class BalancoPatrimonial {
         return ativoCirculante;
     }
 
-    public void setAtivoCirculante(double ativoCirculante) {
+    public void setAtivoCirculante(final double ativoCirculante) {
         this.ativoCirculante += ativoCirculante;
     }
 
@@ -372,7 +371,7 @@ public class BalancoPatrimonial {
         return outrosAtivosCirculantes;
     }
 
-    public void setOutrosAtivosCirculantes(double outrosAtivosCirculantes) {
+    public void setOutrosAtivosCirculantes(final double outrosAtivosCirculantes) {
         this.outrosAtivosCirculantes += outrosAtivosCirculantes;
     }
 
@@ -380,7 +379,7 @@ public class BalancoPatrimonial {
         return ativoRealizavelALongoPrazo;
     }
 
-    public void setAtivoRealizavelALongoPrazo(double ativoRealizavelALongoPrazo) {
+    public void setAtivoRealizavelALongoPrazo(final double ativoRealizavelALongoPrazo) {
         this.ativoRealizavelALongoPrazo += ativoRealizavelALongoPrazo;
     }
 
@@ -388,7 +387,7 @@ public class BalancoPatrimonial {
         return outrosAtivosNaoCirculantes;
     }
 
-    public void setOutrosAtivosNaoCirculantes(double outrosAtivosNaoCirculantes) {
+    public void setOutrosAtivosNaoCirculantes(final double outrosAtivosNaoCirculantes) {
         this.outrosAtivosNaoCirculantes += outrosAtivosNaoCirculantes;
     }
 
@@ -396,7 +395,7 @@ public class BalancoPatrimonial {
         return passivoTotal;
     }
 
-    public void setPassivoTotal(double passivoTotal) {
+    public void setPassivoTotal(final double passivoTotal) {
         this.passivoTotal += passivoTotal;
     }
 
@@ -404,7 +403,7 @@ public class BalancoPatrimonial {
         return passivoCirculante;
     }
 
-    public void setPassivoCirculante(double passivoCirculante) {
+    public void setPassivoCirculante(final double passivoCirculante) {
         this.passivoCirculante += passivoCirculante;
     }
 
@@ -412,7 +411,7 @@ public class BalancoPatrimonial {
         return passivoNaoCirculante;
     }
 
-    public void setPassivoNaoCirculante(double passivoNaoCirculante) {
+    public void setPassivoNaoCirculante(final double passivoNaoCirculante) {
         this.passivoNaoCirculante += passivoNaoCirculante;
     }
 
