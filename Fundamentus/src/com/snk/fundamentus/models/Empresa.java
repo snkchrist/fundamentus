@@ -1,5 +1,7 @@
 package com.snk.fundamentus.models;
 
+import java.util.List;
+
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -40,6 +42,8 @@ public class Empresa {
 
     private Long valorEmpresa;
 
+    @Embedded
+    private List<BalancoPatrimonial> balancoList;
     @Embedded
     private Balanco balanco;
     @Embedded
@@ -199,5 +203,13 @@ public class Empresa {
 
     public void setDemonstracao12meses(final Demonstrativo12Meses demonstracao12meses) {
         this.demonstracao12meses = demonstracao12meses;
+    }
+
+    public List<BalancoPatrimonial> getBalancoList() {
+        return balancoList;
+    }
+
+    public void setBalancoList(final List<BalancoPatrimonial> balancoList) {
+        this.balancoList = balancoList;
     }
 }

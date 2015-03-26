@@ -2,6 +2,9 @@ package com.snk.fundamentus.models;
 
 import java.util.Date;
 
+import javax.persistence.Embeddable;
+
+@Embeddable
 public class BalancoPatrimonial {
 
     public double adiantamentoParaFuturoAumentoCapital;
@@ -413,6 +416,12 @@ public class BalancoPatrimonial {
 
     public void setPassivoNaoCirculante(final double passivoNaoCirculante) {
         this.passivoNaoCirculante += passivoNaoCirculante;
+    }
+
+    @Override
+    public String toString() {
+        return "Date:" + getDataDoBalanco();
+
     }
 
 }

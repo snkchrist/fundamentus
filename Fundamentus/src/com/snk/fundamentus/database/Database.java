@@ -1,11 +1,11 @@
 package com.snk.fundamentus.database;
 
 import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
-
 
 public class Database<T> {
 
@@ -13,7 +13,7 @@ public class Database<T> {
     EntityManagerFactory emf;
     Class type;
 
-    public Database(Class type) {
+    public Database(final Class type) {
         this.type = type;
     }
 
@@ -33,11 +33,11 @@ public class Database<T> {
     }
 
     public List<T> listAllElements() {
-        TypedQuery<T> query = getEm().createQuery("SELECT p FROM Empresa p", type);
+        TypedQuery<T> query = getEm().createQuery("SELECT p FROM " + type.getSimpleName() + " p", type);
         return query.getResultList();
     }
 
-    public void add(T obj) {
+    public void add(final T obj) {
         getEm().getTransaction().begin();
         em.persist(obj);
         getEm().getTransaction().commit();
