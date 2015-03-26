@@ -12,7 +12,7 @@ import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
 
 
-public class RegExClasses {
+public class XpathClasses {
 
     // Infos
     public final static String NAME = Messages.getString("RegExClasses.NAME");

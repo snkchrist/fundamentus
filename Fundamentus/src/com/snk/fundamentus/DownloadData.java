@@ -81,8 +81,9 @@ public class DownloadData {
             HttpEntity entity = download(download);
 
             if (entity != null) {
-                String fileName = java.text.MessageFormat.format(
-                        "C:\\Users\\ribeifil\\Downloads\\fundamentusFiles\\{0}.rar",
+                String string = "Path where you want to save the files";
+
+                String fileName = java.text.MessageFormat.format(string + "{0}.rar",
                         empEnum.name());
 
                 FileOutputStream fos = new java.io.FileOutputStream(fileName);
@@ -97,16 +98,6 @@ public class DownloadData {
     public static void main(final String[] args)
             throws ClientProtocolException, XPathExpressionException, IOException, ParserConfigurationException {
         // new DownloadFundamentusData().getAllInformation();
-
-        DownloadData downloadData = new DownloadData();
-
-        File files = new File("C:/Users/ribeifil/Downloads/fundamentusFiles");
-
-        File[] listFiles = files.listFiles();
-
-        for (File file : listFiles) {
-            downloadData.getZipFiles(file, "C:/Users/ribeifil/Downloads/xls");
-        }
 
         //        final Database<Empresa> base = new Database<Empresa>(Empresa.class);
         //
@@ -144,9 +135,20 @@ public class DownloadData {
 
     }
 
+    private static void UnzipFundamentFiles(final File folderToGetFiles, final String folderToExtract)
+            throws IOException {
+        DownloadData downloadData = new DownloadData();
+
+        File[] listFiles = folderToGetFiles.listFiles();
+
+        for (File file : listFiles) {
+            downloadData.getZipFiles(file, folderToExtract);
+        }
+    }
+
     /**
      * extract the zip files
-     * 
+     *
      * @param fileName
      * @param destFolder
      * @throws IOException
