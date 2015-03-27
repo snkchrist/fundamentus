@@ -1,14 +1,19 @@
-package com.snk.fundamentus;
+package com.snk.fundamentus.report;
 
 import com.snk.fundamentus.models.Empresa;
 
 
 public class ReportFundamentalista {
 
-    private Empresa empresa;
+    private final Empresa empresa;
 
-    public ReportFundamentalista(Empresa empresa) {
+    public ReportFundamentalista(final Empresa empresa) {
         this.empresa = empresa;
+    }
+
+    public boolean teveLucroUltimos32Semestres() {
+
+        return true;
     }
 
     /*
@@ -28,12 +33,12 @@ public class ReportFundamentalista {
 
     /**
      * VALOR POR ACAO
-     * 
+     *
      * @return
      */
     public double getVPA() {
         double vpa = (double) empresa.getBalanco().getPatrimonioLiquido()
-            / empresa.getNumeroDeAcoes();
+                / empresa.getNumeroDeAcoes();
         return vpa;
     }
 

@@ -1,4 +1,4 @@
-package com.snk.fundamentus;
+package com.snk.fundamentus.tools;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;

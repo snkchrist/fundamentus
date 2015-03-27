@@ -1,4 +1,4 @@
-package com.snk.fundamentus;
+package com.snk.fundamentus.tools;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

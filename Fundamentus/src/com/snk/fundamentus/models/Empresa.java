@@ -43,6 +43,8 @@ public class Empresa {
     private Long valorEmpresa;
 
     @Embedded
+    private List<DemonstrativoResultado> demonstrativoList;
+    @Embedded
     private List<BalancoPatrimonial> balancoList;
     @Embedded
     private Balanco balanco;
@@ -212,4 +214,13 @@ public class Empresa {
     public void setBalancoList(final List<BalancoPatrimonial> balancoList) {
         this.balancoList = balancoList;
     }
+
+    public List<DemonstrativoResultado> getDemonstrativoList() {
+        return demonstrativoList;
+    }
+
+    public void setDemonstrativoList(final List<DemonstrativoResultado> demonstrativoList) {
+        this.demonstrativoList = demonstrativoList;
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.snk.fundamentus;
+package com.snk.fundamentus.tools;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
