@@ -1,11 +1,12 @@
 package com.snk.fundamentus.models;
 
+import java.util.Date;
 import java.util.List;
-
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+
 
 @Entity
 public class Empresa {
@@ -28,13 +29,15 @@ public class Empresa {
 
     private String dataUltimaCotacao;
 
+    private Date ultimaCotacaoRegistrada;
+
     private Double minimo52Semanas;
 
     private Double maximo52Semanas;
 
     private Long volumeMedio2Meses;
 
-    private String ultimoBalancoProcessado;
+    private Date ultimoBalancoRegistrado;
 
     private Long numeroDeAcoes;
 
@@ -143,14 +146,6 @@ public class Empresa {
         this.volumeMedio2Meses = volumeMedio2Meses;
     }
 
-    public String getUltimoBalancoProcessado() {
-        return ultimoBalancoProcessado;
-    }
-
-    public void setUltimoBalancoProcessado(final String ultimoBalancoProcessado) {
-        this.ultimoBalancoProcessado = ultimoBalancoProcessado;
-    }
-
     public Long getNumeroDeAcoes() {
         return numeroDeAcoes;
     }
@@ -221,6 +216,22 @@ public class Empresa {
 
     public void setDemonstrativoList(final List<DemonstrativoResultado> demonstrativoList) {
         this.demonstrativoList = demonstrativoList;
+    }
+
+    public Date getUltimoBalancoRegistrado() {
+        return ultimoBalancoRegistrado;
+    }
+
+    public void setUltimoBalancoRegistrado(Date ultimoBalancoRegistrado) {
+        this.ultimoBalancoRegistrado = ultimoBalancoRegistrado;
+    }
+
+    public Date getUltimaCotacaoRegistrada() {
+        return ultimaCotacaoRegistrada;
+    }
+
+    public void setUltimaCotacaoRegistrada(Date ultimaCotacaoRegistrada) {
+        this.ultimaCotacaoRegistrada = ultimaCotacaoRegistrada;
     }
 
 }

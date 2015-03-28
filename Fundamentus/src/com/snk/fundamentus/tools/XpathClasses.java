@@ -1,5 +1,8 @@
 package com.snk.fundamentus.tools;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -113,7 +116,24 @@ public class XpathClasses {
         return str;
     }
 
-    public static Long getFieldFromXpathLong(String html, String x)
+    public static Date getDateFieldFromXpath(String html, String x)
+        throws XPathExpressionException, ParserConfigurationException {
+        Date value = null;
+        try {
+            String fieldFromXpath = getFieldFromXpath(html, x);
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            Date parse = format.parse(fieldFromXpath);
+
+            value = parse;
+        }
+
+        catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return value;
+    }
+
+    public static Long getLongFieldFromXpath(String html, String x)
         throws XPathExpressionException, ParserConfigurationException {
         Long value = 0L;
         try {
@@ -127,7 +147,7 @@ public class XpathClasses {
         return value;
     }
 
-    public static Double getFieldFromXpathDouble(String html, String x)
+    public static Double getDoubleFieldFromXpath(String html, String x)
         throws XPathExpressionException, ParserConfigurationException {
 
         Double value = 0.0;

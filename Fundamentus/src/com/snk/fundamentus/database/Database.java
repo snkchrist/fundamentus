@@ -1,11 +1,11 @@
 package com.snk.fundamentus.database;
 
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
+
 
 public class Database<T> {
 
@@ -33,13 +33,23 @@ public class Database<T> {
     }
 
     public List<T> listAllElements() {
-        TypedQuery<T> query = getEm().createQuery("SELECT p FROM " + type.getSimpleName() + " p", type);
+        TypedQuery<T> query = getEm().createQuery("SELECT p FROM " + type.getSimpleName()
+            + " p", type);
         return query.getResultList();
     }
 
-    public void add(final T obj) {
+    public void beginTransaction() {
         getEm().getTransaction().begin();
-        em.persist(obj);
+    }
+
+    public void commitTransaction() {
         getEm().getTransaction().commit();
+    }
+
+    public void add(final T obj) {
+        this.beginTransaction();
+        em.persist(obj);
+        this.commitTransaction();
+
     }
 }

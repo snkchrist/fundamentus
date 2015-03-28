@@ -1,11 +1,12 @@
 package com.snk.fundamentus.models;
 
 import java.util.Date;
-
 import javax.persistence.Embeddable;
+
 
 @Embeddable
 public class DemonstrativoResultado {
+
     private Date dataDemonstrativo;
     private double receitaBrutaVendasServicos;
     private double deducoesReceitaBruta;
@@ -45,7 +46,7 @@ public class DemonstrativoResultado {
     }
 
     public void setReceitaBrutaVendasServicos(final double receitaBrutaVendasServicos) {
-        this.receitaBrutaVendasServicos = receitaBrutaVendasServicos;
+        this.receitaBrutaVendasServicos += receitaBrutaVendasServicos;
     }
 
     public double getDeducoesReceitaBruta() {
@@ -53,7 +54,7 @@ public class DemonstrativoResultado {
     }
 
     public void setDeducoesReceitaBruta(final double deducoesReceitaBruta) {
-        this.deducoesReceitaBruta = deducoesReceitaBruta;
+        this.deducoesReceitaBruta += deducoesReceitaBruta;
     }
 
     public double getReceitaLiquidaVendasServicos() {
@@ -61,7 +62,7 @@ public class DemonstrativoResultado {
     }
 
     public void setReceitaLiquidaVendasServicos(final double receitaLiquidaVendasServicos) {
-        this.receitaLiquidaVendasServicos = receitaLiquidaVendasServicos;
+        this.receitaLiquidaVendasServicos += receitaLiquidaVendasServicos;
     }
 
     public double getCustoBensServicosVendidos() {
@@ -69,7 +70,7 @@ public class DemonstrativoResultado {
     }
 
     public void setCustoBensServicosVendidos(final double custoBensServicosVendidos) {
-        this.custoBensServicosVendidos = custoBensServicosVendidos;
+        this.custoBensServicosVendidos += custoBensServicosVendidos;
     }
 
     public double getResultadoBruto() {
@@ -77,7 +78,7 @@ public class DemonstrativoResultado {
     }
 
     public void setResultadoBruto(final double resultadoBruto) {
-        this.resultadoBruto = resultadoBruto;
+        this.resultadoBruto += resultadoBruto;
     }
 
     public double getDespesasComVendas() {
@@ -85,23 +86,25 @@ public class DemonstrativoResultado {
     }
 
     public void setDespesasComVendas(final double despesasComVendas) {
-        this.despesasComVendas = despesasComVendas;
+        this.despesasComVendas += despesasComVendas;
     }
 
     public double getDespesasGeraisAdministrativas() {
         return despesasGeraisAdministrativas;
     }
 
-    public void setDespesasGeraisAdministrativas(final double despesasGeraisAdministrativas) {
-        this.despesasGeraisAdministrativas = despesasGeraisAdministrativas;
+    public void setDespesasGeraisAdministrativas(
+        final double despesasGeraisAdministrativas) {
+        this.despesasGeraisAdministrativas += despesasGeraisAdministrativas;
     }
 
     public double getPerdasPelaNaoRecuperabilidadeAtivos() {
         return perdasPelaNaoRecuperabilidadeAtivos;
     }
 
-    public void setPerdasPelaNaoRecuperabilidadeAtivos(final double perdasPelaNaoRecuperabilidadeAtivos) {
-        this.perdasPelaNaoRecuperabilidadeAtivos = perdasPelaNaoRecuperabilidadeAtivos;
+    public void setPerdasPelaNaoRecuperabilidadeAtivos(
+        final double perdasPelaNaoRecuperabilidadeAtivos) {
+        this.perdasPelaNaoRecuperabilidadeAtivos += perdasPelaNaoRecuperabilidadeAtivos;
     }
 
     public double getOutrasReceitasOperacionais() {
@@ -109,7 +112,7 @@ public class DemonstrativoResultado {
     }
 
     public void setOutrasReceitasOperacionais(final double outrasReceitasOperacionais) {
-        this.outrasReceitasOperacionais = outrasReceitasOperacionais;
+        this.outrasReceitasOperacionais += outrasReceitasOperacionais;
     }
 
     public double getOutrasDespesasOperacionais() {
@@ -117,15 +120,16 @@ public class DemonstrativoResultado {
     }
 
     public void setOutrasDespesasOperacionais(final double outrasDespesasOperacionais) {
-        this.outrasDespesasOperacionais = outrasDespesasOperacionais;
+        this.outrasDespesasOperacionais += outrasDespesasOperacionais;
     }
 
     public double getResultadoEquivalenciaPatrimonial() {
         return resultadoEquivalenciaPatrimonial;
     }
 
-    public void setResultadoEquivalenciaPatrimonial(final double resultadoEquivalenciaPatrimonial) {
-        this.resultadoEquivalenciaPatrimonial = resultadoEquivalenciaPatrimonial;
+    public void setResultadoEquivalenciaPatrimonial(
+        final double resultadoEquivalenciaPatrimonial) {
+        this.resultadoEquivalenciaPatrimonial += resultadoEquivalenciaPatrimonial;
     }
 
     public double getFinanceiras() {
@@ -133,7 +137,7 @@ public class DemonstrativoResultado {
     }
 
     public void setFinanceiras(final double financeiras) {
-        this.financeiras = financeiras;
+        this.financeiras += financeiras;
     }
 
     public double getReceitasFinanceiras() {
@@ -141,7 +145,7 @@ public class DemonstrativoResultado {
     }
 
     public void setReceitasFinanceiras(final double receitasFinanceiras) {
-        this.receitasFinanceiras = receitasFinanceiras;
+        this.receitasFinanceiras += receitasFinanceiras;
     }
 
     public double getDespesasFinanceiras() {
@@ -149,7 +153,7 @@ public class DemonstrativoResultado {
     }
 
     public void setDespesasFinanceiras(final double despesasFinanceiras) {
-        this.despesasFinanceiras = despesasFinanceiras;
+        this.despesasFinanceiras += despesasFinanceiras;
     }
 
     public double getResultadoNaoOperacional() {
@@ -157,7 +161,7 @@ public class DemonstrativoResultado {
     }
 
     public void setResultadoNaoOperacional(final double resultadoNaoOperacional) {
-        this.resultadoNaoOperacional = resultadoNaoOperacional;
+        this.resultadoNaoOperacional += resultadoNaoOperacional;
     }
 
     public double getReceitas() {
@@ -165,7 +169,7 @@ public class DemonstrativoResultado {
     }
 
     public void setReceitas(final double receitas) {
-        this.receitas = receitas;
+        this.receitas += receitas;
     }
 
     public double getDespesas() {
@@ -173,55 +177,60 @@ public class DemonstrativoResultado {
     }
 
     public void setDespesas(final double despesas) {
-        this.despesas = despesas;
+        this.despesas += despesas;
     }
 
     public double getResultadoAntesTributacao_Participacoes() {
         return resultadoAntesTributacao_Participacoes;
     }
 
-    public void setResultadoAntesTributacao_Participacoes(final double resultadoAntesTributacao_Participacoes) {
-        this.resultadoAntesTributacao_Participacoes = resultadoAntesTributacao_Participacoes;
+    public void setResultadoAntesTributacao_Participacoes(
+        final double resultadoAntesTributacao_Participacoes) {
+        this.resultadoAntesTributacao_Participacoes += resultadoAntesTributacao_Participacoes;
     }
 
     public double getProvisaoParaIRContribuicaoSocial() {
         return provisaoParaIRContribuicaoSocial;
     }
 
-    public void setProvisaoParaIRContribuicaoSocial(final double provisaoParaIRContribuicaoSocial) {
-        this.provisaoParaIRContribuicaoSocial = provisaoParaIRContribuicaoSocial;
+    public void setProvisaoParaIRContribuicaoSocial(
+        final double provisaoParaIRContribuicaoSocial) {
+        this.provisaoParaIRContribuicaoSocial += provisaoParaIRContribuicaoSocial;
     }
 
     public double getiRDiferido() {
         return iRDiferido;
     }
 
-    public void setiRDiferido(final double iRDiferido) {
-        this.iRDiferido = iRDiferido;
+    public void setIRDiferido(final double iRDiferido) {
+        this.iRDiferido += iRDiferido;
     }
 
     public double getParticipacoes_ContribuicoesEstatutarias() {
         return participacoes_ContribuicoesEstatutarias;
     }
 
-    public void setParticipacoes_ContribuicoesEstatutarias(final double participacoes_ContribuicoesEstatutarias) {
-        this.participacoes_ContribuicoesEstatutarias = participacoes_ContribuicoesEstatutarias;
+    public void setParticipacoes_ContribuicoesEstatutarias(
+        final double participacoes_ContribuicoesEstatutarias) {
+        this.participacoes_ContribuicoesEstatutarias += participacoes_ContribuicoesEstatutarias;
     }
 
     public double getReversaoJurosSobreCapitalProprio() {
         return reversaoJurosSobreCapitalProprio;
     }
 
-    public void setReversaoJurosSobreCapitalProprio(final double reversaoJurosSobreCapitalProprio) {
-        this.reversaoJurosSobreCapitalProprio = reversaoJurosSobreCapitalProprio;
+    public void setReversaoJurosSobreCapitalProprio(
+        final double reversaoJurosSobreCapitalProprio) {
+        this.reversaoJurosSobreCapitalProprio += reversaoJurosSobreCapitalProprio;
     }
 
     public double getPartAcionistasNaoControladores() {
         return partAcionistasNaoControladores;
     }
 
-    public void setPartAcionistasNaoControladores(final double partAcionistasNaoControladores) {
-        this.partAcionistasNaoControladores = partAcionistasNaoControladores;
+    public void setPartAcionistasNaoControladores(
+        final double partAcionistasNaoControladores) {
+        this.partAcionistasNaoControladores += partAcionistasNaoControladores;
     }
 
     public double getLucro_PrejuizoPeriodo() {
@@ -229,7 +238,7 @@ public class DemonstrativoResultado {
     }
 
     public void setLucro_PrejuizoPeriodo(final double lucro_PrejuizoPeriodo) {
-        this.lucro_PrejuizoPeriodo = lucro_PrejuizoPeriodo;
+        this.lucro_PrejuizoPeriodo += lucro_PrejuizoPeriodo;
     }
 
 }

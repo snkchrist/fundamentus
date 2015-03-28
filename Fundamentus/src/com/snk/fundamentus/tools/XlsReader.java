@@ -8,31 +8,50 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import jxl.read.biff.BiffException;
-
 import org.apache.log4j.Logger;
-
 import com.snk.fundamentus.database.DaoFactory;
 import com.snk.fundamentus.database.EmpresaDao;
 import com.snk.fundamentus.models.BalancoPatrimonial;
 import com.snk.fundamentus.models.DemonstrativoResultado;
 import com.snk.fundamentus.models.Empresa;
 
+
 public class XlsReader {
 
     private final static Logger logger = Logger.getLogger(XlsReader.class);
 
     public static void main(final String[] args)
-            throws IOException, ParseException, BiffException {
+        throws IOException, ParseException, BiffException {
+        /*
+         * XlsReader reader = new XlsReader(); reader.importXLSDataIntoDb();
+         */
 
-        XlsReader reader = new XlsReader();
-        reader.importXLSDataIntoDb();
+        DaoFactory dao = new DaoFactory();
+        EmpresaDao empresaDao = dao.getEmpresaDao();
+        List<Empresa> listAllElements = empresaDao.listAllElements();
+
+        for (Empresa empresa : listAllElements) {
+            List<BalancoPatrimonial> balancoList = empresa.getBalancoList();
+
+            List<BalancoPatrimonial> listaBalancoAtualizada = new ArrayList<BalancoPatrimonial>();
+
+            for (BalancoPatrimonial balancoPatrimonial : balancoList) {
+                if (null != balancoPatrimonial.getDataDoBalanco()) {
+                    listaBalancoAtualizada.add(balancoPatrimonial);
+                }
+            }
+
+            empresaDao.beginTransaction();
+            empresa.setBalancoList(listaBalancoAtualizada);
+            empresaDao.commitTransaction();
+        }
+
     }
 
     private void importXLSDataIntoDb()
-            throws FileNotFoundException, IOException, ParseException, BiffException {
-        String path = "PATH WHERE THE XLS FILES ARE";
+        throws FileNotFoundException, IOException, ParseException, BiffException {
+        String path = "C:/xls";
         File file = new File(path);
         XlsReader reader = new XlsReader();
         DaoFactory daoFactory = new DaoFactory();
@@ -43,7 +62,7 @@ public class XlsReader {
 
             for (File file2 : listFiles) {
                 logger.info("Start reading file [" + file2.getName() + "]");
-                List<BalancoPatrimonial> readOldXLSFiles = reader.readOldXLSFiles(file2);
+                List<DemonstrativoResultado> readOldXLSFiles = reader.readOldXLSFiles(file2);
                 String acaoOlhar = file2.getName().replaceFirst("[.][^.]+$", "");
 
                 Empresa empresa = empresaDao.findListBySigla(acaoOlhar);
@@ -51,29 +70,30 @@ public class XlsReader {
                 if (null != empresa) {
 
                     empresaDao.getEm().getTransaction().begin();
-                    empresa.setBalancoList(readOldXLSFiles);
+                    empresa.setDemonstrativoList(readOldXLSFiles);
                     empresaDao.getEm().getTransaction().commit();
                 }
 
-                logger.info("BalancoPatrimonial created by the filename [" + file2.getPath() + "]");
+                logger.info("BalancoPatrimonial created by the filename ["
+                    + file2.getPath() + "]");
             }
         }
     }
 
-    private List<BalancoPatrimonial> readOldXLSFiles(final File fileName)
-            throws FileNotFoundException, IOException, ParseException, BiffException {
+    private List<DemonstrativoResultado> readOldXLSFiles(final File fileName)
+        throws FileNotFoundException, IOException, ParseException, BiffException {
 
         jxl.Workbook workbook = jxl.Workbook.getWorkbook(fileName);
 
-        jxl.Sheet sheet1 = workbook.getSheet(0);
+        jxl.Sheet sheet1 = workbook.getSheet(1);
 
         int columnsLength = sheet1.getColumns();
         int rowsLength = sheet1.getRows();
 
-        List<BalancoPatrimonial> balancoList = new ArrayList<BalancoPatrimonial>();
+        List<DemonstrativoResultado> demonstratitoList = new ArrayList<DemonstrativoResultado>();
 
         for (int column = 1; column < columnsLength; column++) {
-            BalancoPatrimonial balanco = new BalancoPatrimonial();
+            DemonstrativoResultado demonstrativo = new DemonstrativoResultado();
 
             for (int row = 0; row < rowsLength; row++) {
 
@@ -84,7 +104,7 @@ public class XlsReader {
                 String value = cell.getContents().replaceAll("[.,]", "");
 
                 if (null != value && false == value.isEmpty()) {
-                    setBalancoAttributeValue(balanco, column0, value);
+                    setDemonstrativoResultado(demonstrativo, column0, value);
                 }
                 else {
                     logger.info("Value [" + value + "] is empty or null.");
@@ -92,21 +112,22 @@ public class XlsReader {
 
             }
 
-            balancoList.add(balanco);
+            if (null != demonstrativo.getDataDemonstrativo())
+                demonstratitoList.add(demonstrativo);
         }
 
-        //jxl.Cell cell = sheet1.getCell(0, 0);
+        // jxl.Cell cell = sheet1.getCell(0, 0);
         workbook.close();
 
-        return balancoList;
+        return demonstratitoList;
     }
 
     private void setDemonstrativoResultado(
-            final DemonstrativoResultado demons,
-            final String tituloPrimeiraColuna,
-            final String valorDaColunaStr) {
+        final DemonstrativoResultado demons,
+        final String tituloPrimeiraColuna,
+        final String valorDaColunaStr) {
 
-        if (tituloPrimeiraColuna.isEmpty()) {
+        if (tituloPrimeiraColuna.trim().isEmpty()) {
             SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
             Date parse;
             try {
@@ -124,88 +145,94 @@ public class XlsReader {
             valorDaColuna = Double.parseDouble(valorDaColunaStr) * 1000;
         }
         catch (NumberFormatException exp) {
-            logger.error("NumberFormatException: not able to parse [" + valorDaColunaStr + "]", exp);
+            logger.error("NumberFormatException: not able to parse [" + valorDaColunaStr
+                + "]", exp);
             return;
         }
 
-        if (tituloPrimeiraColuna.equals("Receita Bruta de Vendas e/ou Serviços")) {
+        switch (tituloPrimeiraColuna) {
+        case "Receita Bruta de Vendas e/ou Serviços":
             demons.setReceitaBrutaVendasServicos(valorDaColuna);
+            break;
+        case "Deduções da Receita Bruta":
+            demons.setDeducoesReceitaBruta(valorDaColuna);
+            break;
+        case "Receita Líquida de Vendas e/ou Serviços":
+            demons.setReceitaLiquidaVendasServicos(valorDaColuna);
+            break;
+        case "Custo de Bens e/ou Serviços Vendidos":
+            demons.setCustoBensServicosVendidos(valorDaColuna);
+            break;
+        case "Resultado Bruto":
+            demons.setResultadoBruto(valorDaColuna);
+            break;
+        case "Despesas Com Vendas":
+            demons.setDespesasComVendas(valorDaColuna);
+            break;
+        case "Despesas Gerais e Administrativas":
+            demons.setDespesasGeraisAdministrativas(valorDaColuna);
+            break;
+        case "Perdas pela Não Recuperabilidade de Ativos":
+            demons.setPerdasPelaNaoRecuperabilidadeAtivos(valorDaColuna);
+            break;
+        case "Outras Receitas Operacionais":
+            demons.setOutrasReceitasOperacionais(valorDaColuna);
+            break;
+        case "Outras Despesas Operacionais":
+            demons.setOutrasDespesasOperacionais(valorDaColuna);
+            break;
+        case "Resultado da Equivalência Patrimonial":
+            demons.setResultadoEquivalenciaPatrimonial(valorDaColuna);
+            break;
+        case "Financeiras":
+            demons.setFinanceiras(valorDaColuna);
+            break;
+        case "Receitas Financeiras":
+            demons.setReceitasFinanceiras(valorDaColuna);
+            break;
+        case "Despesas Financeiras":
+            demons.setDespesasFinanceiras(valorDaColuna);
+            break;
+        case "Resultado Não Operacional":
+            demons.setResultadoNaoOperacional(valorDaColuna);
+            break;
+        case "Receitas":
+            demons.setReceitas(valorDaColuna);
+            break;
+        case "Despesas":
+            demons.setDespesas(valorDaColuna);
+            break;
+        case "Resultado Antes Tributação/Participações":
+            demons.setResultadoAntesTributacao_Participacoes(valorDaColuna);
+            break;
+        case "Provisão para IR e Contribuição Social":
+            demons.setProvisaoParaIRContribuicaoSocial(valorDaColuna);
+            break;
+        case "IR Diferido":
+            demons.setIRDiferido(valorDaColuna);
+            break;
+        case "Participações/Contribuições Estatutárias":
+            demons.setParticipacoes_ContribuicoesEstatutarias(valorDaColuna);
+            break;
+        case "Reversão dos Juros sobre Capital Próprio":
+            demons.setReversaoJurosSobreCapitalProprio(valorDaColuna);
+            break;
+        case "Part. de Acionistas Não Controladores":
+            demons.setPartAcionistasNaoControladores(valorDaColuna);
+            break;
+        case "Lucro/Prejuízo do Período":
+            demons.setLucro_PrejuizoPeriodo(valorDaColuna);
+            break;
+        default:
+            break;
         }
-        else if (tituloPrimeiraColuna.equals("Deduções da Receita Bruta")) {
 
-        }
-        else if (tituloPrimeiraColuna.equals("Receita Líquida de Vendas e/ou Serviços")) {
-
-        }
-        else if (tituloPrimeiraColuna.equals("Custo de Bens e/ou Serviços Vendidos")) {
-
-        }
-        else if (tituloPrimeiraColuna.equals("Resultado Bruto")) {
-
-        }
-        else if (tituloPrimeiraColuna.equals("Despesas Com Vendas")) {
-
-        }
-        else if (tituloPrimeiraColuna.equals("Despesas Gerais e Administrativas")) {
-
-        }
-        else if (tituloPrimeiraColuna.equals("Perdas pela Não Recuperabilidade de Ativos")) {
-
-        }
-        else if (tituloPrimeiraColuna.equals("Outras Receitas Operacionais")) {
-
-        }
-        else if (tituloPrimeiraColuna.equals("Outras Despesas Operacionais")) {
-
-        }
-        else if (tituloPrimeiraColuna.equals("Resultado da Equivalência Patrimonial")) {
-
-        }
-        else if (tituloPrimeiraColuna.equals("Financeiras")) {
-
-        }
-        else if (tituloPrimeiraColuna.equals("Receitas Financeiras")) {
-
-        }
-        else if (tituloPrimeiraColuna.equals("Despesas Financeiras")) {
-
-        }
-        else if (tituloPrimeiraColuna.equals("Resultado Não Operacional")) {
-
-        }
-        else if (tituloPrimeiraColuna.equals("Receitas")) {
-
-        }
-        else if (tituloPrimeiraColuna.equals("Despesas")) {
-
-        }
-        else if (tituloPrimeiraColuna.equals("Resultado Antes Tributação/Participações")) {
-
-        }
-        else if (tituloPrimeiraColuna.equals("Provisão para IR e Contribuição Social")) {
-
-        }
-        else if (tituloPrimeiraColuna.equals("IR Diferido")) {
-
-        }
-        else if (tituloPrimeiraColuna.equals("Participações/Contribuições Estatutárias")) {
-
-        }
-        else if (tituloPrimeiraColuna.equals("Reversão dos Juros sobre Capital Próprio")) {
-
-        }
-        else if (tituloPrimeiraColuna.equals("Part. de Acionistas Não Controladores")) {
-
-        }
-        else if (tituloPrimeiraColuna.equals("Lucro/Prejuízo do Período")) {
-
-        }
     }
 
     private void setBalancoAttributeValue(
-            final BalancoPatrimonial balanco,
-            final String tituloPrimeiraColuna,
-            final String valorDaColunaStr) {
+        final BalancoPatrimonial balanco,
+        final String tituloPrimeiraColuna,
+        final String valorDaColunaStr) {
 
         if (tituloPrimeiraColuna.isEmpty()) {
             SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
@@ -225,7 +252,8 @@ public class XlsReader {
             valorDaColuna = Double.parseDouble(valorDaColunaStr) * 1000;
         }
         catch (NumberFormatException exp) {
-            logger.error("NumberFormatException: not able to parse [" + valorDaColunaStr + "]", exp);
+            logger.error("NumberFormatException: not able to parse [" + valorDaColunaStr
+                + "]", exp);
             return;
         }
 
