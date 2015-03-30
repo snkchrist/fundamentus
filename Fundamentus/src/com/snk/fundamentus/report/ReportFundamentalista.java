@@ -5,30 +5,70 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
 import org.apache.log4j.Logger;
+
 import com.snk.fundamentus.enums.Trimestre;
 import com.snk.fundamentus.models.BalancoPatrimonial;
 import com.snk.fundamentus.models.DemonstrativoResultado;
 import com.snk.fundamentus.models.Empresa;
 
-
 public class ReportFundamentalista {
 
     private static Logger logger = Logger.getLogger(ReportFundamentalista.class);
+    private final int ano;
 
     private final Empresa empresa;
 
-    public ReportFundamentalista(final Empresa empresa) {
+    public ReportFundamentalista(final Empresa empresa, final int ano) {
         this.empresa = empresa;
+        this.ano = ano;
+    }
 
+    public int getAno() {
+        return ano;
+    }
+
+    /*
+     * LUCRO POR AÇÃO
+     */
+    public double getLPA() {
+        return ((double) empresa.getDemonstracao12meses().getLucroLiquido() / empresa.getNumeroDeAcoes());
+    }
+
+    /*
+     * PRECO POR LUCRO P ACAO
+     */
+    public double getPL() {
+        double pl = empresa.getCotacao() / getLPA();
+        return pl;
+    }
+
+    /**
+     * VALOR POR ACAO
+     *
+     * @return
+     */
+    public double getVPA() {
+        double vpa = (double) empresa.getBalanco().getPatrimonioLiquido()
+                / empresa.getNumeroDeAcoes();
+        return vpa;
+    }
+
+    /*
+     * PRECO POR VALOR POR ACAO
+     */
+    public double getPVPA() {
+        return empresa.getCotacao() / getVPA();
     }
 
     public boolean teveLucroUltimos32Semestres() {
 
         List<DemonstrativoResultado> demonstrativoList = empresa.getDemonstrativoList();
         for (DemonstrativoResultado demonstrativoResultado : demonstrativoList) {
-            if (demonstrativoResultado.getLucro_PrejuizoPeriodo() <= 0)
+            if (demonstrativoResultado.getLucro_PrejuizoPeriodo() <= 0) {
                 return false;
+            }
         }
 
         return true;
@@ -40,12 +80,12 @@ public class ReportFundamentalista {
      * representado possuindo XX ativos disponíveis (ou reais em espécie) para
      * cobrir cada real de dívida contraída a curto prazo (PINHEIRO. 2009, p.
      * 412).
-     * 
+     *
      * @param ano
      * @return
      */
-    public double getLiquidezImediata(int ano) {
-        List<BalancoPatrimonial> listaBalancoPorAno = getListaBalancoPorAno(ano);
+    public double getLiquidezImediata() {
+        List<BalancoPatrimonial> listaBalancoPorAno = getListaBalancoPorAno(getAno());
         double liquidezImediata = -1;
 
         double caixaEEquivalentesDeCaixa = 0;
@@ -68,12 +108,12 @@ public class ReportFundamentalista {
      * ativos, a fim de se evitar sua insolvência. Portanto, essa análise
      * procura avaliar as condições que a empresa tem para saldar suas
      * exigibilidades.”
-     * 
+     *
      * @param ano
      * @return
      */
-    public double getLiquidezCorrentePorAno(int ano) {
-        List<BalancoPatrimonial> listaBalancoPorAno = getListaBalancoPorAno(ano);
+    public double getLiquidezCorrentePorAno() {
+        List<BalancoPatrimonial> listaBalancoPorAno = getListaBalancoPorAno(getAno());
         double liquidezCorrente = -1;
 
         if (listaBalancoPorAno != null) {
@@ -101,12 +141,12 @@ public class ReportFundamentalista {
      * exclusivamente dos direitos realizáveis a curto prazo e, como pode ser
      * observado na tabela 3, este resultado para a empresa Tegma é bastante
      * satisfatório.
-     * 
+     *
      * @param ano
      * @return
      */
-    public double getLiquidezSeca(int ano) {
-        List<BalancoPatrimonial> listaBalancoPorAno = getListaBalancoPorAno(ano);
+    public double getLiquidezSeca() {
+        List<BalancoPatrimonial> listaBalancoPorAno = getListaBalancoPorAno(getAno());
         double liquidezSeca = -1;
 
         if (listaBalancoPorAno != null) {
@@ -132,12 +172,12 @@ public class ReportFundamentalista {
      * e longo prazos para cobrir cada real de dívida contraída. Possui R$ XXX
      * disponíveis no curto e longo prazos para quitar cada real de dívida de
      * curto e longo prazos (PINHEIRO. 2009, p. 412).
-     * 
+     *
      * @param ano
      * @return
      */
-    public double getLiquidezGeral(int ano) {
-        List<BalancoPatrimonial> listaBalancoPorAno = getListaBalancoPorAno(ano);
+    public double getLiquidezGeral() {
+        List<BalancoPatrimonial> listaBalancoPorAno = getListaBalancoPorAno(getAno());
         double liquidezGeral = -1;
 
         if (listaBalancoPorAno != null) {
@@ -154,7 +194,7 @@ public class ReportFundamentalista {
 
             }
             liquidezGeral = (ativosCirculantes + ativoRealizavelALongoPrazo)
-                / (passivosCirculantes + passivoNaoCirculante);
+                    / (passivosCirculantes + passivoNaoCirculante);
         }
 
         return liquidezGeral;
@@ -166,13 +206,13 @@ public class ReportFundamentalista {
      * empresa girou em determinado período em função das vendas realizadas, que
      * de acordo com Pinheiro (2009, p. 424), este índice reflete o grau de
      * utilização dos ativos na geração das vendas.
-     * 
+     *
      * @param ano
      * @return
      */
-    public double getIndiceRotatividade(int ano) {
+    public double getIndiceRotatividade() {
         List<DemonstrativoResultado> listaDemonstrativoPorAno = getListaDemonstrativoResultadoPorAno(ano);
-        List<BalancoPatrimonial> listaBalancoPorAno = getListaBalancoPorAno(ano);
+        List<BalancoPatrimonial> listaBalancoPorAno = getListaBalancoPorAno(getAno());
 
         double indiceRotatividade = -1;
 
@@ -198,13 +238,13 @@ public class ReportFundamentalista {
     /**
      * O índice de lucratividade reflete a eficiência global da empresa na
      * geração do lucro resultante de todas as fases do negócio da empresa
-     * 
+     *
      * @param ano
      * @return
      */
-    public double getIndiceLucratividade(int ano) {
+    public double getIndiceLucratividade() {
 
-        List<DemonstrativoResultado> listaDemonstrativoPorAno = getListaDemonstrativoResultadoPorAno(ano);
+        List<DemonstrativoResultado> listaDemonstrativoPorAno = getListaDemonstrativoResultadoPorAno(getAno());
         double indiceLucratividade = -1;
 
         if (listaDemonstrativoPorAno != null) {
@@ -223,7 +263,7 @@ public class ReportFundamentalista {
 
     }
 
-    public List<BalancoPatrimonial> getListaBalancoPorAno(int ano) {
+    public List<BalancoPatrimonial> getListaBalancoPorAno(final int ano) {
 
         List<BalancoPatrimonial> lista = new ArrayList<BalancoPatrimonial>();
 
@@ -250,7 +290,7 @@ public class ReportFundamentalista {
         return lista;
     }
 
-    public List<DemonstrativoResultado> getListaDemonstrativoResultadoPorAno(int ano) {
+    public List<DemonstrativoResultado> getListaDemonstrativoResultadoPorAno(final int ano) {
 
         List<DemonstrativoResultado> lista = new ArrayList<DemonstrativoResultado>();
 
@@ -277,7 +317,7 @@ public class ReportFundamentalista {
         return lista;
     }
 
-    public int getNumeroBalancosApuradorPorAno(int ano) {
+    public int getNumeroBalancosApuradorPorAno(final int ano) {
         List<BalancoPatrimonial> balancoList = empresa.getBalancoList();
         int count = 0;
 
@@ -299,7 +339,7 @@ public class ReportFundamentalista {
 
     }
 
-    public double getLiquidezCorrentePorTrimestre(Trimestre trimestre, int ano) {
+    public double getLiquidezCorrentePorTrimestre(final Trimestre trimestre, final int ano) {
 
         String data = trimestre.getValue() + "/" + ano;
         double liquidezCorrente = -1;
@@ -321,7 +361,7 @@ public class ReportFundamentalista {
         return liquidezCorrente;
     }
 
-    private double getLiquidezCorrente(BalancoPatrimonial balancoByDate) {
+    private double getLiquidezCorrente(final BalancoPatrimonial balancoByDate) {
         double liquidezCorrente = -1;
 
         if (balancoByDate != null) {
@@ -337,7 +377,7 @@ public class ReportFundamentalista {
     /**
      * Para cada real de dívidas vencíveis a curto prazo, a companhia possui XX
      * ativos de curto prazo.
-     * 
+     *
      * @return
      */
     public double getLiquidezCorrenteUltimoTrimestre() {
@@ -351,13 +391,26 @@ public class ReportFundamentalista {
         return liquidezCorrente;
     }
 
+    public double getVendasPorAno() {
+        List<DemonstrativoResultado> listaDemonstrativoResultadoPorAno = getListaDemonstrativoResultadoPorAno(getAno());
+
+        double vendas = 0;
+
+        for (DemonstrativoResultado demonstrativoResultado : listaDemonstrativoResultadoPorAno) {
+            vendas += demonstrativoResultado.getReceitaLiquidaVendasServicos();
+        }
+
+        return vendas;
+
+    }
+
     private BalancoPatrimonial getBalancoPatrimonialUltimoTrimestre() {
 
         Calendar ultimoTrimestre = ReportUtil.getUltimoTrimestre(Calendar.getInstance());
         return getBalancoByDate(ultimoTrimestre);
     }
 
-    private BalancoPatrimonial getBalancoByDate(Calendar ultimoTrimestre) {
+    private BalancoPatrimonial getBalancoByDate(final Calendar ultimoTrimestre) {
         String trimestre = ReportUtil.formatDate(ultimoTrimestre.getTime());
 
         BalancoPatrimonial balancoPatrimonial = null;
@@ -377,7 +430,7 @@ public class ReportFundamentalista {
     }
 
     private DemonstrativoResultado getDemonstrativoResultadoByDate(
-        Calendar ultimoTrimestre) {
+            final Calendar ultimoTrimestre) {
         String trimestre = ReportUtil.formatDate(ultimoTrimestre.getTime());
 
         DemonstrativoResultado demonstrativoResultado = null;
@@ -395,38 +448,4 @@ public class ReportFundamentalista {
         }
         return demonstrativoResultado;
     }
-
-    /*
-     * LUCRO POR AÇÃO
-     */
-    public double getLPA() {
-        return ((double) empresa.getDemonstracao12meses().getLucroLiquido() / empresa.getNumeroDeAcoes());
-    }
-
-    /*
-     * PRECO POR LUCRO P ACAO
-     */
-    public double getPL() {
-        double pl = empresa.getCotacao() / getLPA();
-        return pl;
-    }
-
-    /**
-     * VALOR POR ACAO
-     *
-     * @return
-     */
-    public double getVPA() {
-        double vpa = (double) empresa.getBalanco().getPatrimonioLiquido()
-            / empresa.getNumeroDeAcoes();
-        return vpa;
-    }
-
-    /*
-     * PRECO POR VALOR POR ACAO
-     */
-    public double getPVPA() {
-        return empresa.getCotacao() / getVPA();
-    }
-
 }

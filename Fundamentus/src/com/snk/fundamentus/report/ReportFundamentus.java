@@ -1,48 +1,51 @@
 package com.snk.fundamentus.report;
 
 import java.util.List;
-import org.apache.log4j.Logger;
-import com.snk.fundamentus.database.DaoFactory;
-import com.snk.fundamentus.database.EmpresaDao;
-import com.snk.fundamentus.models.Empresa;
 
+import org.apache.log4j.Logger;
+
+import com.snk.fundamentus.enums.MetodoInvestimento;
+import com.snk.fundamentus.models.Empresa;
 
 public class ReportFundamentus {
 
     private static final Logger logger = Logger.getLogger(ReportFundamentus.class);
 
     public static void main(final String[] args) {
-        DaoFactory daoFactory = new DaoFactory();
-        EmpresaDao empresaDao = daoFactory.getEmpresaDao();
+        GuruMethod guru = GuruMethod.getGurusMethodInstance(MetodoInvestimento.Grahan, 2014);
+        List<Empresa> lstEmpresa = guru.getLstEmpresa();
 
-        List<Empresa> listAllElements = empresaDao.listAllElements();
+        for (Empresa empresa : lstEmpresa) {
+            logger.info("Empresa [" + empresa.getSigla() + "] se enquadra no método Graham.");
+        }
 
-        int count = 0;
+    }
 
-        for (Empresa empresa : listAllElements) {
-            ReportFundamentalista report = new ReportFundamentalista(empresa);
-            double lpa = report.getLPA();
-            double pl = report.getPL();
-            double pvpa = report.getPVPA();
-            double vpa = report.getVPA();
+    private static int getGeneralReport(int count, final Empresa empresa) {
+        ReportFundamentalista report = new ReportFundamentalista(empresa, 2014);
+        double lpa = report.getLPA();
+        double pl = report.getPL();
+        double pvpa = report.getPVPA();
+        double vpa = report.getVPA();
 
-            if (true == report.teveLucroUltimos32Semestres()) {
-                int ano = 2014;
+        if (true == report.teveLucroUltimos32Semestres()) {
+            int ano = 2014;
 
-                count++;
-                logger.info("Empresa [" + empresa.getSigla()
+            count++;
+            logger.info("Empresa [" + empresa.getSigla()
                     + "] teve lucro nos últimos 32 semestres");
 
-                if (report.getLiquidezCorrentePorAno(ano) != -1) {
-                    logger.info("Liquidez corrente ano 2014: ["
-                        + report.getLiquidezCorrentePorAno(2014) + "]");
-                }
+            logger.info("####################LIQUIDEZ####################");
+            logger.info("Liquidez Corrente ano 2014: [" + report.getLiquidezCorrentePorAno() + "]");
+            logger.info("Liquidez Geral ano 2014: [" + report.getLiquidezGeral() + "]");
+            logger.info("Liquidez Imediata ano 2014: [" + report.getLiquidezImediata() + "]");
+            logger.info("Liquidez Seca ano 2014: [" + report.getLiquidezSeca() + "]");
+            logger.info("########################################");
 
-                logger.info("Liquidez Geral ano 2014: [" + report.getLiquidezGeral(ano) + "]");
-                logger.info("Liquidez Imediata ano 2014: [" +report.getLiquidezImediata(ano) + "]");
-                logger.info("Liquidez Seca ano 2014: [" + report.getLiquidezSeca(ano) + "]");
-            }
+            logger.info("Indice de Lucratividade ano 2014:[" + report.getIndiceLucratividade() + "]");
+            logger.info("Indice de Rotatividade ano 2014:[" + report.getIndiceRotatividade() + "]");
 
         }
+        return count;
     }
 }
