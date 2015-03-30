@@ -27,16 +27,20 @@ public class ReportFundamentus {
             double vpa = report.getVPA();
 
             if (true == report.teveLucroUltimos32Semestres()) {
+                int ano = 2014;
+
                 count++;
                 logger.info("Empresa [" + empresa.getSigla()
                     + "] teve lucro nos últimos 32 semestres");
 
-                double liquidezCorrenteAno2014 = report.getLiquidezCorrentePorAno(2014);
-
-                if (liquidezCorrenteAno2014 != -1) {
-                    logger.info("Liquidez corrente ano 2014: [" + liquidezCorrenteAno2014
-                        + "]");
+                if (report.getLiquidezCorrentePorAno(ano) != -1) {
+                    logger.info("Liquidez corrente ano 2014: ["
+                        + report.getLiquidezCorrentePorAno(2014) + "]");
                 }
+
+                logger.info("Liquidez Geral ano 2014: [" + report.getLiquidezGeral(ano) + "]");
+                logger.info("Liquidez Imediata ano 2014: [" +report.getLiquidezImediata(ano) + "]");
+                logger.info("Liquidez Seca ano 2014: [" + report.getLiquidezSeca(ano) + "]");
             }
 
         }
