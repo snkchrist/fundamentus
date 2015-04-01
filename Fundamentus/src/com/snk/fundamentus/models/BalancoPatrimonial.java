@@ -290,7 +290,7 @@ public class BalancoPatrimonial {
         this.passivosSobreAtivosNaoCorrentesAVendaEDescontinuados += passivosSobreAtivosNaoCorrentesAVendaEDescontinuados;
     }
 
-    public double getPatrimônioLiquido() {
+    public double getPatrimonioLiquido() {
         return patrimônioLiquido;
     }
 

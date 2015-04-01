@@ -5,13 +5,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
 import org.apache.log4j.Logger;
-
 import com.snk.fundamentus.enums.Trimestre;
 import com.snk.fundamentus.models.BalancoPatrimonial;
 import com.snk.fundamentus.models.DemonstrativoResultado;
 import com.snk.fundamentus.models.Empresa;
+
 
 public class ReportFundamentalista {
 
@@ -51,7 +50,7 @@ public class ReportFundamentalista {
      */
     public double getVPA() {
         double vpa = (double) empresa.getBalanco().getPatrimonioLiquido()
-                / empresa.getNumeroDeAcoes();
+            / empresa.getNumeroDeAcoes();
         return vpa;
     }
 
@@ -66,7 +65,7 @@ public class ReportFundamentalista {
 
         List<DemonstrativoResultado> demonstrativoList = empresa.getDemonstrativoList();
         for (DemonstrativoResultado demonstrativoResultado : demonstrativoList) {
-            if (demonstrativoResultado.getLucro_PrejuizoPeriodo() <= 0) {
+            if (demonstrativoResultado.getLucro_PrejuizoPeriodo() < 0) {
                 return false;
             }
         }
@@ -194,7 +193,7 @@ public class ReportFundamentalista {
 
             }
             liquidezGeral = (ativosCirculantes + ativoRealizavelALongoPrazo)
-                    / (passivosCirculantes + passivoNaoCirculante);
+                / (passivosCirculantes + passivoNaoCirculante);
         }
 
         return liquidezGeral;
@@ -260,6 +259,57 @@ public class ReportFundamentalista {
         }
 
         return indiceLucratividade;
+    }
+
+    public double getDividaBruta() {
+
+        double dividaBruta = -1;
+        BalancoPatrimonial balanco = getBalancoPatrimonialUltimoTrimestre();
+
+        if (null != balanco) {
+            dividaBruta = balanco.getEmprestimosEFinanciamentos();
+            logger.debug("DividaBruta: " + dividaBruta);
+        }
+
+        return dividaBruta;
+
+    }
+
+    public double getDividaLiquida() {
+        double dividaBruta = getDividaBruta();
+        double disponivilidades = getDisponivilidades();
+        double dividaLiquida = -1;
+        if (dividaBruta != -1 && disponivilidades != -1) {
+            dividaLiquida = dividaBruta - disponivilidades;
+            logger.debug("DividaLiquida: " + dividaLiquida);
+        }
+        return dividaLiquida;
+    }
+
+    public double getDisponivilidades() {
+        double disponivilidades = -1;
+        BalancoPatrimonial balanco = getBalancoPatrimonialUltimoTrimestre();
+
+        if (null != balanco) {
+            double caixaEEquivalentesDeCaixa = balanco.getCaixaEEquivalentesDeCaixa();
+            double aplicacoesFinanceiras = balanco.getAplicacoesFinanceiras();
+            disponivilidades = (caixaEEquivalentesDeCaixa + aplicacoesFinanceiras);
+            logger.debug("Disponivilidades: " + disponivilidades);
+        }
+
+        return disponivilidades;
+    }
+
+    public double getRelacaoDividaLiquidaPatrimonioLiquido() {
+        BalancoPatrimonial balanco = getBalancoPatrimonialUltimoTrimestre();
+        double relacao = -1;
+        if (null != balanco) {
+            double dividaLiquida = getDividaLiquida();
+            double patrimonioLiquido = balanco.getPatrimonioLiquido();
+            relacao = dividaLiquida / patrimonioLiquido;
+            logger.debug("Relação divida liquida sobre patrimonio liquido: " + relacao);
+        }
+        return relacao;
 
     }
 
@@ -430,7 +480,7 @@ public class ReportFundamentalista {
     }
 
     private DemonstrativoResultado getDemonstrativoResultadoByDate(
-            final Calendar ultimoTrimestre) {
+        final Calendar ultimoTrimestre) {
         String trimestre = ReportUtil.formatDate(ultimoTrimestre.getTime());
 
         DemonstrativoResultado demonstrativoResultado = null;
