@@ -5,13 +5,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
 import org.apache.log4j.Logger;
-
 import com.snk.fundamentus.enums.Trimestre;
 import com.snk.fundamentus.models.BalancoPatrimonial;
 import com.snk.fundamentus.models.DemonstrativoResultado;
 import com.snk.fundamentus.models.Empresa;
+
 
 public class ReportFundamentalista {
 
@@ -36,12 +35,24 @@ public class ReportFundamentalista {
         return ((double) empresa.getDemonstracao12meses().getLucroLiquido() / empresa.getNumeroDeAcoes());
     }
 
-    /*
-     * PRECO POR LUCRO P ACAO
+    /**
+     * indica que para preço e lucro constantes, serão necessários X anos para
+     * recuperar o capital
+     * 
+     * @return
      */
     public double getPL() {
         double pl = empresa.getCotacao() / getLPA();
         return pl;
+    }
+
+    /**
+     * Indica a taxa de lucratividade anual da ação
+     * 
+     * @return
+     */
+    public double getLucratividadePL() {
+        return (1 / getPL()) * 100;
     }
 
     /**
@@ -51,7 +62,7 @@ public class ReportFundamentalista {
      */
     public double getVPA() {
         double vpa = (double) empresa.getBalanco().getPatrimonioLiquido()
-                / empresa.getNumeroDeAcoes();
+            / empresa.getNumeroDeAcoes();
         return vpa;
     }
 
@@ -194,7 +205,7 @@ public class ReportFundamentalista {
 
             }
             liquidezGeral = (ativosCirculantes + ativoRealizavelALongoPrazo)
-                    / (passivosCirculantes + passivoNaoCirculante);
+                / (passivosCirculantes + passivoNaoCirculante);
         }
 
         return liquidezGeral;
@@ -470,20 +481,48 @@ public class ReportFundamentalista {
         return lucroAno;
     }
 
+    /**
+     * Desenvolvido por James Tobin, em 1969, o 'q' de Tobin é calculado
+     * dividindo-se o valor da firma (valor de mercado mais as dívidas) pelo
+     * valor de reposição dos seus ativos (VRA). Este representa o desembolso
+     * teórico para se adquirir novamente os bens operacionais da companhia. É
+     * obtido pelo seguinte calculo (valor de mercado + passivo circulante +
+     * divida de longo prazo - ativo circulante) / valor total dos ativos
+     * 
+     * @return
+     */
+    public double getQdeTobin() {
+        BalancoPatrimonial balanco = getBalancoPatrimonialUltimoTrimestre();
+        double qTobin = 0;
+
+        if (null != balanco) {
+            double soma = empresa.getValorMercado() + balanco.getPassivoCirculante()
+                + balanco.getEmprestimosEFinanciamentos();
+            qTobin = (soma - balanco.getAtivoCirculante()) / balanco.getAtivoTotal();
+        }
+
+        return qTobin;
+
+    }
+
     public boolean isLucroMedio3AnosAcima4PorCento() {
         double percentual = 0;
         int anos = 3;
-        logger.debug("#####################" + empresa.getSigla() + "#######################");
-        logger.debug("Lucro Medio dos últimos [" + anos + "] anos. Começando em [" + getAno() + "]");
+        logger.debug("#####################" + empresa.getSigla()
+            + "#######################");
+        logger.debug("Lucro Medio dos últimos [" + anos + "] anos. Começando em ["
+            + getAno() + "]");
 
         for (int i = anos; i > 0; i--) {
             int anoInicial = ano - i;
             int anoAnterior = ano - (i - 1);
 
-            logger.debug("Contabilizando o lucro do ano de [" + anoAnterior + "] menos o ano de [" + anoInicial + "]");
+            logger.debug("Contabilizando o lucro do ano de [" + anoAnterior
+                + "] menos o ano de [" + anoInicial + "]");
             double lucroPorAno = getLucroPorAno(anoInicial);
             double lucroPorAnoAnterior = getLucroPorAno(anoAnterior);
-            logger.debug("Ano: [" + anoAnterior + "] - Lucro: [" + lucroPorAnoAnterior + "]");
+            logger.debug("Ano: [" + anoAnterior + "] - Lucro: [" + lucroPorAnoAnterior
+                + "]");
             logger.debug("Ano: [" + anoInicial + "] - Lucro: [" + lucroPorAno + "]");
 
             double aumento_reducao = ((lucroPorAnoAnterior - lucroPorAno) / lucroPorAnoAnterior) * 100;
@@ -521,7 +560,7 @@ public class ReportFundamentalista {
     }
 
     private DemonstrativoResultado getDemonstrativoResultadoByDate(
-            final Calendar ultimoTrimestre) {
+        final Calendar ultimoTrimestre) {
         String trimestre = ReportUtil.formatDate(ultimoTrimestre.getTime());
 
         DemonstrativoResultado demonstrativoResultado = null;

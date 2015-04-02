@@ -2,15 +2,17 @@ package com.snk.fundamentus.report;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import jxl.common.Logger;
 import com.snk.fundamentus.database.DaoFactory;
 import com.snk.fundamentus.enums.MetodoInvestimento;
 import com.snk.fundamentus.models.Empresa;
+
 
 public class GuruMethod {
 
     private final DaoFactory daoFactory = new DaoFactory();
     private final List<Empresa> lstEmpresa;
+    private Logger logger = Logger.getLogger(GuruMethod.class);
 
     private GuruMethod() {
         lstEmpresa = new ArrayList<Empresa>();
@@ -21,8 +23,8 @@ public class GuruMethod {
     }
 
     public static GuruMethod getGurusMethodInstance(
-            final MetodoInvestimento method,
-            final int ano) {
+        final MetodoInvestimento method,
+        final int ano) {
         GuruMethod guru = null;
 
         if (MetodoInvestimento.Grahan.equals(method)) {
@@ -45,8 +47,12 @@ public class GuruMethod {
             boolean teveLucroUltimos32Semestres = report.teveLucroUltimos32Semestres();
             boolean lucroMedio3AnosAcima4PorCento = report.isLucroMedio3AnosAcima4PorCento();
 
+            double qdeTobin = report.getQdeTobin();
+            logger.info("O Q de Tobin encontrado para empresa [" + empresa.getSigla()
+                + "] é de [" + qdeTobin + "]");
+
             if (vendasSubstanciais && liquidezCorrente && relacaoDividaPatrimonio
-                    && teveLucroUltimos32Semestres && lucroMedio3AnosAcima4PorCento) {
+                && teveLucroUltimos32Semestres && lucroMedio3AnosAcima4PorCento) {
                 getLstEmpresa().add(empresa);
             }
 

@@ -1,11 +1,10 @@
 package com.snk.fundamentus.report;
 
 import java.util.List;
-
 import org.apache.log4j.Logger;
-
 import com.snk.fundamentus.enums.MetodoInvestimento;
 import com.snk.fundamentus.models.Empresa;
+
 
 public class ReportFundamentus {
 
@@ -16,7 +15,8 @@ public class ReportFundamentus {
         List<Empresa> lstEmpresa = guru.getLstEmpresa();
 
         for (Empresa empresa : lstEmpresa) {
-            logger.info("Empresa [" + empresa.getSigla() + "] se enquadra no método Graham.");
+            logger.info("Empresa [" + empresa.getSigla()
+                + "] se enquadra no método Graham.");
         }
 
     }
@@ -33,17 +33,24 @@ public class ReportFundamentus {
 
             count++;
             logger.info("Empresa [" + empresa.getSigla()
-                    + "] teve lucro nos últimos 32 semestres");
-
-            logger.info("####################LIQUIDEZ####################");
-            logger.info("Liquidez Corrente ano 2014: [" + report.getLiquidezCorrentePorAno() + "]");
-            logger.info("Liquidez Geral ano 2014: [" + report.getLiquidezGeral() + "]");
-            logger.info("Liquidez Imediata ano 2014: [" + report.getLiquidezImediata() + "]");
-            logger.info("Liquidez Seca ano 2014: [" + report.getLiquidezSeca() + "]");
-            logger.info("########################################");
-
-            logger.info("Indice de Lucratividade ano 2014:[" + report.getIndiceLucratividade() + "]");
-            logger.info("Indice de Rotatividade ano 2014:[" + report.getIndiceRotatividade() + "]");
+                + "] teve lucro nos últimos 32 semestres");
+            /*
+             * logger.info("####################LIQUIDEZ####################");
+             * logger.info("Liquidez Corrente ano 2014: [" +
+             * report.getLiquidezCorrentePorAno() + "]");
+             * logger.info("Liquidez Geral ano 2014: [" +
+             * report.getLiquidezGeral() + "]");
+             * logger.info("Liquidez Imediata ano 2014: [" +
+             * report.getLiquidezImediata() + "]");
+             * logger.info("Liquidez Seca ano 2014: [" +
+             * report.getLiquidezSeca() + "]");
+             * logger.info("########################################");
+             * 
+             * logger.info("Indice de Lucratividade ano 2014:[" +
+             * report.getIndiceLucratividade() + "]");
+             * logger.info("Indice de Rotatividade ano 2014:[" +
+             * report.getIndiceRotatividade() + "]");
+             */
 
         }
         return count;
