@@ -2,10 +2,10 @@ package com.snk.fundamentus.report;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.snk.fundamentus.database.DaoFactory;
 import com.snk.fundamentus.enums.MetodoInvestimento;
 import com.snk.fundamentus.models.Empresa;
-
 
 public class GuruMethod {
 
@@ -21,8 +21,8 @@ public class GuruMethod {
     }
 
     public static GuruMethod getGurusMethodInstance(
-        final MetodoInvestimento method,
-        final int ano) {
+            final MetodoInvestimento method,
+            final int ano) {
         GuruMethod guru = null;
 
         if (MetodoInvestimento.Grahan.equals(method)) {
@@ -41,11 +41,12 @@ public class GuruMethod {
             ReportFundamentalista report = new ReportFundamentalista(empresa, ano);
             boolean vendasSubstanciais = report.getVendasPorAno() > 250000000;
             boolean liquidezCorrente = report.getLiquidezCorrentePorAno() >= 1;
-            boolean relacaoDividaPatrimonio = report.getRelacaoDividaLiquidaPatrimonioLiquido() > 0.5;
+            boolean relacaoDividaPatrimonio = report.getRelacaoDividaLiquidaPatrimonioLiquido() <= 0.5;
             boolean teveLucroUltimos32Semestres = report.teveLucroUltimos32Semestres();
+            boolean lucroMedio3AnosAcima4PorCento = report.isLucroMedio3AnosAcima4PorCento();
 
             if (vendasSubstanciais && liquidezCorrente && relacaoDividaPatrimonio
-                && teveLucroUltimos32Semestres) {
+                    && teveLucroUltimos32Semestres && lucroMedio3AnosAcima4PorCento) {
                 getLstEmpresa().add(empresa);
             }
 

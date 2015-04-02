@@ -5,12 +5,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
 import org.apache.log4j.Logger;
+
 import com.snk.fundamentus.enums.Trimestre;
 import com.snk.fundamentus.models.BalancoPatrimonial;
 import com.snk.fundamentus.models.DemonstrativoResultado;
 import com.snk.fundamentus.models.Empresa;
-
 
 public class ReportFundamentalista {
 
@@ -50,7 +51,7 @@ public class ReportFundamentalista {
      */
     public double getVPA() {
         double vpa = (double) empresa.getBalanco().getPatrimonioLiquido()
-            / empresa.getNumeroDeAcoes();
+                / empresa.getNumeroDeAcoes();
         return vpa;
     }
 
@@ -193,7 +194,7 @@ public class ReportFundamentalista {
 
             }
             liquidezGeral = (ativosCirculantes + ativoRealizavelALongoPrazo)
-                / (passivosCirculantes + passivoNaoCirculante);
+                    / (passivosCirculantes + passivoNaoCirculante);
         }
 
         return liquidezGeral;
@@ -454,6 +455,46 @@ public class ReportFundamentalista {
 
     }
 
+    public double getLucroPorAno(final int ano) {
+        double lucroAno = 0;
+
+        List<DemonstrativoResultado> demonstrativoList = getListaDemonstrativoResultadoPorAno(ano);
+
+        if (null != demonstrativoList) {
+            for (DemonstrativoResultado demonstrativoResultado : demonstrativoList) {
+                lucroAno += demonstrativoResultado.getLucro_PrejuizoPeriodo();
+
+            }
+        }
+
+        return lucroAno;
+    }
+
+    public boolean isLucroMedio3AnosAcima4PorCento() {
+        double percentual = 0;
+        int anos = 3;
+        logger.debug("#####################" + empresa.getSigla() + "#######################");
+        logger.debug("Lucro Medio dos últimos [" + anos + "] anos. Começando em [" + getAno() + "]");
+
+        for (int i = anos; i > 0; i--) {
+            int anoInicial = ano - i;
+            int anoAnterior = ano - (i - 1);
+
+            logger.debug("Contabilizando o lucro do ano de [" + anoAnterior + "] menos o ano de [" + anoInicial + "]");
+            double lucroPorAno = getLucroPorAno(anoInicial);
+            double lucroPorAnoAnterior = getLucroPorAno(anoAnterior);
+            logger.debug("Ano: [" + anoAnterior + "] - Lucro: [" + lucroPorAnoAnterior + "]");
+            logger.debug("Ano: [" + anoInicial + "] - Lucro: [" + lucroPorAno + "]");
+
+            double aumento_reducao = ((lucroPorAnoAnterior - lucroPorAno) / lucroPorAnoAnterior) * 100;
+            percentual += aumento_reducao;
+
+            logger.debug("Aumento/redução de [" + percentual + "]");
+        }
+
+        return (percentual / anos) >= 4;
+    }
+
     private BalancoPatrimonial getBalancoPatrimonialUltimoTrimestre() {
 
         Calendar ultimoTrimestre = ReportUtil.getUltimoTrimestre(Calendar.getInstance());
@@ -480,7 +521,7 @@ public class ReportFundamentalista {
     }
 
     private DemonstrativoResultado getDemonstrativoResultadoByDate(
-        final Calendar ultimoTrimestre) {
+            final Calendar ultimoTrimestre) {
         String trimestre = ReportUtil.formatDate(ultimoTrimestre.getTime());
 
         DemonstrativoResultado demonstrativoResultado = null;
