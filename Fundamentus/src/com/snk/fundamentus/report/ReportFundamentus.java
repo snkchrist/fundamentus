@@ -1,10 +1,12 @@
 package com.snk.fundamentus.report;
 
 import java.util.List;
+
 import org.apache.log4j.Logger;
+
+import com.snk.fundamentus.database.EmpresaDao;
 import com.snk.fundamentus.enums.MetodoInvestimento;
 import com.snk.fundamentus.models.Empresa;
-
 
 public class ReportFundamentus {
 
@@ -16,7 +18,20 @@ public class ReportFundamentus {
 
         for (Empresa empresa : lstEmpresa) {
             logger.info("Empresa [" + empresa.getSigla()
-                + "] se enquadra no método Graham.");
+                    + "] se enquadra no método Graham.");
+        }
+
+        EmpresaDao empresaDao = new EmpresaDao();
+        List<Empresa> listAllElements = empresaDao.listAllElements();
+
+        for (Empresa empresa : listAllElements) {
+            ReportFundamentalista rep = new ReportFundamentalista(empresa, 2014);
+            double qdeTobin = rep.getQdeTobin();
+
+            if (qdeTobin >= 1) {
+                logger.info("Empresa [" + empresa.getSigla() + "] possui Q de Tobin iqual a [" + qdeTobin + "]");
+            }
+
         }
 
     }
@@ -33,7 +48,7 @@ public class ReportFundamentus {
 
             count++;
             logger.info("Empresa [" + empresa.getSigla()
-                + "] teve lucro nos últimos 32 semestres");
+                    + "] teve lucro nos últimos 32 semestres");
             /*
              * logger.info("####################LIQUIDEZ####################");
              * logger.info("Liquidez Corrente ano 2014: [" +
@@ -45,7 +60,7 @@ public class ReportFundamentus {
              * logger.info("Liquidez Seca ano 2014: [" +
              * report.getLiquidezSeca() + "]");
              * logger.info("########################################");
-             * 
+             *
              * logger.info("Indice de Lucratividade ano 2014:[" +
              * report.getIndiceLucratividade() + "]");
              * logger.info("Indice de Rotatividade ano 2014:[" +
