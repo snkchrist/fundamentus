@@ -66,7 +66,7 @@ public class DownloadData {
 
     public void downloadXlsFiles()
             throws ClientProtocolException, IOException {
-        String sid = "bt041t0mhl5v2h8gu9h5thldk1";
+        String sid = "ff71jkjnk8crugs0n1l5i6l1g7";
         String balancoUrl = "http://www.fundamentus.com.br/balancos.php?papel={0}&tipo=1";
         String downloadUrl = "http://www.fundamentus.com.br/planilhas.php?SID={0}";
 
@@ -81,7 +81,7 @@ public class DownloadData {
             HttpEntity entity = download(download);
 
             if (entity != null) {
-                String string = "Path where you want to save the files";
+                String string = "C:\\Users\\ribeifil\\Desktop\\xlsFiles\\";
 
                 String fileName = java.text.MessageFormat.format(string + "{0}.rar",
                         empEnum.name());
@@ -97,45 +97,23 @@ public class DownloadData {
 
     public static void main(final String[] args)
             throws ClientProtocolException, XPathExpressionException, IOException, ParserConfigurationException {
-        // new DownloadFundamentusData().getAllInformation();
 
-        //        final Database<Empresa> base = new Database<Empresa>(Empresa.class);
-        //
-        //        final List<Empresa> listAllElements = base.listAllElements();
-        //
-        //        for (final Empresa empresa : listAllElements) {
-        //
-        //            double osc = empresa.getOscilacoes().getAno2010() +
-        //                    empresa.getOscilacoes().getAno2011() +
-        //                    empresa.getOscilacoes().getAno2012() +
-        //                    empresa.getOscilacoes().getAno2013() +
-        //                    empresa.getOscilacoes().getAno2014() +
-        //                    empresa.getOscilacoes().getAno2015();
-        //
-        //            if ((osc / 5) > 13.5) {
-        //
-        //                double numeroDeAcoes = empresa.getNumeroDeAcoes();
-        //                double lpa = ((double) empresa.getDemonstracao12meses().getLucroLiquido() / numeroDeAcoes);
-        //                double pl = empresa.getCotacao() / lpa;
-        //                double vpa = (double) empresa.getBalanco().getPatrimonioLiquido() / numeroDeAcoes;
-        //                double pvpa = empresa.getCotacao() / vpa;
-        //
-        //                if (pl < 10) {
-        //                    System.out.println("[" + empresa.getSigla() + "]");
-        //                    System.out.println("Nome:" + empresa.getNome());
-        //                    System.out.println("Oscilação nos últimos 5 anos: " + osc);
-        //                    System.out.println("LPA: " + lpa);
-        //                    System.out.println("P/L: " + pl);
-        //                    System.out.println("VPA: " + vpa);
-        //                    System.out.println("P/VPA: " + pvpa);
-        //                }
-        //            }
-        //
-        //        }
+        DownloadData data = new DownloadData();
+        /*
+         * data.downloadXlsFiles();
+         */
 
+        File files = new File("C:\\Users\\ribeifil\\Desktop\\xlsFiles\\");
+        if (files.isDirectory()) {
+            File[] listFiles = files.listFiles();
+
+            for (File file : listFiles) {
+                data.getZipFiles(file, "C:\\Users\\ribeifil\\Desktop\\xlsFiles\\xls\\");
+            }
+        }
     }
 
-    private static void UnzipFundamentFiles(final File folderToGetFiles, final String folderToExtract)
+    private void UnzipFundamentFiles(final File folderToGetFiles, final String folderToExtract)
             throws IOException {
         DownloadData downloadData = new DownloadData();
 

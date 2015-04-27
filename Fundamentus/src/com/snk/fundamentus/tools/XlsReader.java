@@ -65,7 +65,7 @@ public class XlsReader {
                 List<DemonstrativoResultado> readOldXLSFiles = reader.readOldXLSFiles(file2);
                 String acaoOlhar = file2.getName().replaceFirst("[.][^.]+$", "");
 
-                Empresa empresa = empresaDao.findListBySigla(acaoOlhar);
+                Empresa empresa = empresaDao.findEmpresaBySigla(acaoOlhar);
 
                 if (null != empresa) {
 
