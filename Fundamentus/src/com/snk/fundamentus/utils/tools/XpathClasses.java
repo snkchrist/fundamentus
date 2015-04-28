@@ -1,4 +1,4 @@
-package com.snk.fundamentus.tools;
+package com.snk.fundamentus.utils.tools;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

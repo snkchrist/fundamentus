@@ -2,11 +2,11 @@ package com.snk.fundamentus.models;
 
 import java.util.Date;
 import java.util.List;
+
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-
 
 @Entity
 public class Empresa {
@@ -222,7 +222,7 @@ public class Empresa {
         return ultimoBalancoRegistrado;
     }
 
-    public void setUltimoBalancoRegistrado(Date ultimoBalancoRegistrado) {
+    public void setUltimoBalancoRegistrado(final Date ultimoBalancoRegistrado) {
         this.ultimoBalancoRegistrado = ultimoBalancoRegistrado;
     }
 
@@ -230,8 +230,30 @@ public class Empresa {
         return ultimaCotacaoRegistrada;
     }
 
-    public void setUltimaCotacaoRegistrada(Date ultimaCotacaoRegistrada) {
+    public void setUltimaCotacaoRegistrada(final Date ultimaCotacaoRegistrada) {
         this.ultimaCotacaoRegistrada = ultimaCotacaoRegistrada;
     }
 
+    public boolean containsBalancoByDate(final Date date) {
+        if (null != balancoList) {
+            for (BalancoPatrimonial balancoPatrimonial : balancoList) {
+                if (balancoPatrimonial.getDataDoBalanco().equals(date)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public boolean containsDemonstrativoByDate(final Date date) {
+        if (null != demonstrativoList) {
+            for (DemonstrativoResultado demonstrativo : demonstrativoList) {
+                if (demonstrativo.getDataDemonstrativo().equals(date)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

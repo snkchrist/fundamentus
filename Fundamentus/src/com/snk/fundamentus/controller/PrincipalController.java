@@ -35,7 +35,7 @@ public class PrincipalController {
             }
         }
 
-        if (listAllElements.isEmpty() && listAllElements.size() > 0) {
+        if (false == listAllElements.isEmpty() && listAllElements.size() > 0) {
 
             String[] columnHeader = new String[] {
                     "Nome", "Sigla", "Numero de Acões", "Data da última cotação"

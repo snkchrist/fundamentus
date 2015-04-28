@@ -1,13 +1,14 @@
-package com.snk.fundamentus.tools;
+package com.snk.fundamentus.utils.transform;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
+
 import com.snk.fundamentus.models.Balanco;
 import com.snk.fundamentus.models.Demonstrativo12Meses;
 import com.snk.fundamentus.models.Demonstrativo3Meses;
 import com.snk.fundamentus.models.Empresa;
 import com.snk.fundamentus.models.Oscilacoes;
-
+import com.snk.fundamentus.utils.tools.XpathClasses;
 
 public class HtmlConverter {
 
@@ -22,7 +23,7 @@ public class HtmlConverter {
     }
 
     public Empresa getEmpresa()
-        throws XPathExpressionException, ParserConfigurationException {
+            throws XPathExpressionException, ParserConfigurationException {
         final Empresa empresa = htmlToEmpresaObject();
         final Balanco htmlToBalancoObject = htmlToBalancoObject();
         final Oscilacoes htmlToOscilacoes = htmlToOscilacoes();
@@ -39,7 +40,7 @@ public class HtmlConverter {
     }
 
     private Empresa htmlToEmpresaObject()
-        throws ParserConfigurationException, XPathExpressionException {
+            throws ParserConfigurationException, XPathExpressionException {
 
         final Empresa empresa = new Empresa();
 
@@ -64,7 +65,7 @@ public class HtmlConverter {
     }
 
     private Balanco htmlToBalancoObject()
-        throws XPathExpressionException, ParserConfigurationException {
+            throws XPathExpressionException, ParserConfigurationException {
         final Balanco balanco = new Balanco();
         balanco.setAtivos(XpathClasses.getLongFieldFromXpath(html, XpathClasses.ATIVOS));
         balanco.setDisponibilidades(XpathClasses.getLongFieldFromXpath(html, XpathClasses.DISPONIBILIDADES));
@@ -77,7 +78,7 @@ public class HtmlConverter {
     }
 
     private Oscilacoes htmlToOscilacoes()
-        throws XPathExpressionException, ParserConfigurationException {
+            throws XPathExpressionException, ParserConfigurationException {
         final Oscilacoes oscilacoes = new Oscilacoes();
         oscilacoes.setDia(XpathClasses.getDoubleFieldFromXpath(html, XpathClasses.OSCILACAO_DIA));
         oscilacoes.setMes(XpathClasses.getDoubleFieldFromXpath(html, XpathClasses.OSCILACAO_MES));
@@ -94,7 +95,7 @@ public class HtmlConverter {
     }
 
     private Demonstrativo3Meses htmlToDemonstrativo3Meses()
-        throws XPathExpressionException, ParserConfigurationException {
+            throws XPathExpressionException, ParserConfigurationException {
         final Demonstrativo3Meses demonstrativo = new Demonstrativo3Meses();
         demonstrativo.setReceitaLiquida(XpathClasses.getLongFieldFromXpath(html, XpathClasses.RECEITA_LIQUIDA_3_MESES));
         demonstrativo.seteBit(XpathClasses.getLongFieldFromXpath(html, XpathClasses.E_BIT_3_MESES));
@@ -104,7 +105,7 @@ public class HtmlConverter {
     }
 
     private Demonstrativo12Meses htmlToDemonstrativo12Meses()
-        throws XPathExpressionException, ParserConfigurationException {
+            throws XPathExpressionException, ParserConfigurationException {
         final Demonstrativo12Meses demonstrativo = new Demonstrativo12Meses();
         demonstrativo.setReceitaLiquida(XpathClasses.getLongFieldFromXpath(html, XpathClasses.RECEITA_LIQUIDA_12_MESES));
         demonstrativo.setEbit(XpathClasses.getLongFieldFromXpath(html, XpathClasses.E_BIT_12_MESES));

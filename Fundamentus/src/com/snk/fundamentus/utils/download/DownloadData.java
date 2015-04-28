@@ -1,4 +1,4 @@
-package com.snk.fundamentus.tools;
+package com.snk.fundamentus.utils.download;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -26,10 +26,34 @@ import com.snk.fundamentus.database.DaoFactory;
 import com.snk.fundamentus.database.Database;
 import com.snk.fundamentus.enums.EmpEnum;
 import com.snk.fundamentus.models.Empresa;
+import com.snk.fundamentus.utils.transform.HtmlConverter;
 
 public class DownloadData {
+    private static final String SESSION_ID_URL = "ff71jkjnk8crugs0n1l5i6l1g7";
+    private static final String URL_ZIP = "http://www.fundamentus.com.br/planilhas.php?SID={0}";
+    private static final String URL_BALANCO = "http://www.fundamentus.com.br/balancos.php?papel={0}&tipo=1";
+    private static final String DEST_ZIP_FOLDER = "C:\\Users\\ribeifil\\Desktop\\xlsFiles\\xls\\";
+    private static final String DEST_FOLDER = "C:\\Users\\ribeifil\\Desktop\\xlsFiles\\";
     private HttpClient client;
     private final DaoFactory daoFactory = new DaoFactory();
+
+    public static void main(final String[] args)
+            throws ClientProtocolException, XPathExpressionException, IOException, ParserConfigurationException {
+        String destFolder = DEST_FOLDER;
+        String zipDestFolder = DEST_ZIP_FOLDER;
+
+        DownloadData data = new DownloadData();
+        data.downloadXlsFiles(destFolder);
+
+        File files = new File(destFolder);
+        if (files.isDirectory()) {
+            File[] listFiles = files.listFiles();
+
+            for (File file : listFiles) {
+                data.getZipFiles(file, zipDestFolder);
+            }
+        }
+    }
 
     public HttpClient getClient() {
         if (null == client) {
@@ -64,11 +88,11 @@ public class DownloadData {
         return string;
     }
 
-    public void downloadXlsFiles()
+    public void downloadXlsFiles(final String destFolder)
             throws ClientProtocolException, IOException {
-        String sid = "ff71jkjnk8crugs0n1l5i6l1g7";
-        String balancoUrl = "http://www.fundamentus.com.br/balancos.php?papel={0}&tipo=1";
-        String downloadUrl = "http://www.fundamentus.com.br/planilhas.php?SID={0}";
+        String sid = SESSION_ID_URL;
+        String balancoUrl = URL_BALANCO;
+        String downloadUrl = URL_ZIP;
 
         String download = java.text.MessageFormat.format(downloadUrl, sid);
 
@@ -81,7 +105,7 @@ public class DownloadData {
             HttpEntity entity = download(download);
 
             if (entity != null) {
-                String string = "C:\\Users\\ribeifil\\Desktop\\xlsFiles\\";
+                String string = destFolder;
 
                 String fileName = java.text.MessageFormat.format(string + "{0}.rar",
                         empEnum.name());
@@ -93,24 +117,6 @@ public class DownloadData {
         }
 
         System.out.println("DownloadedCompleted");
-    }
-
-    public static void main(final String[] args)
-            throws ClientProtocolException, XPathExpressionException, IOException, ParserConfigurationException {
-
-        DownloadData data = new DownloadData();
-        /*
-         * data.downloadXlsFiles();
-         */
-
-        File files = new File("C:\\Users\\ribeifil\\Desktop\\xlsFiles\\");
-        if (files.isDirectory()) {
-            File[] listFiles = files.listFiles();
-
-            for (File file : listFiles) {
-                data.getZipFiles(file, "C:\\Users\\ribeifil\\Desktop\\xlsFiles\\xls\\");
-            }
-        }
     }
 
     private void UnzipFundamentFiles(final File folderToGetFiles, final String folderToExtract)
