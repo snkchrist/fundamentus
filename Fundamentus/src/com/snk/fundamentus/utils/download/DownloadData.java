@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -21,9 +22,11 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
 
 import com.snk.fundamentus.database.DaoFactory;
 import com.snk.fundamentus.database.Database;
+import com.snk.fundamentus.database.EmpresaDao;
 import com.snk.fundamentus.enums.EmpEnum;
 import com.snk.fundamentus.models.Empresa;
 import com.snk.fundamentus.utils.transform.HtmlConverter;
@@ -36,6 +39,7 @@ public class DownloadData {
     private static final String DEST_FOLDER = "C:\\Users\\ribeifil\\Desktop\\xlsFiles\\";
     private HttpClient client;
     private final DaoFactory daoFactory = new DaoFactory();
+    private final Logger logger = Logger.getLogger(DownloadData.class);
 
     public static void main(final String[] args)
             throws ClientProtocolException, XPathExpressionException, IOException, ParserConfigurationException {
@@ -43,16 +47,18 @@ public class DownloadData {
         String zipDestFolder = DEST_ZIP_FOLDER;
 
         DownloadData data = new DownloadData();
-        data.downloadXlsFiles(destFolder);
+        data.updateEmpresaInformation();
 
-        File files = new File(destFolder);
-        if (files.isDirectory()) {
-            File[] listFiles = files.listFiles();
-
-            for (File file : listFiles) {
-                data.getZipFiles(file, zipDestFolder);
-            }
-        }
+        //   data.downloadXlsFiles(destFolder);
+        //
+        //        File files = new File(destFolder);
+        //        if (files.isDirectory()) {
+        //            File[] listFiles = files.listFiles();
+        //
+        //            for (File file : listFiles) {
+        //                data.getZipFiles(file, zipDestFolder);
+        //            }
+        //        }
     }
 
     public HttpClient getClient() {
@@ -178,6 +184,35 @@ public class DownloadData {
         }
     }
 
+    public void updateEmpresaInformation()
+            throws ClientProtocolException, IOException, XPathExpressionException,
+            ParserConfigurationException {
+        final String url = "http://fundamentus.com.br/detalhes.php?papel=";
+
+        EmpresaDao empresaDao = daoFactory.getEmpresaDao();
+
+        List<Empresa> listAllElements = empresaDao.listAllElements();
+
+        empresaDao.beginTransaction();
+        for (Empresa empresa : listAllElements) {
+            final String downloadHtml = downloadHtml(url + empresa.getSigla());
+            final HtmlConverter obj = new HtmlConverter(downloadHtml);
+            logger.info("Empresa ["
+                    + empresa.getSigla()
+                    + "] foi atualizada pela última vez em ["
+                    + empresa.getDataUltimaCotacao()
+                    + "].");
+            obj.updateEmpresa(empresa);
+            logger.info("Dados atualizados para Empresa ["
+                    + empresa.getSigla()
+                    + "]. Dados coletados são do dia  ["
+                    + empresa.getDataUltimaCotacao()
+                    + "].");
+
+        }
+        empresaDao.commitTransaction();
+    }
+
     public void collectAllInformation()
             throws ClientProtocolException, IOException, XPathExpressionException,
             ParserConfigurationException {
@@ -191,6 +226,5 @@ public class DownloadData {
             final HtmlConverter obj = new HtmlConverter(downloadHtml);
             base.add(obj.getEmpresa());
         }
-
     }
 }

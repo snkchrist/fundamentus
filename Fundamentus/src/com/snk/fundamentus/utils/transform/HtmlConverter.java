@@ -3,12 +3,12 @@ package com.snk.fundamentus.utils.transform;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
+import com.snk.fundamentus.XpathClasses;
 import com.snk.fundamentus.models.Balanco;
 import com.snk.fundamentus.models.Demonstrativo12Meses;
 import com.snk.fundamentus.models.Demonstrativo3Meses;
 import com.snk.fundamentus.models.Empresa;
 import com.snk.fundamentus.models.Oscilacoes;
-import com.snk.fundamentus.utils.tools.XpathClasses;
 
 public class HtmlConverter {
 
@@ -24,7 +24,9 @@ public class HtmlConverter {
 
     public Empresa getEmpresa()
             throws XPathExpressionException, ParserConfigurationException {
-        final Empresa empresa = htmlToEmpresaObject();
+        Empresa empresa = new Empresa();
+        empresa = htmlToEmpresaObject(empresa);
+
         final Balanco htmlToBalancoObject = htmlToBalancoObject();
         final Oscilacoes htmlToOscilacoes = htmlToOscilacoes();
         final Demonstrativo3Meses htmlToDemonstrativo3Meses = htmlToDemonstrativo3Meses();
@@ -39,14 +41,14 @@ public class HtmlConverter {
 
     }
 
-    private Empresa htmlToEmpresaObject()
+    private Empresa htmlToEmpresaObject(final Empresa empresa)
             throws ParserConfigurationException, XPathExpressionException {
 
-        final Empresa empresa = new Empresa();
+        if (null != empresa && (null == empresa.getSigla() || empresa.getSigla().isEmpty())) {
+            empresa.setSigla(XpathClasses.getFieldFromXpath(html, XpathClasses.NAME));
+        }
 
-        empresa.setSigla(XpathClasses.getFieldFromXpath(html, XpathClasses.NAME));
         empresa.setTipo(XpathClasses.getFieldFromXpath(html, XpathClasses.TIPO));
-
         empresa.setNome(XpathClasses.getFieldFromXpath(html, XpathClasses.NOME_EMPRESA));
         empresa.setSetor(XpathClasses.getFieldFromXpath(html, XpathClasses.SETOR));
 
@@ -114,4 +116,8 @@ public class HtmlConverter {
         return demonstrativo;
     }
 
+    public void updateEmpresa(final Empresa empresa)
+            throws XPathExpressionException, ParserConfigurationException {
+        htmlToEmpresaObject(empresa);
+    }
 }

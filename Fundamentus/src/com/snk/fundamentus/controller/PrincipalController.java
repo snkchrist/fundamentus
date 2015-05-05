@@ -2,21 +2,29 @@ package com.snk.fundamentus.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.lang.reflect.Field;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.swing.table.TableModel;
 
 import com.snk.fundamentus.database.DaoFactory;
+import com.snk.fundamentus.interfaces.ITelaPrincipal;
 import com.snk.fundamentus.models.Empresa;
-import com.snk.fundamentus.ui.TelaPrincipal;
+import com.snk.fundamentus.models.RepresentableOnTable;
 
 public class PrincipalController {
-    private final TelaPrincipal principal;
+    private final ITelaPrincipal view;
     private final DaoFactory daoFactory;
 
-    public PrincipalController(final TelaPrincipal principal) {
-        this.principal = principal;
+    public PrincipalController(final ITelaPrincipal iView) {
+        this.view = iView;
         this.daoFactory = new DaoFactory();
     }
 
@@ -65,20 +73,117 @@ public class PrincipalController {
         return model;
     }
 
+    private void buildTextSearchTableModel() {
+        String textSearch = view.getTextSearch();
+        TableModel stockModel = getStockModel(textSearch);
+
+        if (null != stockModel) {
+            view.setTblAcoesModel(stockModel);
+        }
+    }
+
+    private TableStockModel buildBasicDetailsTableModel()
+            throws IllegalArgumentException, IllegalAccessException {
+        int selectedRowAtTblAcoes = view.getSelectedRowAtTblAcoes();
+
+        String empSigla = (String) view.getSelectedObjectAtTblAcoes(selectedRowAtTblAcoes, 1);
+
+        Empresa empresa = daoFactory.getEmpresaDao().findEmpresaBySigla(empSigla);
+        TableStockModel model = null;
+
+        Object[][] model2dArray = buildTableModelGenerically(empresa, "com.snk.fundamentus", null);
+        model = new TableStockModel(model2dArray, new String[] {
+                "Name", "Valor"
+        });
+        return model;
+    }
+
+    private Object[][] buildTableModelGenerically(final Object obj, final String classNameContains, Map<String, Object> map)
+            throws IllegalAccessException {
+        Object[][] twoDimObject = null;
+
+        if (null != obj && obj.getClass().getName().contains(classNameContains)) {
+            if (null == map) {
+                map = new TreeMap<String, Object>();
+            }
+
+            Field[] fields = obj.getClass().getDeclaredFields();
+
+            for (Field field : fields) {
+                if (field.isAnnotationPresent(RepresentableOnTable.class)) {
+                    RepresentableOnTable[] annotationsByType = field.getAnnotationsByType(RepresentableOnTable.class);
+                    String name = annotationsByType[0].name();
+                    String format = annotationsByType[0].format();
+
+                    field.setAccessible(true);
+                    Object value = field.get(obj);
+
+                    if (null != format && false == format.isEmpty()) {
+
+                        try {
+                            DateFormat dateformat = DateFormat.getDateInstance();
+                            Date parse = dateformat.parse(value.toString());
+                            value = String.format(format, parse);
+                        }
+                        catch (Exception exp) {
+                        }
+                    }
+
+                    map.put(name, value);
+                }
+                else if (Object.class.isAssignableFrom(field.getType())) {
+                    field.setAccessible(true);
+                    buildTableModelGenerically(field.get(obj), classNameContains, map);
+                }
+            }
+
+            twoDimObject = convertHashMapTo2dArrayObject(map);
+        }
+        return twoDimObject;
+    }
+
+    private Object[][] convertHashMapTo2dArrayObject(final Map<String, Object> map) {
+        int size = map.values().size();
+        Object[][] object = new Object[size][2];
+        Object[] keyArray = map.keySet().toArray();
+        Object[] valueArray = map.values().toArray();
+
+        for (int i = 0; i < size; i++) {
+            object[i][0] = keyArray[i].toString();
+            object[i][1] = valueArray[i].toString();
+        }
+        return object;
+    }
+
     public ActionListener getBtnBuscarActionListener() {
         ActionListener btnActionListener = new ActionListener() {
 
             @Override
             public void actionPerformed(final ActionEvent arg0) {
-                String textSearch = principal.getTextSearch();
-                TableModel stockModel = getStockModel(textSearch);
-
-                if (null != stockModel) {
-                    principal.setTblAcoesModel(stockModel);
-                }
+                buildTextSearchTableModel();
             }
         };
 
         return btnActionListener;
+    }
+
+    public MouseAdapter getTblAcoesMouseAdapter() {
+        MouseAdapter mouseAdapter = new MouseAdapter() {
+            @Override
+            public void mouseClicked(final MouseEvent arg0) {
+                TableStockModel buildBasicDetailsTableModel = null;
+                try {
+                    buildBasicDetailsTableModel = buildBasicDetailsTableModel();
+                }
+                catch (IllegalArgumentException | IllegalAccessException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                view.setTblDetalhesBasicosModel(buildBasicDetailsTableModel);
+
+            }
+        };
+
+        return mouseAdapter;
     }
 }

@@ -1,19 +1,20 @@
-package com.snk.fundamentus.utils.tools;
+package com.snk.fundamentus;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+
 import org.apache.commons.lang.StringEscapeUtils;
 import org.htmlcleaner.CleanerProperties;
 import org.htmlcleaner.DomSerializer;
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
-
 
 public class XpathClasses {
 
@@ -98,8 +99,8 @@ public class XpathClasses {
         return str.replace(".", "").replace("%", "").replace(",", ".");
     }
 
-    public static String getFieldFromXpath(String html, String x)
-        throws ParserConfigurationException, XPathExpressionException {
+    public static String getFieldFromXpath(final String html, final String x)
+            throws ParserConfigurationException, XPathExpressionException {
         TagNode tagNode = new HtmlCleaner().clean(html);
         org.w3c.dom.Document doc = new DomSerializer(new CleanerProperties()).createDOM(tagNode);
 
@@ -116,8 +117,8 @@ public class XpathClasses {
         return str;
     }
 
-    public static Date getDateFieldFromXpath(String html, String x)
-        throws XPathExpressionException, ParserConfigurationException {
+    public static Date getDateFieldFromXpath(final String html, final String x)
+            throws XPathExpressionException, ParserConfigurationException {
         Date value = null;
         try {
             String fieldFromXpath = getFieldFromXpath(html, x);
@@ -133,8 +134,8 @@ public class XpathClasses {
         return value;
     }
 
-    public static Long getLongFieldFromXpath(String html, String x)
-        throws XPathExpressionException, ParserConfigurationException {
+    public static Long getLongFieldFromXpath(final String html, final String x)
+            throws XPathExpressionException, ParserConfigurationException {
         Long value = 0L;
         try {
             String fieldFromXpath = getFieldFromXpath(html, x);
@@ -147,8 +148,8 @@ public class XpathClasses {
         return value;
     }
 
-    public static Double getDoubleFieldFromXpath(String html, String x)
-        throws XPathExpressionException, ParserConfigurationException {
+    public static Double getDoubleFieldFromXpath(final String html, final String x)
+            throws XPathExpressionException, ParserConfigurationException {
 
         Double value = 0.0;
 

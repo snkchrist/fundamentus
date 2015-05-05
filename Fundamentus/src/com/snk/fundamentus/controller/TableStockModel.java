@@ -7,8 +7,12 @@ public class TableStockModel extends AbstractTableModel {
      *
      */
     private static final long serialVersionUID = 1L;
-    private final String[] columnNames;
-    private final Object[][] data;
+    private String[] columnNames = new String[] {};
+    private Object[][] data = new Object[][] {};
+
+    public TableStockModel() {
+
+    }
 
     public TableStockModel(final Object[][] data, final String[] columnNames) {
         this.columnNames = columnNames;

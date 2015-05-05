@@ -15,34 +15,46 @@ public class Empresa {
     @GeneratedValue
     private long id;
 
+    @RepresentableOnTable(name = "Sigla")
     private String sigla;
 
     private String tipo;
 
+    @RepresentableOnTable(name = "Nome")
     private String nome;
 
+    @RepresentableOnTable(name = "Setor")
     private String setor;
 
+    @RepresentableOnTable(name = "Sub-Setor")
     private String subSetor;
 
+    @RepresentableOnTable(name = "Cotação")
     private Double cotacao;
 
+    @RepresentableOnTable(name = "Data da última cotação", format = "%1$te/%1$tm/%1$tY")
     private String dataUltimaCotacao;
 
     private Date ultimaCotacaoRegistrada;
 
+    @RepresentableOnTable(name = "Valor mínimo nas últimas 52 semanas")
     private Double minimo52Semanas;
 
+    @RepresentableOnTable(name = "Valor máximo nas últimas 52 semanas")
     private Double maximo52Semanas;
 
     private Long volumeMedio2Meses;
 
+    @RepresentableOnTable(name = "Último balanço registrado", format = "%1$te/%1$tm/%1$tY")
     private Date ultimoBalancoRegistrado;
 
+    @RepresentableOnTable(name = "Numero total de ações emitidas")
     private Long numeroDeAcoes;
 
+    @RepresentableOnTable(name = "Valor de Mercado")
     private Long valorMercado;
 
+    @RepresentableOnTable(name = "Valor da Empresa")
     private Long valorEmpresa;
 
     @Embedded

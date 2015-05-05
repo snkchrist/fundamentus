@@ -4,8 +4,11 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class Demonstrativo12Meses {
+    @RepresentableOnTable(name = "Receita liquida em 12 meses")
     private Long receitaLiquida;
+    @RepresentableOnTable(name = "Ebit/Lucro antes impostos/taxas - 12 meses")
     private Long eBit;
+    @RepresentableOnTable(name = "Lucro liquido em 12 meses")
     private Long lucroLiquido;
 
     public Long getReceitaLiquida() {
@@ -31,5 +34,4 @@ public class Demonstrativo12Meses {
     public void setLucroLiquido(final Long lucroLiquido) {
         this.lucroLiquido = lucroLiquido;
     }
-
 }

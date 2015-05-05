@@ -1,0 +1,15 @@
+public class macro {
+    Sub OpenFiles()
+    Dim MyFolder As String
+    Dim MyFile As String
+    MyFolder = "C:\Users\USER\Desktop\xlsFiles\xls"
+    MyFile = Dir(MyFolder & "\*.xls")
+    
+    While MyFile <> ""
+        Workbooks.Open Filename:=MyFolder & "\" & MyFile
+        ActiveWorkbook.Save
+        ActiveWorkbook.Close
+        MyFile = Dir
+    Wend
+    End Sub
+}

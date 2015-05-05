@@ -5,11 +5,17 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class Balanco {
 
+    @RepresentableOnTable(name = "Ativos")
     private Long ativos;
+    @RepresentableOnTable(name = "Disponibilidades")
     private Long disponibilidades;
+    @RepresentableOnTable(name = "Ativos Circulantes")
     private Long ativosCirculantes;
+    @RepresentableOnTable(name = "Divida Bruta")
     private Long dividaBruta;
+    @RepresentableOnTable(name = "Divida Liquida")
     private Long dividaLiquida;
+    @RepresentableOnTable(name = "Patrimonio Liquido")
     private Long patrimonioLiquido;
 
     public Long getAtivos() {

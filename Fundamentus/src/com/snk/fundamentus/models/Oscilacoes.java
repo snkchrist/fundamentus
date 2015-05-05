@@ -5,14 +5,23 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class Oscilacoes {
     private Double dia;
+    @RepresentableOnTable(name = "Oscilação do Mês")
     private Double mes;
+    @RepresentableOnTable(name = "Oscilação dos últimos 30 dias")
     private Double ultimos30Dias;
+    @RepresentableOnTable(name = "Oscilação dos últimos 12 meses")
     private Double ultimos12Meses;
+    @RepresentableOnTable(name = "Oscilação Ano 2015")
     private Double ano2015;
+    @RepresentableOnTable(name = "Oscilação Ano 2014")
     private Double ano2014;
+    @RepresentableOnTable(name = "Oscilação Ano 2013")
     private Double ano2013;
+    @RepresentableOnTable(name = "Oscilação Ano 2012")
     private Double ano2012;
+    @RepresentableOnTable(name = "Oscilação Ano 2011")
     private Double ano2011;
+    @RepresentableOnTable(name = "Oscilação Ano 2010")
     private Double ano2010;
 
     public Double getDia() {
