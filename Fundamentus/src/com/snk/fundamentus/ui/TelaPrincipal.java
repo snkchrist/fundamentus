@@ -4,7 +4,6 @@ import java.awt.EventQueue;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -12,6 +11,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.TableModel;
 
@@ -28,6 +28,8 @@ public class TelaPrincipal implements ITelaPrincipal {
     private JScrollPane scrollPane;
     private PrincipalController controller;
     private JTable tblDetalhesBasicos;
+    private JTabbedPane tabbedPaneBalancos;
+    private JTabbedPane tabbedPaneDemonstrativos;
 
     /**
      * Launch the application.
@@ -36,6 +38,8 @@ public class TelaPrincipal implements ITelaPrincipal {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
+                    UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+
                     TelaPrincipal window = new TelaPrincipal();
                     window.frmStocksearch.setVisible(true);
                 }
@@ -105,18 +109,64 @@ public class TelaPrincipal implements ITelaPrincipal {
 
         JPanel pnlDetalhes = new JPanel();
         pnlDetalhes.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-        pnlDetalhes.setLayout(new MigLayout("", "[]", "[grow][grow]"));
+        pnlDetalhes.setLayout(new MigLayout("", "[grow]", "[grow]"));
         panel.add(pnlDetalhes, "cell 1 1 2 1,grow");
+        //pnlDetalhes.setLayout(new MigLayout("", "[grow]", "[][grow]"));
 
-        JLabel lblDetalhes = new JLabel("Detalhes:");
-        pnlDetalhes.setLayout(new MigLayout("", "[grow]", "[][grow]"));
-        pnlDetalhes.add(lblDetalhes, "cell 0 0, wrap");
+        JTabbedPane tabbedPaneAcao = new JTabbedPane(JTabbedPane.TOP);
+        tabbedPaneAcao.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        pnlDetalhes.add(tabbedPaneAcao, "grow");
+
+        JPanel pnlDetalhesBasicos = new JPanel();
+        tabbedPaneAcao.addTab("Detalhes", null, pnlDetalhesBasicos, null);
+        pnlDetalhesBasicos.setLayout(new MigLayout("", "[grow, fill]", "[grow, fill]"));
 
         tblDetalhesBasicos = new JTable();
-        pnlDetalhes.add(tblDetalhesBasicos, "grow");
+        pnlDetalhesBasicos.add(tblDetalhesBasicos, "cell 0 0,grow");
+
+        JPanel pnlBalancos = new JPanel();
+        tabbedPaneAcao.addTab("Balanços", null, pnlBalancos, null);
+        pnlBalancos.setLayout(new MigLayout("", "[grow]", "[grow]"));
+
+        tabbedPaneBalancos = new JTabbedPane(JTabbedPane.BOTTOM);
+        tabbedPaneBalancos.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        pnlBalancos.add(tabbedPaneBalancos, "cell 0 0,grow");
+
+        JPanel pnlDemonstrativos = new JPanel();
+        tabbedPaneAcao.addTab("Demonstrativos", null, pnlDemonstrativos, null);
+        pnlDemonstrativos.setLayout(new MigLayout("", "[grow,fill]", "[grow,fill]"));
+
+        tabbedPaneDemonstrativos = new JTabbedPane(JTabbedPane.BOTTOM);
+        pnlDemonstrativos.add(tabbedPaneDemonstrativos, "cell 0 0,grow");
 
         JButton btnAvancado = new JButton("Avan\u00E7ado");
         panel.add(btnAvancado, "cell 2 0,wmax 90,alignx right");
+    }
+
+    @Override
+    public void addNewBalancoTab(final String tabName, final JPanel panel) {
+        tabbedPaneBalancos.addTab(tabName, null, panel, null);
+    }
+
+    @Override
+    public void addNewDemonstrativoTab(final String tabName, final JPanel panel) {
+        tabbedPaneDemonstrativos.addTab(tabName, null, panel, null);
+    }
+
+    @Override
+    public void clearBalancoTab() {
+        tabbedPaneBalancos.removeAll();
+    }
+
+    @Override
+    public JPanel getJPanelTemplateToBalancoTab(final TableModel tblModel) {
+        JPanel pnlTemplate = new JPanel();
+        pnlTemplate.setLayout(new MigLayout("", "[grow, fill]", "[grow, fill]"));
+
+        JTable tblTemplate = new JTable(tblModel);
+        pnlTemplate.add(tblTemplate, "cell 0 0,grow");
+
+        return pnlTemplate;
     }
 
     @Override
@@ -133,11 +183,9 @@ public class TelaPrincipal implements ITelaPrincipal {
 
     @Override
     public void setTblAcoesModel(final TableModel tblModel) {
-
         tblAcoes.setModel(tblModel);
         tblAcoes.repaint();
         tblAcoes.revalidate();
-
     }
 
     @Override

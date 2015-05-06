@@ -1,5 +1,6 @@
 package com.snk.fundamentus.interfaces;
 
+import javax.swing.JPanel;
 import javax.swing.table.TableModel;
 
 public interface ITelaPrincipal {
@@ -14,4 +15,13 @@ public interface ITelaPrincipal {
     public int getSelectedRowAtTblAcoes();
 
     public int getSelectedColumnAtTblAcoes();
+
+    void addNewBalancoTab(String tabName, JPanel panel);
+
+    void addNewDemonstrativoTab(String tabName, JPanel panel);
+
+    JPanel getJPanelTemplateToBalancoTab(TableModel tblModel);
+
+    void clearBalancoTab();
+
 }

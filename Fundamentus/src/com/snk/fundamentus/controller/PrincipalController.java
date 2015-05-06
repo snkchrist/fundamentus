@@ -6,16 +6,20 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.Field;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.swing.JPanel;
 import javax.swing.table.TableModel;
 
 import com.snk.fundamentus.database.DaoFactory;
 import com.snk.fundamentus.interfaces.ITelaPrincipal;
+import com.snk.fundamentus.models.BalancoPatrimonial;
+import com.snk.fundamentus.models.DemonstrativoResultado;
 import com.snk.fundamentus.models.Empresa;
 import com.snk.fundamentus.models.RepresentableOnTable;
 
@@ -82,16 +86,34 @@ public class PrincipalController {
         }
     }
 
-    private TableStockModel buildBasicDetailsTableModel()
+    private TableStockModel buildDetalhesBasicosTableModel(final Empresa empresa)
             throws IllegalArgumentException, IllegalAccessException {
-        int selectedRowAtTblAcoes = view.getSelectedRowAtTblAcoes();
 
-        String empSigla = (String) view.getSelectedObjectAtTblAcoes(selectedRowAtTblAcoes, 1);
-
-        Empresa empresa = daoFactory.getEmpresaDao().findEmpresaBySigla(empSigla);
         TableStockModel model = null;
 
         Object[][] model2dArray = buildTableModelGenerically(empresa, "com.snk.fundamentus", null);
+        model = new TableStockModel(model2dArray, new String[] {
+                "Name", "Valor"
+        });
+        return model;
+    }
+
+    private TableStockModel buildBalancoTableModel(final BalancoPatrimonial balanco)
+            throws IllegalArgumentException, IllegalAccessException {
+        TableStockModel model = null;
+
+        Object[][] model2dArray = buildTableModelGenerically(balanco, "com.snk.fundamentus", null);
+        model = new TableStockModel(model2dArray, new String[] {
+                "Name", "Valor"
+        });
+        return model;
+    }
+
+    private TableStockModel buildDemonstrativoTableModel(final DemonstrativoResultado demonstrativo)
+            throws IllegalArgumentException, IllegalAccessException {
+        TableStockModel model = null;
+
+        Object[][] model2dArray = buildTableModelGenerically(demonstrativo, "com.snk.fundamentus", null);
         model = new TableStockModel(model2dArray, new String[] {
                 "Name", "Valor"
         });
@@ -113,6 +135,11 @@ public class PrincipalController {
                 if (field.isAnnotationPresent(RepresentableOnTable.class)) {
                     RepresentableOnTable[] annotationsByType = field.getAnnotationsByType(RepresentableOnTable.class);
                     String name = annotationsByType[0].name();
+
+                    if (null == name || name.isEmpty()) {
+                        name = field.getName();
+                    }
+
                     String format = annotationsByType[0].format();
 
                     field.setAccessible(true);
@@ -125,7 +152,8 @@ public class PrincipalController {
                             Date parse = dateformat.parse(value.toString());
                             value = String.format(format, parse);
                         }
-                        catch (Exception exp) {
+                        catch (ParseException e) {
+                            value = String.format(format, value);
                         }
                     }
 
@@ -173,10 +201,37 @@ public class PrincipalController {
             public void mouseClicked(final MouseEvent arg0) {
                 TableStockModel buildBasicDetailsTableModel = null;
                 try {
-                    buildBasicDetailsTableModel = buildBasicDetailsTableModel();
+                    view.clearBalancoTab();
+                    int selectedRowAtTblAcoes = view.getSelectedRowAtTblAcoes();
+                    String empSigla = (String) view.getSelectedObjectAtTblAcoes(selectedRowAtTblAcoes, 1);
+                    Empresa empresa = daoFactory.getEmpresaDao().findEmpresaBySigla(empSigla);
+
+                    buildBasicDetailsTableModel = buildDetalhesBasicosTableModel(empresa);
+
+                    List<BalancoPatrimonial> balancoList = empresa.getBalancoList();
+
+                    if (null != balancoList) {
+                        for (BalancoPatrimonial balanco : balancoList) {
+                            TableStockModel buildBalancoTableModel = buildBalancoTableModel(balanco);
+
+                            JPanel jPanel = view.getJPanelTemplateToBalancoTab(buildBalancoTableModel);
+                            view.addNewBalancoTab(String.format("%1$te/%1$tm/%1$tY", balanco.getDataDoBalanco()), jPanel);
+                        }
+                    }
+
+                    List<DemonstrativoResultado> demonstrativoList = empresa.getDemonstrativoList();
+
+                    if (null != demonstrativoList) {
+                        for (DemonstrativoResultado demonstrativo : demonstrativoList) {
+                            TableStockModel buildBalancoTableModel = buildDemonstrativoTableModel(demonstrativo);
+
+                            JPanel jPanel = view.getJPanelTemplateToBalancoTab(buildBalancoTableModel);
+                            view.addNewBalancoTab(String.format("%1$te/%1$tm/%1$tY", demonstrativo.getDataDemonstrativo()), jPanel);
+                        }
+                    }
+
                 }
                 catch (IllegalArgumentException | IllegalAccessException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
                 view.setTblDetalhesBasicosModel(buildBasicDetailsTableModel);

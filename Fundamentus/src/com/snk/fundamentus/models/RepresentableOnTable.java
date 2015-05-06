@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RepresentableOnTable {
-    String name();
+    String name() default "";
 
     String format() default "";
 }

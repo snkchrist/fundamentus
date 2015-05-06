@@ -6,51 +6,95 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class BalancoPatrimonial {
-
+    @RepresentableOnTable(format = "%1.0f")
     public double adiantamentoParaFuturoAumentoCapital;
+    @RepresentableOnTable(format = "%1.0f")
     public double ajustesAcumuladosDeConversao;
+    @RepresentableOnTable(format = "%1.0f")
     public double ajustesDeAvaliacaoPatrimonial;
+    @RepresentableOnTable(format = "%1.0f")
     public double aplicacoesFinanceiras;
+    @RepresentableOnTable(format = "%1.0f")
     public double aplicacoesFinanceirasAvaliadasAValorJusto;
+    @RepresentableOnTable(format = "%1.0f")
     public double aplicacoesFinanceirasAvaliadasAoCustoAmortizado;
+    @RepresentableOnTable(format = "%1.0f")
     public double ativosBiologicos;
+    @RepresentableOnTable(format = "%1.0f")
     public double caixaEEquivalentesDeCaixa;
+    @RepresentableOnTable(format = "%1.0f")
     public double capitalSocialRealizado;
+    @RepresentableOnTable(format = "%1.0f")
     public double contasAReceber;
+    @RepresentableOnTable(format = "%1.0f")
     public double creditosComPartesRelacionadas;
+    @RepresentableOnTable(format = "%1.0f")
     public double despesasAntecipadas;
+    @RepresentableOnTable(format = "%1.0f")
     public double diferido;
+    @RepresentableOnTable(format = "%1.0f")
     public double dividendosEJCPAPagar;
+    @RepresentableOnTable(format = "%1.0f")
     public double emprestimosEFinanciamentos;
+    @RepresentableOnTable(format = "%1.0f")
     public double estoques;
+    @RepresentableOnTable(format = "%1.0f")
     public double fornecedores;
+    @RepresentableOnTable(format = "%1.0f")
     public double imobilizado;
+    @RepresentableOnTable(format = "%1.0f")
     public double intangivel;
+    @RepresentableOnTable(format = "%1.0f")
     public double investimentos;
+    @RepresentableOnTable(format = "%1.0f")
     public double lucrosEReceitasAApropriar;
+    @RepresentableOnTable(format = "%1.0f")
     public double lucros_PrejuizosAcumulados;
+    @RepresentableOnTable(format = "%1.0f")
     public double obrigacoesFiscais;
+    @RepresentableOnTable(format = "%1.0f")
     public double obrigacoesSociaisETrabalhistas;
+    @RepresentableOnTable(format = "%1.0f")
     public double outros;
+    @RepresentableOnTable(format = "%1.0f")
     public double outrosResultadosAbrangentes;
+    @RepresentableOnTable(format = "%1.0f")
     public double participacaoDosAcionistasNaoControladores;
+    @RepresentableOnTable(format = "%1.0f")
     public double passivosComPartesRelacionadas;
+    @RepresentableOnTable(format = "%1.0f")
     public double passivosSobreAtivosNaoCorrentesAVendaEDescontinuados;
+    @RepresentableOnTable(format = "%1.0f")
     public double patrimônioLiquido;
+    @RepresentableOnTable(format = "%1.0f")
     public double provisoes;
+    @RepresentableOnTable(format = "%1.0f")
     public double reservasDeCapital;
+    @RepresentableOnTable(format = "%1.0f")
     public double reservasDeLucros;
+    @RepresentableOnTable(format = "%1.0f")
     public double reservasDeReavaliacao;
+    @RepresentableOnTable(format = "%1.0f")
     public double tributosARecuperar;
+    @RepresentableOnTable(format = "%1.0f")
     public double tributosDiferidos;
+    @RepresentableOnTable(format = "%1.0f")
     public double ativoTotal;
+    @RepresentableOnTable(format = "%1.0f")
     public double ativoCirculante;
+    @RepresentableOnTable(format = "%1.0f")
     public double outrosAtivosCirculantes;
+    @RepresentableOnTable(format = "%1.0f")
     public double ativoRealizavelALongoPrazo;
+    @RepresentableOnTable(format = "%1.0f")
     public double outrosAtivosNaoCirculantes;
+    @RepresentableOnTable(format = "%1.0f")
     public double passivoTotal;
+    @RepresentableOnTable(format = "%1.0f")
     public double passivoCirculante;
+    @RepresentableOnTable(format = "%1.0f")
     public double passivoNaoCirculante;
+    @RepresentableOnTable(format = "%1$te/%1$tm/%1$tY")
     public Date dataDoBalanco;
 
     public double getAdiantamentoParaFuturoAumentoCapital() {
