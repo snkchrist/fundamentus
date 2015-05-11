@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
 import org.apache.log4j.Logger;
+
 import com.snk.fundamentus.enums.Trimestre;
 import com.snk.fundamentus.models.BalancoPatrimonial;
 import com.snk.fundamentus.models.DemonstrativoResultado;
 import com.snk.fundamentus.models.Empresa;
-
+import com.snk.fundamentus.models.Oscilacoes;
 
 public class ReportFundamentalista {
 
@@ -18,6 +20,10 @@ public class ReportFundamentalista {
     private final int ano;
 
     private final Empresa empresa;
+
+    public ReportFundamentalista(final Empresa empresa) {
+        this(empresa, Calendar.getInstance().get(Calendar.YEAR));
+    }
 
     public ReportFundamentalista(final Empresa empresa, final int ano) {
         this.empresa = empresa;
@@ -38,7 +44,7 @@ public class ReportFundamentalista {
     /**
      * indica que para preço e lucro constantes, serão necessários X anos para
      * recuperar o capital
-     * 
+     *
      * @return
      */
     public double getPL() {
@@ -48,7 +54,7 @@ public class ReportFundamentalista {
 
     /**
      * Indica a taxa de lucratividade anual da ação
-     * 
+     *
      * @return
      */
     public double getLucratividadePL() {
@@ -62,7 +68,7 @@ public class ReportFundamentalista {
      */
     public double getVPA() {
         double vpa = (double) empresa.getBalanco().getPatrimonioLiquido()
-            / empresa.getNumeroDeAcoes();
+                / empresa.getNumeroDeAcoes();
         return vpa;
     }
 
@@ -83,6 +89,76 @@ public class ReportFundamentalista {
         }
 
         return true;
+    }
+
+    public boolean teveLucroAcoesUltimos5Anos() {
+        Oscilacoes oscilacoes = empresa.getOscilacoes();
+
+        if (oscilacoes.getAno2010() > 0 &&
+                oscilacoes.getAno2011() > 0 &&
+                oscilacoes.getAno2012() > 0 &&
+                oscilacoes.getAno2013() > 0 &&
+                oscilacoes.getAno2014() > 0 &&
+                oscilacoes.getAno2015() > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * O Lucro antes de Juros e Impostos (LAJIR ou EBIT)
+     * Conhecido como EBIT (earnings
+     * before interests and taxes), é uma variável do EBITDA.
+     * É o EBITDA (LAJIDA) menos
+     * a depreciação e a amortização de intangíveis.
+     * É um tipo de “Lucro antes de Impostos”, porém, não é um indicador
+     * contábil apresentado normalmente nas
+     * demonstrações de resultados.
+     *
+     * @return
+     */
+    public double getEbitUltimoTrimestre() {
+
+        double ebit = -1;
+        List<DemonstrativoResultado> demonstrativoList = empresa.getDemonstrativoList();
+
+        if (demonstrativoList.size() > 0) {
+            DemonstrativoResultado resultadoUltimoTrimestre = demonstrativoList.get(0);
+
+            ebit = resultadoUltimoTrimestre.getResultadoBruto() +
+                    resultadoUltimoTrimestre.getDespesasComVendas() +
+                    resultadoUltimoTrimestre.getDespesasGeraisAdministrativas();
+        }
+
+        return ebit;
+    }
+
+    /**
+     * O Lucro antes de Juros e Impostos (LAJIR ou EBIT) 12 meses
+     */
+    public double getEbit12Meses() {
+        double ebit = -1;
+        double resultadoBruto = 0;
+        double despesasComVendas = 0;
+        double despesasGerais = 0;
+
+        List<DemonstrativoResultado> demonstrativoList = empresa.getDemonstrativoList();
+
+        if (demonstrativoList.size() >= 4) {
+            for (int i = 0; i < 4; i++) {
+                resultadoBruto += demonstrativoList.get(i).getResultadoBruto();
+                despesasComVendas += demonstrativoList.get(i).getDespesasComVendas();
+                despesasGerais += demonstrativoList.get(i).getDespesasGeraisAdministrativas();
+            }
+        }
+
+        ebit = resultadoBruto +
+                despesasComVendas +
+                despesasGerais;
+
+        return ebit;
+
     }
 
     /**
@@ -205,7 +281,7 @@ public class ReportFundamentalista {
 
             }
             liquidezGeral = (ativosCirculantes + ativoRealizavelALongoPrazo)
-                / (passivosCirculantes + passivoNaoCirculante);
+                    / (passivosCirculantes + passivoNaoCirculante);
         }
 
         return liquidezGeral;
@@ -222,7 +298,7 @@ public class ReportFundamentalista {
      * @return
      */
     public double getIndiceRotatividade() {
-        List<DemonstrativoResultado> listaDemonstrativoPorAno = getListaDemonstrativoResultadoPorAno(ano);
+        List<DemonstrativoResultado> listaDemonstrativoPorAno = getListaDemonstrativoUltimos12Meses();
         List<BalancoPatrimonial> listaBalancoPorAno = getListaBalancoPorAno(getAno());
 
         double indiceRotatividade = -1;
@@ -255,7 +331,7 @@ public class ReportFundamentalista {
      */
     public double getIndiceLucratividade() {
 
-        List<DemonstrativoResultado> listaDemonstrativoPorAno = getListaDemonstrativoResultadoPorAno(getAno());
+        List<DemonstrativoResultado> listaDemonstrativoPorAno = getListaDemonstrativoUltimos12Meses();
         double indiceLucratividade = -1;
 
         if (listaDemonstrativoPorAno != null) {
@@ -289,7 +365,7 @@ public class ReportFundamentalista {
 
     public double getDividaLiquida() {
         double dividaBruta = getDividaBruta();
-        double disponivilidades = getDisponivilidades();
+        double disponivilidades = getDisponibilidades();
         double dividaLiquida = -1;
         if (dividaBruta != -1 && disponivilidades != -1) {
             dividaLiquida = dividaBruta - disponivilidades;
@@ -298,7 +374,7 @@ public class ReportFundamentalista {
         return dividaLiquida;
     }
 
-    public double getDisponivilidades() {
+    public double getDisponibilidades() {
         double disponivilidades = -1;
         BalancoPatrimonial balanco = getBalancoPatrimonialUltimoTrimestre();
 
@@ -342,6 +418,24 @@ public class ReportFundamentalista {
                 BalancoPatrimonial balancoByDate = getBalancoByDate(calendarFromDate);
                 if (null != balancoByDate) {
                     lista.add(balancoByDate);
+                }
+            }
+        }
+        catch (Exception e) {
+            logger.error(e);
+        }
+
+        return lista;
+    }
+
+    public List<DemonstrativoResultado> getListaDemonstrativoUltimos12Meses() {
+
+        List<DemonstrativoResultado> lista = new ArrayList<DemonstrativoResultado>();
+
+        try {
+            if (empresa.getDemonstrativoList().size() >= 4) {
+                for (int i = 0; i < 4; i++) {
+                    lista.add(empresa.getDemonstrativoList().get(i));
                 }
             }
         }
@@ -453,8 +547,8 @@ public class ReportFundamentalista {
         return liquidezCorrente;
     }
 
-    public double getVendasPorAno() {
-        List<DemonstrativoResultado> listaDemonstrativoResultadoPorAno = getListaDemonstrativoResultadoPorAno(getAno());
+    public double getVendasUltimos12Meses() {
+        List<DemonstrativoResultado> listaDemonstrativoResultadoPorAno = getListaDemonstrativoUltimos12Meses();
 
         double vendas = 0;
 
@@ -464,6 +558,18 @@ public class ReportFundamentalista {
 
         return vendas;
 
+    }
+
+    public double getLucroLiquido() {
+        double lucroAno = 0;
+
+        List<DemonstrativoResultado> demonstrativoList = empresa.getDemonstrativoList();
+
+        for (int i = 0; i < 4; i++) {
+            lucroAno += demonstrativoList.get(0).getLucro_PrejuizoPeriodo();
+        }
+
+        return lucroAno;
     }
 
     public double getLucroPorAno(final int ano) {
@@ -488,7 +594,7 @@ public class ReportFundamentalista {
      * teórico para se adquirir novamente os bens operacionais da companhia. É
      * obtido pelo seguinte calculo (valor de mercado + passivo circulante +
      * divida de longo prazo - ativo circulante) / valor total dos ativos
-     * 
+     *
      * @return
      */
     public double getQdeTobin() {
@@ -497,7 +603,7 @@ public class ReportFundamentalista {
 
         if (null != balanco) {
             double soma = empresa.getValorMercado() + balanco.getPassivoCirculante()
-                + balanco.getEmprestimosEFinanciamentos();
+                    + balanco.getEmprestimosEFinanciamentos();
             qTobin = (soma - balanco.getAtivoCirculante()) / balanco.getAtivoTotal();
         }
 
@@ -505,24 +611,45 @@ public class ReportFundamentalista {
 
     }
 
+    public double getROIC() {
+
+        BalancoPatrimonial balancoPatrimonial = empresa.getBalancoList().get(0);
+
+        double roic = getEbit12Meses() /
+                (balancoPatrimonial.getAtivoTotal() -
+                        balancoPatrimonial.getCaixaEEquivalentesDeCaixa() -
+                        balancoPatrimonial.getFornecedores());
+
+        return roic * 100;
+    }
+
+    public double getROE() {
+        BalancoPatrimonial balancoPatrimonial = empresa.getBalancoList().get(0);
+
+        double roe = getLucroLiquido() /
+                balancoPatrimonial.getPatrimonioLiquido();
+
+        return roe * 100;
+    }
+
     public boolean isLucroMedio3AnosAcima4PorCento() {
         double percentual = 0;
         int anos = 3;
         logger.debug("#####################" + empresa.getSigla()
-            + "#######################");
+                + "#######################");
         logger.debug("Lucro Medio dos últimos [" + anos + "] anos. Começando em ["
-            + getAno() + "]");
+                + getAno() + "]");
 
         for (int i = anos; i > 0; i--) {
             int anoInicial = ano - i;
             int anoAnterior = ano - (i - 1);
 
             logger.debug("Contabilizando o lucro do ano de [" + anoAnterior
-                + "] menos o ano de [" + anoInicial + "]");
+                    + "] menos o ano de [" + anoInicial + "]");
             double lucroPorAno = getLucroPorAno(anoInicial);
             double lucroPorAnoAnterior = getLucroPorAno(anoAnterior);
             logger.debug("Ano: [" + anoAnterior + "] - Lucro: [" + lucroPorAnoAnterior
-                + "]");
+                    + "]");
             logger.debug("Ano: [" + anoInicial + "] - Lucro: [" + lucroPorAno + "]");
 
             double aumento_reducao = ((lucroPorAnoAnterior - lucroPorAno) / lucroPorAnoAnterior) * 100;
@@ -560,7 +687,7 @@ public class ReportFundamentalista {
     }
 
     private DemonstrativoResultado getDemonstrativoResultadoByDate(
-        final Calendar ultimoTrimestre) {
+            final Calendar ultimoTrimestre) {
         String trimestre = ReportUtil.formatDate(ultimoTrimestre.getTime());
 
         DemonstrativoResultado demonstrativoResultado = null;
@@ -578,4 +705,5 @@ public class ReportFundamentalista {
         }
         return demonstrativoResultado;
     }
+
 }

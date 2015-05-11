@@ -8,6 +8,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+import com.snk.fundamentus.enums.ShowOnTable;
+import com.snk.fundamentus.enums.ShowOnTableRecursive;
+
 @Entity
 public class Empresa {
 
@@ -15,58 +18,67 @@ public class Empresa {
     @GeneratedValue
     private long id;
 
-    @RepresentableOnTable(name = "Sigla")
+    @ShowOnTable(name = "Sigla")
     private String sigla;
 
     private String tipo;
 
-    @RepresentableOnTable(name = "Nome")
+    @ShowOnTable(name = "Nome")
     private String nome;
 
-    @RepresentableOnTable(name = "Setor")
+    @ShowOnTable(name = "Setor")
     private String setor;
 
-    @RepresentableOnTable(name = "Sub-Setor")
+    @ShowOnTable(name = "Sub-Setor")
     private String subSetor;
 
-    @RepresentableOnTable(name = "Cotação")
+    @ShowOnTable(name = "Cotação")
     private Double cotacao;
 
-    @RepresentableOnTable(name = "Data da última cotação", format = "%1$te/%1$tm/%1$tY")
+    @ShowOnTable(name = "Data da última cotação", format = "%1$te/%1$tm/%1$tY")
     private String dataUltimaCotacao;
 
     private Date ultimaCotacaoRegistrada;
 
-    @RepresentableOnTable(name = "Valor mínimo nas últimas 52 semanas")
+    @ShowOnTable(name = "Valor mínimo nas últimas 52 semanas")
     private Double minimo52Semanas;
 
-    @RepresentableOnTable(name = "Valor máximo nas últimas 52 semanas")
+    @ShowOnTable(name = "Valor máximo nas últimas 52 semanas")
     private Double maximo52Semanas;
 
     private Long volumeMedio2Meses;
 
-    @RepresentableOnTable(name = "Último balanço registrado", format = "%1$te/%1$tm/%1$tY")
+    @ShowOnTable(name = "Último balanço registrado", format = "%1$te/%1$tm/%1$tY")
     private Date ultimoBalancoRegistrado;
 
-    @RepresentableOnTable(name = "Numero total de ações emitidas")
+    @ShowOnTable(name = "Numero total de ações emitidas")
     private Long numeroDeAcoes;
 
-    @RepresentableOnTable(name = "Valor de Mercado")
+    @ShowOnTable(name = "Valor de Mercado")
     private Long valorMercado;
 
-    @RepresentableOnTable(name = "Valor da Empresa")
+    @ShowOnTable(name = "Valor da Empresa")
     private Long valorEmpresa;
 
     @Embedded
     private List<DemonstrativoResultado> demonstrativoList;
+
     @Embedded
     private List<BalancoPatrimonial> balancoList;
+
+    @ShowOnTableRecursive
     @Embedded
     private Balanco balanco;
+
+    @ShowOnTableRecursive
     @Embedded
     private Oscilacoes oscilacoes;
+
+    @ShowOnTableRecursive
     @Embedded
     private Demonstrativo3Meses demonstracao3meses;
+
+    @ShowOnTableRecursive
     @Embedded
     private Demonstrativo12Meses demonstracao12meses;
 

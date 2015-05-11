@@ -1,6 +1,7 @@
 package com.snk.fundamentus.report;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import jxl.common.Logger;
@@ -25,24 +26,48 @@ public class GuruMethod {
 
     public static GuruMethod getGurusMethodInstance(
             final MetodoInvestimento method,
-            final int ano) {
+            final Integer ano) {
         GuruMethod guru = null;
+        int anoCorrente;
+
+        if (null == ano) {
+            anoCorrente = Calendar.getInstance().get(Calendar.YEAR) - 1;
+        }
+        else {
+            anoCorrente = ano;
+        }
 
         if (MetodoInvestimento.Grahan.equals(method)) {
             guru = new GuruMethod();
-            guru.buildGrahansMethod(ano);
+            guru.buildGrahansMethod(anoCorrente);
+        }
+        else if (MetodoInvestimento.Ultimos5AP.equals(method)) {
+            guru = new GuruMethod();
+            guru.buildLast5PositiveYeards();
         }
 
         return guru;
     }
 
-    private List<Empresa> buildGrahansMethod(final int ano) {
+    private void buildLast5PositiveYeards() {
+        List<Empresa> empresaList = daoFactory.getEmpresaDao().listAllElements();
+
+        for (Empresa empresa : empresaList) {
+            ReportFundamentalista report = new ReportFundamentalista(empresa);
+
+            if (true == report.teveLucroAcoesUltimos5Anos()) {
+                getLstEmpresa().add(empresa);
+            }
+        }
+    }
+
+    private void buildGrahansMethod(final int ano) {
 
         List<Empresa> empresaList = daoFactory.getEmpresaDao().listAllElements();
 
         for (Empresa empresa : empresaList) {
             ReportFundamentalista report = new ReportFundamentalista(empresa, ano);
-            boolean vendasSubstanciais = report.getVendasPorAno() > 250000000;
+            boolean vendasSubstanciais = report.getVendasUltimos12Meses() > 250000000;
             boolean liquidezCorrente = report.getLiquidezCorrentePorAno() >= 1;
             boolean relacaoDividaPatrimonio = report.getRelacaoDividaLiquidaPatrimonioLiquido() <= 0.5;
             boolean teveLucroUltimos32Semestres = report.teveLucroUltimos32Semestres();
@@ -54,8 +79,5 @@ public class GuruMethod {
             }
 
         }
-
-        return null;
-
     }
 }

@@ -4,24 +4,28 @@ import javax.swing.JPanel;
 import javax.swing.table.TableModel;
 
 public interface ITelaPrincipal {
-    public String getTextSearch();
+    String getTextSearch();
 
-    public void setTblDetalhesBasicosModel(final TableModel tblModel);
+    void setTblDetalhesBasicosModel(final TableModel tblModel);
 
-    public void setTblAcoesModel(final TableModel tblModel);
+    void setTblAcoesModel(final TableModel tblModel);
 
-    public Object getSelectedObjectAtTblAcoes(final int row, final int column);
+    void setTblIndices(TableModel tblModel);
 
-    public int getSelectedRowAtTblAcoes();
+    Object getSelectedObjectAtTblAcoes(final int row, final int column);
 
-    public int getSelectedColumnAtTblAcoes();
+    int getSelectedRowAtTblAcoes();
+
+    int getSelectedColumnAtTblAcoes();
 
     void addNewBalancoTab(String tabName, JPanel panel);
 
     void addNewDemonstrativoTab(String tabName, JPanel panel);
 
-    JPanel getJPanelTemplateToBalancoTab(TableModel tblModel);
+    JPanel getJPanelTemplateTab(TableModel tblModel);
 
-    void clearBalancoTab();
+    void clearUiTabs();
+
+    Object getSelectedGuruMethod();
 
 }

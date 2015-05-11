@@ -1,4 +1,4 @@
-package com.snk.fundamentus.models;
+package com.snk.fundamentus.enums;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -11,8 +11,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RepresentableOnTable {
-    String name() default "";
+public @interface ShowOnTableRecursive {
 
-    String format() default "";
 }

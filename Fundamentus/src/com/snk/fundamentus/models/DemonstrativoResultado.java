@@ -1,36 +1,87 @@
 package com.snk.fundamentus.models;
 
 import java.util.Date;
+
 import javax.persistence.Embeddable;
 
+import com.snk.fundamentus.enums.DataType;
+import com.snk.fundamentus.enums.ShowOnTable;
 
 @Embeddable
 public class DemonstrativoResultado {
 
     private Date dataDemonstrativo;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Receita Bruta de Vendas e/ou Serviços")
     private double receitaBrutaVendasServicos;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Deduções da Receita Bruta")
     private double deducoesReceitaBruta;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Receita Líquida de Vendas e/ou Serviços")
     private double receitaLiquidaVendasServicos;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Custo de Bens e/ou Serviços Vendidos")
     private double custoBensServicosVendidos;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Resultado Bruto")
     private double resultadoBruto;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Despesas Com Vendas")
     private double despesasComVendas;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Despesas Gerais e Administrativas")
     private double despesasGeraisAdministrativas;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Perdas pela Não Recuperabilidade de Ativos")
     private double perdasPelaNaoRecuperabilidadeAtivos;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Outras Receitas Operacionais")
     private double outrasReceitasOperacionais;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Outras Despesas Operacionais")
     private double outrasDespesasOperacionais;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Resultado da Equivalência Patrimonial")
     private double resultadoEquivalenciaPatrimonial;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Financeiras")
     private double financeiras;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Receitas Financeiras")
     private double receitasFinanceiras;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Despesas Financeiras")
     private double despesasFinanceiras;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Resultado Não Operacional")
     private double resultadoNaoOperacional;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Receitas")
     private double receitas;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Despesas")
     private double despesas;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Resultado Antes Tributação/Participações")
     private double resultadoAntesTributacao_Participacoes;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Provisão para IR e Contribuição Social")
     private double provisaoParaIRContribuicaoSocial;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "IR Diferido")
     private double iRDiferido;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Participações/Contribuições Estatutárias")
     private double participacoes_ContribuicoesEstatutarias;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Reversão dos Juros sobre Capital Próprio")
     private double reversaoJurosSobreCapitalProprio;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Participação de Acionistas Não Controladores")
     private double partAcionistasNaoControladores;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Lucro/Prejuízo do Período")
     private double lucro_PrejuizoPeriodo;
 
     public Date getDataDemonstrativo() {
@@ -94,7 +145,7 @@ public class DemonstrativoResultado {
     }
 
     public void setDespesasGeraisAdministrativas(
-        final double despesasGeraisAdministrativas) {
+            final double despesasGeraisAdministrativas) {
         this.despesasGeraisAdministrativas += despesasGeraisAdministrativas;
     }
 
@@ -103,7 +154,7 @@ public class DemonstrativoResultado {
     }
 
     public void setPerdasPelaNaoRecuperabilidadeAtivos(
-        final double perdasPelaNaoRecuperabilidadeAtivos) {
+            final double perdasPelaNaoRecuperabilidadeAtivos) {
         this.perdasPelaNaoRecuperabilidadeAtivos += perdasPelaNaoRecuperabilidadeAtivos;
     }
 
@@ -128,7 +179,7 @@ public class DemonstrativoResultado {
     }
 
     public void setResultadoEquivalenciaPatrimonial(
-        final double resultadoEquivalenciaPatrimonial) {
+            final double resultadoEquivalenciaPatrimonial) {
         this.resultadoEquivalenciaPatrimonial += resultadoEquivalenciaPatrimonial;
     }
 
@@ -185,7 +236,7 @@ public class DemonstrativoResultado {
     }
 
     public void setResultadoAntesTributacao_Participacoes(
-        final double resultadoAntesTributacao_Participacoes) {
+            final double resultadoAntesTributacao_Participacoes) {
         this.resultadoAntesTributacao_Participacoes += resultadoAntesTributacao_Participacoes;
     }
 
@@ -194,7 +245,7 @@ public class DemonstrativoResultado {
     }
 
     public void setProvisaoParaIRContribuicaoSocial(
-        final double provisaoParaIRContribuicaoSocial) {
+            final double provisaoParaIRContribuicaoSocial) {
         this.provisaoParaIRContribuicaoSocial += provisaoParaIRContribuicaoSocial;
     }
 
@@ -211,7 +262,7 @@ public class DemonstrativoResultado {
     }
 
     public void setParticipacoes_ContribuicoesEstatutarias(
-        final double participacoes_ContribuicoesEstatutarias) {
+            final double participacoes_ContribuicoesEstatutarias) {
         this.participacoes_ContribuicoesEstatutarias += participacoes_ContribuicoesEstatutarias;
     }
 
@@ -220,7 +271,7 @@ public class DemonstrativoResultado {
     }
 
     public void setReversaoJurosSobreCapitalProprio(
-        final double reversaoJurosSobreCapitalProprio) {
+            final double reversaoJurosSobreCapitalProprio) {
         this.reversaoJurosSobreCapitalProprio += reversaoJurosSobreCapitalProprio;
     }
 
@@ -229,7 +280,7 @@ public class DemonstrativoResultado {
     }
 
     public void setPartAcionistasNaoControladores(
-        final double partAcionistasNaoControladores) {
+            final double partAcionistasNaoControladores) {
         this.partAcionistasNaoControladores += partAcionistasNaoControladores;
     }
 

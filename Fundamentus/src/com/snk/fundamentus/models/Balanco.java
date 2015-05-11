@@ -2,20 +2,22 @@ package com.snk.fundamentus.models;
 
 import javax.persistence.Embeddable;
 
+import com.snk.fundamentus.enums.ShowOnTable;
+
 @Embeddable
 public class Balanco {
 
-    @RepresentableOnTable(name = "Ativos")
+    @ShowOnTable(name = "Ativos")
     private Long ativos;
-    @RepresentableOnTable(name = "Disponibilidades")
+    @ShowOnTable(name = "Disponibilidades")
     private Long disponibilidades;
-    @RepresentableOnTable(name = "Ativos Circulantes")
+    @ShowOnTable(name = "Ativos Circulantes")
     private Long ativosCirculantes;
-    @RepresentableOnTable(name = "Divida Bruta")
+    @ShowOnTable(name = "Divida Bruta")
     private Long dividaBruta;
-    @RepresentableOnTable(name = "Divida Liquida")
+    @ShowOnTable(name = "Divida Liquida")
     private Long dividaLiquida;
-    @RepresentableOnTable(name = "Patrimonio Liquido")
+    @ShowOnTable(name = "Patrimonio Liquido")
     private Long patrimonioLiquido;
 
     public Long getAtivos() {

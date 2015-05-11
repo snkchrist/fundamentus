@@ -4,97 +4,100 @@ import java.util.Date;
 
 import javax.persistence.Embeddable;
 
+import com.snk.fundamentus.enums.DataType;
+import com.snk.fundamentus.enums.ShowOnTable;
+
 @Embeddable
 public class BalancoPatrimonial {
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double adiantamentoParaFuturoAumentoCapital;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double ajustesAcumuladosDeConversao;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double ajustesDeAvaliacaoPatrimonial;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double aplicacoesFinanceiras;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double aplicacoesFinanceirasAvaliadasAValorJusto;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double aplicacoesFinanceirasAvaliadasAoCustoAmortizado;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double ativosBiologicos;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double caixaEEquivalentesDeCaixa;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double capitalSocialRealizado;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double contasAReceber;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double creditosComPartesRelacionadas;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double despesasAntecipadas;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double diferido;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double dividendosEJCPAPagar;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double emprestimosEFinanciamentos;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double estoques;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double fornecedores;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double imobilizado;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double intangivel;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double investimentos;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double lucrosEReceitasAApropriar;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double lucros_PrejuizosAcumulados;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double obrigacoesFiscais;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double obrigacoesSociaisETrabalhistas;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double outros;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double outrosResultadosAbrangentes;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double participacaoDosAcionistasNaoControladores;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double passivosComPartesRelacionadas;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double passivosSobreAtivosNaoCorrentesAVendaEDescontinuados;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double patrimônioLiquido;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double provisoes;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double reservasDeCapital;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double reservasDeLucros;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double reservasDeReavaliacao;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double tributosARecuperar;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double tributosDiferidos;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double ativoTotal;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double ativoCirculante;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double outrosAtivosCirculantes;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double ativoRealizavelALongoPrazo;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double outrosAtivosNaoCirculantes;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double passivoTotal;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double passivoCirculante;
-    @RepresentableOnTable(format = "%1.0f")
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency)
     public double passivoNaoCirculante;
-    @RepresentableOnTable(format = "%1$te/%1$tm/%1$tY")
+    @ShowOnTable(format = "%1$te/%1$tm/%1$tY")
     public Date dataDoBalanco;
 
     public double getAdiantamentoParaFuturoAumentoCapital() {

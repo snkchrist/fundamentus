@@ -2,14 +2,19 @@ package com.snk.fundamentus.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.Field;
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -17,11 +22,16 @@ import javax.swing.JPanel;
 import javax.swing.table.TableModel;
 
 import com.snk.fundamentus.database.DaoFactory;
+import com.snk.fundamentus.enums.DataType;
+import com.snk.fundamentus.enums.MetodoInvestimento;
+import com.snk.fundamentus.enums.ShowOnTable;
+import com.snk.fundamentus.enums.ShowOnTableRecursive;
 import com.snk.fundamentus.interfaces.ITelaPrincipal;
 import com.snk.fundamentus.models.BalancoPatrimonial;
 import com.snk.fundamentus.models.DemonstrativoResultado;
 import com.snk.fundamentus.models.Empresa;
-import com.snk.fundamentus.models.RepresentableOnTable;
+import com.snk.fundamentus.models.Indices;
+import com.snk.fundamentus.report.GuruMethod;
 
 public class PrincipalController {
     private final ITelaPrincipal view;
@@ -37,14 +47,21 @@ public class PrincipalController {
         TableStockModel model = null;
         List<Empresa> listAllElements = new ArrayList<Empresa>();
 
-        if (null == search || search.isEmpty()) {
-            listAllElements.addAll(this.daoFactory.getEmpresaDao().listAllElements());
+        if (MetodoInvestimento.None.equals(view.getSelectedGuruMethod())) {
+            if (null == search || search.isEmpty()) {
+                listAllElements.addAll(this.daoFactory.getEmpresaDao().listAllElements());
+            }
+            else {
+                Empresa empresa = this.daoFactory.getEmpresaDao().findEmpresaBySigla(search);
+                if (null != empresa) {
+                    listAllElements.add(empresa);
+                }
+            }
         }
         else {
-            Empresa empresa = this.daoFactory.getEmpresaDao().findEmpresaBySigla(search);
-            if (null != empresa) {
-                listAllElements.add(empresa);
-            }
+            GuruMethod gurus = GuruMethod.getGurusMethodInstance((MetodoInvestimento) view.getSelectedGuruMethod(), null);
+            List<Empresa> lstEmpresa = gurus.getLstEmpresa();
+            listAllElements.addAll(lstEmpresa);
         }
 
         if (false == listAllElements.isEmpty() && listAllElements.size() > 0) {
@@ -86,34 +103,11 @@ public class PrincipalController {
         }
     }
 
-    private TableStockModel buildDetalhesBasicosTableModel(final Empresa empresa)
-            throws IllegalArgumentException, IllegalAccessException {
-
-        TableStockModel model = null;
-
-        Object[][] model2dArray = buildTableModelGenerically(empresa, "com.snk.fundamentus", null);
-        model = new TableStockModel(model2dArray, new String[] {
-                "Name", "Valor"
-        });
-        return model;
-    }
-
-    private TableStockModel buildBalancoTableModel(final BalancoPatrimonial balanco)
+    private TableStockModel buildObjectTableModel(final Object object)
             throws IllegalArgumentException, IllegalAccessException {
         TableStockModel model = null;
 
-        Object[][] model2dArray = buildTableModelGenerically(balanco, "com.snk.fundamentus", null);
-        model = new TableStockModel(model2dArray, new String[] {
-                "Name", "Valor"
-        });
-        return model;
-    }
-
-    private TableStockModel buildDemonstrativoTableModel(final DemonstrativoResultado demonstrativo)
-            throws IllegalArgumentException, IllegalAccessException {
-        TableStockModel model = null;
-
-        Object[][] model2dArray = buildTableModelGenerically(demonstrativo, "com.snk.fundamentus", null);
+        Object[][] model2dArray = buildTableModelGenerically(object, "com.snk.fundamentus", null);
         model = new TableStockModel(model2dArray, new String[] {
                 "Name", "Valor"
         });
@@ -132,9 +126,10 @@ public class PrincipalController {
             Field[] fields = obj.getClass().getDeclaredFields();
 
             for (Field field : fields) {
-                if (field.isAnnotationPresent(RepresentableOnTable.class)) {
-                    RepresentableOnTable[] annotationsByType = field.getAnnotationsByType(RepresentableOnTable.class);
+                if (field.isAnnotationPresent(ShowOnTable.class)) {
+                    ShowOnTable[] annotationsByType = field.getAnnotationsByType(ShowOnTable.class);
                     String name = annotationsByType[0].name();
+                    DataType type = annotationsByType[0].type();
 
                     if (null == name || name.isEmpty()) {
                         name = field.getName();
@@ -153,13 +148,23 @@ public class PrincipalController {
                             value = String.format(format, parse);
                         }
                         catch (ParseException e) {
-                            value = String.format(format, value);
+                            if (DataType.Currency.equals(type) && value instanceof Double) {
+                                NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+                                value = currencyFormatter.format(value);
+                            }
+                            else {
+                                value = String.format(format, value);
+
+                                if (DataType.Percentage.equals(type)) {
+                                    value = "%" + value;
+                                }
+                            }
                         }
                     }
 
                     map.put(name, value);
                 }
-                else if (Object.class.isAssignableFrom(field.getType())) {
+                else if (field.isAnnotationPresent(ShowOnTableRecursive.class) && Object.class.isAssignableFrom(field.getType())) {
                     field.setAccessible(true);
                     buildTableModelGenerically(field.get(obj), classNameContains, map);
                 }
@@ -183,6 +188,89 @@ public class PrincipalController {
         return object;
     }
 
+    private void updateViewByEmpresaObject() {
+        TableStockModel buildBasicDetailsTableModel = null;
+        try {
+            view.clearUiTabs();
+            int selectedRowAtTblAcoes = view.getSelectedRowAtTblAcoes();
+            String empSigla = (String) view.getSelectedObjectAtTblAcoes(selectedRowAtTblAcoes, 1);
+            Empresa empresa = daoFactory.getEmpresaDao().findEmpresaBySigla(empSigla);
+
+            buildBasicDetailsTableModel = buildObjectTableModel(empresa);
+
+            updateBalancoViewByEmpresaObject(empresa);
+
+            updateDemonstrativoViewByEmpresaObject(empresa);
+
+            updateIndicesViewByEmpresaObject(empresa);
+
+            view.setTblDetalhesBasicosModel(buildBasicDetailsTableModel);
+
+        }
+        catch (IllegalArgumentException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void updateDemonstrativoViewByEmpresaObject(final Empresa empresa)
+            throws IllegalAccessException {
+        List<DemonstrativoResultado> demonstrativoList = empresa.getDemonstrativoList();
+
+        if (null != demonstrativoList) {
+            for (DemonstrativoResultado demonstrativo : demonstrativoList) {
+                TableStockModel buildBalancoTableModel = buildObjectTableModel(demonstrativo);
+
+                JPanel jPanelTemplateTab = view.getJPanelTemplateTab(buildBalancoTableModel);
+                view.addNewDemonstrativoTab(
+                        String.format("%1$te/%1$tm/%1$tY", demonstrativo.getDataDemonstrativo()),
+                        jPanelTemplateTab);
+            }
+        }
+    }
+
+    private void updateBalancoViewByEmpresaObject(final Empresa empresa)
+            throws IllegalAccessException {
+        List<BalancoPatrimonial> balancoList = empresa.getBalancoList();
+
+        if (null != balancoList) {
+            for (BalancoPatrimonial balanco : balancoList) {
+                TableStockModel buildBalancoTableModel = buildObjectTableModel(balanco);
+
+                JPanel jPanelTemplateTab = view.getJPanelTemplateTab(buildBalancoTableModel);
+                view.addNewBalancoTab(String.format("%1$te/%1$tm/%1$tY", balanco.getDataDoBalanco()), jPanelTemplateTab);
+            }
+        }
+    }
+
+    private void updateIndicesViewByEmpresaObject(final Empresa empresa)
+            throws IllegalAccessException {
+
+        Indices indices = new Indices(empresa, Calendar.getInstance().get(Calendar.YEAR) - 1);
+
+        if (null != indices) {
+            TableStockModel indiceTableModel = buildObjectTableModel(indices);
+            view.setTblIndices(indiceTableModel);
+        }
+    }
+
+    public ItemListener getCboGuruItemListener() {
+        ItemListener itemListener = new ItemListener() {
+            @Override
+            public void itemStateChanged(final ItemEvent arg0) {
+                if (ItemEvent.SELECTED == arg0.getStateChange()) {
+                    TableModel stockModel = getStockModel(null);
+
+                    if (null != stockModel) {
+                        view.setTblAcoesModel(stockModel);
+                    }
+                }
+            }
+        };
+
+        return itemListener;
+    }
+
     public ActionListener getBtnBuscarActionListener() {
         ActionListener btnActionListener = new ActionListener() {
 
@@ -199,46 +287,11 @@ public class PrincipalController {
         MouseAdapter mouseAdapter = new MouseAdapter() {
             @Override
             public void mouseClicked(final MouseEvent arg0) {
-                TableStockModel buildBasicDetailsTableModel = null;
-                try {
-                    view.clearBalancoTab();
-                    int selectedRowAtTblAcoes = view.getSelectedRowAtTblAcoes();
-                    String empSigla = (String) view.getSelectedObjectAtTblAcoes(selectedRowAtTblAcoes, 1);
-                    Empresa empresa = daoFactory.getEmpresaDao().findEmpresaBySigla(empSigla);
-
-                    buildBasicDetailsTableModel = buildDetalhesBasicosTableModel(empresa);
-
-                    List<BalancoPatrimonial> balancoList = empresa.getBalancoList();
-
-                    if (null != balancoList) {
-                        for (BalancoPatrimonial balanco : balancoList) {
-                            TableStockModel buildBalancoTableModel = buildBalancoTableModel(balanco);
-
-                            JPanel jPanel = view.getJPanelTemplateToBalancoTab(buildBalancoTableModel);
-                            view.addNewBalancoTab(String.format("%1$te/%1$tm/%1$tY", balanco.getDataDoBalanco()), jPanel);
-                        }
-                    }
-
-                    List<DemonstrativoResultado> demonstrativoList = empresa.getDemonstrativoList();
-
-                    if (null != demonstrativoList) {
-                        for (DemonstrativoResultado demonstrativo : demonstrativoList) {
-                            TableStockModel buildBalancoTableModel = buildDemonstrativoTableModel(demonstrativo);
-
-                            JPanel jPanel = view.getJPanelTemplateToBalancoTab(buildBalancoTableModel);
-                            view.addNewBalancoTab(String.format("%1$te/%1$tm/%1$tY", demonstrativo.getDataDemonstrativo()), jPanel);
-                        }
-                    }
-
-                }
-                catch (IllegalArgumentException | IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-                view.setTblDetalhesBasicosModel(buildBasicDetailsTableModel);
+                updateViewByEmpresaObject();
 
             }
-        };
 
+        };
         return mouseAdapter;
     }
 }

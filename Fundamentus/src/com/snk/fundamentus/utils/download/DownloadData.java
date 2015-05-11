@@ -32,7 +32,7 @@ import com.snk.fundamentus.models.Empresa;
 import com.snk.fundamentus.utils.transform.HtmlConverter;
 
 public class DownloadData {
-    private static final String SESSION_ID_URL = "ff71jkjnk8crugs0n1l5i6l1g7";
+    private static final String SESSION_ID_URL = "ruu5a48jbv33d9s5v4b1ck4ml3";
     private static final String URL_ZIP = "http://www.fundamentus.com.br/planilhas.php?SID={0}";
     private static final String URL_BALANCO = "http://www.fundamentus.com.br/balancos.php?papel={0}&tipo=1";
     private static final String DEST_ZIP_FOLDER = "C:\\Users\\ribeifil\\Desktop\\xlsFiles\\xls\\";
@@ -47,18 +47,18 @@ public class DownloadData {
         String zipDestFolder = DEST_ZIP_FOLDER;
 
         DownloadData data = new DownloadData();
-        data.updateEmpresaInformation();
+        //data.downloadXlsFiles(destFolder);
 
-        //   data.downloadXlsFiles(destFolder);
-        //
-        //        File files = new File(destFolder);
-        //        if (files.isDirectory()) {
-        //            File[] listFiles = files.listFiles();
-        //
-        //            for (File file : listFiles) {
-        //                data.getZipFiles(file, zipDestFolder);
-        //            }
-        //        }
+        File files = new File(destFolder);
+        if (files.isDirectory()) {
+            File[] listFiles = files.listFiles();
+
+            for (File file : listFiles) {
+                if (file.isFile()) {
+                    data.getZipFiles(file, zipDestFolder);
+                }
+            }
+        }
     }
 
     public HttpClient getClient() {

@@ -1,8 +1,10 @@
 package com.snk.fundamentus.ui;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -13,23 +15,33 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 import net.miginfocom.swing.MigLayout;
 
 import com.snk.fundamentus.controller.PrincipalController;
+import com.snk.fundamentus.enums.MetodoInvestimento;
 import com.snk.fundamentus.interfaces.ITelaPrincipal;
 
 public class TelaPrincipal implements ITelaPrincipal {
 
+    private JPanel pnlTable;
+
     private JFrame frmStocksearch;
     private JTable tblAcoes;
+    private JTable tblDetalhesBasicos;
+    private JTable tblIndice;
+
     private JTextField txtSearch;
     private JScrollPane scrollPane;
     private PrincipalController controller;
-    private JTable tblDetalhesBasicos;
+
+    private JTabbedPane tabbedPaneAcao;
     private JTabbedPane tabbedPaneBalancos;
     private JTabbedPane tabbedPaneDemonstrativos;
+
+    private JComboBox cboGurus;
 
     /**
      * Launch the application.
@@ -83,9 +95,21 @@ public class TelaPrincipal implements ITelaPrincipal {
         JButton btnBuscar = new JButton("Buscar");
         btnBuscar.addActionListener(controller.getBtnBuscarActionListener());
 
+        cboGurus = new JComboBox<MetodoInvestimento>();
+
+        MetodoInvestimento[] values = MetodoInvestimento.values();
+
+        for (MetodoInvestimento metodoInvestimento : values) {
+            cboGurus.addItem(metodoInvestimento);
+        }
+
+        cboGurus.addItemListener(controller.getCboGuruItemListener());
+
+        panel.add(cboGurus, "cell 2 0, hmax 25, grow");
+
         panel.add(btnBuscar, "cell 2 0,alignx right");
 
-        JPanel pnlTable = new JPanel();
+        pnlTable = new JPanel();
 
         scrollPane = new JScrollPane();
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -95,6 +119,7 @@ public class TelaPrincipal implements ITelaPrincipal {
         if (null != controller.getStockModel(null)) {
             tblAcoes = new JTable(controller.getStockModel(null));
         }
+
         tblAcoes.addMouseListener(controller.getTblAcoesMouseAdapter());
         tblAcoes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -113,7 +138,7 @@ public class TelaPrincipal implements ITelaPrincipal {
         panel.add(pnlDetalhes, "cell 1 1 2 1,grow");
         //pnlDetalhes.setLayout(new MigLayout("", "[grow]", "[][grow]"));
 
-        JTabbedPane tabbedPaneAcao = new JTabbedPane(JTabbedPane.TOP);
+        tabbedPaneAcao = new JTabbedPane(JTabbedPane.TOP);
         tabbedPaneAcao.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         pnlDetalhes.add(tabbedPaneAcao, "grow");
 
@@ -137,10 +162,26 @@ public class TelaPrincipal implements ITelaPrincipal {
         pnlDemonstrativos.setLayout(new MigLayout("", "[grow,fill]", "[grow,fill]"));
 
         tabbedPaneDemonstrativos = new JTabbedPane(JTabbedPane.BOTTOM);
+        tabbedPaneDemonstrativos.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         pnlDemonstrativos.add(tabbedPaneDemonstrativos, "cell 0 0,grow");
+
+        JPanel pnlIndice = new JPanel();
+        tabbedPaneAcao.addTab("Indices", null, pnlIndice, null);
+        pnlIndice.setLayout(new MigLayout("", "[grow, fill]", "[grow, fill]"));
+        tblIndice = new JTable();
+        tblIndice.setRowSelectionAllowed(true);
+        tblIndice.setColumnSelectionAllowed(true);
+        tblIndice.setCellSelectionEnabled(true);
+
+        pnlIndice.add(tblIndice, "cell 0 0,grow");
 
         JButton btnAvancado = new JButton("Avan\u00E7ado");
         panel.add(btnAvancado, "cell 2 0,wmax 90,alignx right");
+    }
+
+    @Override
+    public Object getSelectedGuruMethod() {
+        return cboGurus.getSelectedItem();
     }
 
     @Override
@@ -154,19 +195,41 @@ public class TelaPrincipal implements ITelaPrincipal {
     }
 
     @Override
-    public void clearBalancoTab() {
+    public void clearUiTabs() {
         tabbedPaneBalancos.removeAll();
+        tabbedPaneDemonstrativos.removeAll();
     }
 
     @Override
-    public JPanel getJPanelTemplateToBalancoTab(final TableModel tblModel) {
+    public JPanel getJPanelTemplateTab(final TableModel tblModel) {
+        JPanel panelPrincipal = new JPanel();
+        panelPrincipal.setLayout(new MigLayout("", "[grow,fill]", "[grow,fill]"));
+
+        JScrollPane scrollPaneTemplate = new JScrollPane();
+        scrollPaneTemplate.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPaneTemplate.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
         JPanel pnlTemplate = new JPanel();
         pnlTemplate.setLayout(new MigLayout("", "[grow, fill]", "[grow, fill]"));
 
         JTable tblTemplate = new JTable(tblModel);
         pnlTemplate.add(tblTemplate, "cell 0 0,grow");
 
-        return pnlTemplate;
+        Dimension preferredSize = tblTemplate.getPreferredSize();
+        preferredSize.setSize(preferredSize.getWidth(), preferredSize.getHeight() + 5);
+
+        pnlTemplate.setPreferredSize(preferredSize);
+        scrollPaneTemplate.add(pnlTemplate);
+        scrollPaneTemplate.setViewportView(pnlTemplate);
+
+        panelPrincipal.add(scrollPaneTemplate, "cell 0 0, grow");
+
+        return panelPrincipal;
+    }
+
+    public void fireTableDataChange(final TableModel model) {
+        AbstractTableModel aModel = (AbstractTableModel) model;
+        aModel.fireTableDataChanged();
     }
 
     @Override
@@ -177,15 +240,20 @@ public class TelaPrincipal implements ITelaPrincipal {
     @Override
     public void setTblDetalhesBasicosModel(final TableModel tblModel) {
         tblDetalhesBasicos.setModel(tblModel);
-        tblDetalhesBasicos.repaint();
-        tblDetalhesBasicos.revalidate();
+        fireTableDataChange(tblModel);
     }
 
     @Override
     public void setTblAcoesModel(final TableModel tblModel) {
         tblAcoes.setModel(tblModel);
-        tblAcoes.repaint();
-        tblAcoes.revalidate();
+        fireTableDataChange(tblModel);
+        pnlTable.setPreferredSize(tblAcoes.getPreferredSize());
+    }
+
+    @Override
+    public void setTblIndices(final TableModel tblModel) {
+        tblIndice.setModel(tblModel);
+        fireTableDataChange(tblModel);
     }
 
     @Override
