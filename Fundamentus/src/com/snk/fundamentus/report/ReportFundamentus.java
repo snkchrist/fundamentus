@@ -26,7 +26,7 @@ public class ReportFundamentus {
 
         for (Empresa empresa : listAllElements) {
             ReportFundamentalista rep = new ReportFundamentalista(empresa, 2014);
-            double qdeTobin = rep.getQdeTobin();
+            double qdeTobin = rep.getQdeTobinUltimoTrimestre();
 
             if (qdeTobin >= 1) {
                 logger.info("Empresa [" + empresa.getSigla() + "] possui Q de Tobin iqual a [" + qdeTobin + "]");

@@ -68,7 +68,7 @@ public class GuruMethod {
         for (Empresa empresa : empresaList) {
             ReportFundamentalista report = new ReportFundamentalista(empresa, ano);
             boolean vendasSubstanciais = report.getVendasUltimos12Meses() > 250000000;
-            boolean liquidezCorrente = report.getLiquidezCorrentePorAno() >= 1;
+            boolean liquidezCorrente = report.getLiquidezCorrente() >= 1;
             boolean relacaoDividaPatrimonio = report.getRelacaoDividaLiquidaPatrimonioLiquido() <= 0.5;
             boolean teveLucroUltimos32Semestres = report.teveLucroUltimos32Semestres();
             boolean lucroMedio3AnosAcima4PorCento = report.isLucroMedio3AnosAcima4PorCento();

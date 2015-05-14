@@ -50,6 +50,11 @@ public class TelaPrincipal implements ITelaPrincipal {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
+                    /*
+                     * DownloadData data = new DownloadData();
+                     * data.updateInformation();
+                     */
+
                     UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
 
                     TelaPrincipal window = new TelaPrincipal();

@@ -234,7 +234,7 @@ public class BalancoXlsTranslator implements IXslReaderBalanco<BalancoPatrimonia
         }
 
         else if (tituloPrimeiraColuna.equals("Reservas de Lucros")) {
-            balanco.setReservasDeLucros(valorDaColuna);
+            balanco.setReservasLucro(valorDaColuna);
         }
 
         else if (tituloPrimeiraColuna.equals("Reservas de Reavaliação")) {
@@ -248,5 +248,98 @@ public class BalancoXlsTranslator implements IXslReaderBalanco<BalancoPatrimonia
         else if (tituloPrimeiraColuna.equals("Tributos Diferidos")) {
             balanco.setTributosDiferidos(valorDaColuna);
         }
+
+        else if (tituloPrimeiraColuna.equals("Aplicações Interfinanceiras de Liquidez")) {
+            balanco.setAplicacoesInterfinanceirasLiquidez(valorDaColuna);
+        }
+
+        else if (tituloPrimeiraColuna.equals("Ativo Permanente")) {
+            balanco.setAtivoPermanente(valorDaColuna);
+        }
+
+        else if (tituloPrimeiraColuna.equals("Captações no Mercado Aberto")) {
+            balanco.setCaptacoesMercadoAberto(valorDaColuna);
+        }
+
+        else if (tituloPrimeiraColuna.equals("Depósitos")) {
+            balanco.setDepositos(valorDaColuna);
+        }
+
+        else if (tituloPrimeiraColuna.equals("Disponibilidades")) {
+            balanco.setDisponibilidades(valorDaColuna);
+        }
+
+        else if (tituloPrimeiraColuna.equals("Imobilizado de Arrendamento")) {
+            balanco.setImobilizadoArrendamento(valorDaColuna);
+        }
+
+        else if (tituloPrimeiraColuna.equals("Imobilizado de Uso")) {
+            balanco.setImobilizadoUso(valorDaColuna);
+        }
+
+        else if (tituloPrimeiraColuna.equals("Obrigações por Empréstimos")) {
+            balanco.setObrigacoesPorEmprestimos(valorDaColuna);
+        }
+
+        else if (tituloPrimeiraColuna.equals("Obrigações por Repasse do Exterior")) {
+            balanco.setObrigacoesPorRepasseExterior(valorDaColuna);
+        }
+
+        else if (tituloPrimeiraColuna.equals("Obrigações por Repasse do País")) {
+            balanco.setObrigacoesPorRepassePais(valorDaColuna);
+        }
+
+        else if (tituloPrimeiraColuna.equals("Operações de Arrendamento Mercantil")) {
+            balanco.setOperacoesArrendamentoMercantil(valorDaColuna);
+        }
+
+        else if (tituloPrimeiraColuna.equals("Operações de Crédito")) {
+            balanco.setOperacoesCredito(valorDaColuna);
+        }
+
+        else if (tituloPrimeiraColuna.equals("Outras Obrigações")) {
+            balanco.setOutrasObrigacoes(valorDaColuna);
+        }
+
+        else if (tituloPrimeiraColuna.equals("Outros Créditos")) {
+            balanco.setOutrosCreditos(valorDaColuna);
+        }
+
+        else if (tituloPrimeiraColuna.equals("Outros Valores e Bens")) {
+            balanco.setOutrosValoresBens(valorDaColuna);
+        }
+
+        else if (tituloPrimeiraColuna.equals("Part. de Acionistas Não Controladores")) {
+            balanco.setPartAcionistasNaoControladores(valorDaColuna);
+        }
+
+        else if (tituloPrimeiraColuna.equals("Passivo Exigível a Longo Prazo")) {
+            balanco.setPassivoExigivelLongoPrazo(valorDaColuna);
+        }
+
+        else if (tituloPrimeiraColuna.equals("Recursos de Aceites e Emissão de Títulos")) {
+            balanco.setRecursosAceitesEmissaoTitulos(valorDaColuna);
+        }
+
+        else if (tituloPrimeiraColuna.equals("Relações Interdependências")) {
+            balanco.setRelacoesInterdependencias(valorDaColuna);
+        }
+
+        else if (tituloPrimeiraColuna.equals("Relações Interfinanceiras")) {
+            balanco.setRelacoesInterfinanceiras(valorDaColuna);
+        }
+
+        else if (tituloPrimeiraColuna.equals("Reservas de Lucro")) {
+            balanco.setReservasLucro(valorDaColuna);
+        }
+
+        else if (tituloPrimeiraColuna.equals("Resultados de Exercícios Futuros")) {
+            balanco.setResultadosExerciciosFuturos(valorDaColuna);
+        }
+
+        else if (tituloPrimeiraColuna.equals("Títulos e Valores Mobiliários")) {
+            balanco.setTitulosValoresMobiliarios(valorDaColuna);
+        }
+
     }
 }

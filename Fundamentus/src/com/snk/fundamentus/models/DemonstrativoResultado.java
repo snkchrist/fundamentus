@@ -84,6 +84,109 @@ public class DemonstrativoResultado {
     @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Lucro/Prejuízo do Período")
     private double lucro_PrejuizoPeriodo;
 
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Despesas da Intermediação Financeira")
+    private double despesasIntermediaçaoFinanceira;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Despesas de Pessoal")
+    private double despesasPessoal;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Despesas Tributárias")
+    private double despesasTributarias;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Outras Despesas Administrativas")
+    private double outrasDespesasAdministrativas;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Outras Despesas/Receitas Operacionais")
+    private double outrasDespesasReceitasOperacionais;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Receitas da Intermediação Financeira")
+    private double receitasIntermediaçaoFinanceira;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Receitas de Prestação de Serviços")
+    private double receitasPrestaçaoServicos;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Resultado Bruto Intermediação Financeira")
+    private double resultadoBrutoIntermediacaoFinanceira;
+
+    @ShowOnTable(format = "%1.0f", type = DataType.Currency, name = "Resultado Operacional")
+    private double resultadoOperacional;
+
+    public double getDespesasIntermediaçaoFinanceira() {
+        return despesasIntermediaçaoFinanceira;
+    }
+
+    public double getDespesasPessoal() {
+        return despesasPessoal;
+    }
+
+    public double getDespesasTributarias() {
+        return despesasTributarias;
+    }
+
+    public double getOutrasDespesasAdministrativas() {
+        return outrasDespesasAdministrativas;
+    }
+
+    public double getOutrasDespesasReceitasOperacionais() {
+        return outrasDespesasReceitasOperacionais;
+    }
+
+    public double getReceitasIntermediaçaoFinanceira() {
+        return receitasIntermediaçaoFinanceira;
+    }
+
+    public double getReceitasPrestaçaoServicos() {
+        return receitasPrestaçaoServicos;
+    }
+
+    public double getResultadoBrutoIntermediacaoFinanceira() {
+        return resultadoBrutoIntermediacaoFinanceira;
+    }
+
+    public double getResultadoOperacional() {
+        return resultadoOperacional;
+    }
+
+    public void setiRDiferido(final double iRDiferido) {
+        this.iRDiferido += iRDiferido;
+    }
+
+    public void setDespesasIntermediaçaoFinanceira(final double despesasIntermediaçaoFinanceira) {
+        this.despesasIntermediaçaoFinanceira += despesasIntermediaçaoFinanceira;
+    }
+
+    public void setDespesasPessoal(final double despesasPessoal) {
+        this.despesasPessoal += despesasPessoal;
+    }
+
+    public void setDespesasTributarias(final double despesasTributarias) {
+        this.despesasTributarias += despesasTributarias;
+    }
+
+    public void setOutrasDespesasAdministrativas(final double outrasDespesasAdministrativas) {
+        this.outrasDespesasAdministrativas += outrasDespesasAdministrativas;
+    }
+
+    public void setOutrasDespesasReceitasOperacionais(final double outrasDespesasReceitasOperacionais) {
+        this.outrasDespesasReceitasOperacionais += outrasDespesasReceitasOperacionais;
+    }
+
+    public void setReceitasIntermediaçaoFinanceira(final double receitasIntermediaçaoFinanceira) {
+        this.receitasIntermediaçaoFinanceira += receitasIntermediaçaoFinanceira;
+    }
+
+    public void setReceitasPrestaçaoServicos(final double receitasPrestaçaoServicos) {
+        this.receitasPrestaçaoServicos += receitasPrestaçaoServicos;
+    }
+
+    public void setResultadoBrutoIntermediacaoFinanceira(final double resultadoBrutoIntermediacaoFinanceira) {
+        this.resultadoBrutoIntermediacaoFinanceira += resultadoBrutoIntermediacaoFinanceira;
+    }
+
+    public void setResultadoOperacional(final double resultadoOperacional) {
+        this.resultadoOperacional += resultadoOperacional;
+    }
+
     public Date getDataDemonstrativo() {
         return dataDemonstrativo;
     }

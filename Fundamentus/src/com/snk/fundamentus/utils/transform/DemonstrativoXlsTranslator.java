@@ -8,10 +8,14 @@ import java.util.List;
 
 import jxl.Workbook;
 
+import org.apache.log4j.Logger;
+
 import com.snk.fundamentus.interfaces.IXslReaderBalanco;
 import com.snk.fundamentus.models.DemonstrativoResultado;
 
 public class DemonstrativoXlsTranslator implements IXslReaderBalanco<DemonstrativoResultado> {
+
+    private final Logger logger = Logger.getLogger(DemonstrativoXlsTranslator.class);
 
     @Override
     public List<DemonstrativoResultado> decodeXsl(final Workbook workbook) {
@@ -65,6 +69,7 @@ public class DemonstrativoXlsTranslator implements IXslReaderBalanco<Demonstrati
             valorDaColuna = Double.parseDouble(valorDaColunaStr) * 1000;
         }
         catch (NumberFormatException exp) {
+            logger.info(tituloPrimeiraColuna);
             return;
         }
 
@@ -141,10 +146,36 @@ public class DemonstrativoXlsTranslator implements IXslReaderBalanco<Demonstrati
             case "Lucro/Prejuízo do Período":
                 demons.setLucro_PrejuizoPeriodo(valorDaColuna);
                 break;
+            case "Despesas da Intermediação Financeira":
+                demons.setDespesasIntermediaçaoFinanceira(valorDaColuna);
+                break;
+            case "Despesas de Pessoal":
+                demons.setDespesasPessoal(valorDaColuna);
+                break;
+            case "Despesas Tributárias":
+                demons.setDespesasTributarias(valorDaColuna);
+                break;
+            case "Outras Despesas Administrativas":
+                demons.setOutrasDespesasAdministrativas(valorDaColuna);
+                break;
+            case "Outras Despesas/Receitas Operacionais":
+                demons.setOutrasDespesasReceitasOperacionais(valorDaColuna);
+                break;
+            case "Receitas da Intermediação Financeira":
+                demons.setReceitasIntermediaçaoFinanceira(valorDaColuna);
+                break;
+            case "Receitas de Prestação de Serviços":
+                demons.setReceitasPrestaçaoServicos(valorDaColuna);
+                break;
+            case "Resultado Bruto Intermediação Financeira":
+                demons.setResultadoBrutoIntermediacaoFinanceira(valorDaColuna);
+                break;
+            case "Resultado Operacional":
+                demons.setResultadoOperacional(valorDaColuna);
+                break;
             default:
                 break;
         }
 
     }
-
 }

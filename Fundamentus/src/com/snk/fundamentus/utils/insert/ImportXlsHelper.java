@@ -49,9 +49,10 @@ public class ImportXlsHelper {
      */
     private void addMissingBalancos(final String folderXlsFiles)
             throws IOException, BiffException {
-        EmpresaDao empresaDao = daoFactory.getEmpresaDao();
 
         File file = new File(folderXlsFiles);
+
+        EmpresaDao empresaDao = daoFactory.getEmpresaDao();
 
         if (file.isDirectory()) {
             File[] listFiles = file.listFiles();
@@ -70,13 +71,47 @@ public class ImportXlsHelper {
                 String fileNameWithoutExtention = fileName.getName().replaceFirst("[.][^.]+$", "");
                 Empresa empresa = empresaDao.findEmpresaBySigla(fileNameWithoutExtention);
 
-                empresaDao.getEm().getTransaction().begin();
+                empresaDao.beginTransaction();
 
                 updateBalancoList(decodeBalanco, empresa);
                 updateDemonstrativoList(decodeDemonstrativo, empresa);
                 sortCollections(empresa);
 
-                empresaDao.getEm().getTransaction().commit();
+                empresaDao.commitTransaction();
+            }
+        }
+    }
+
+    private void updateExistingBalancos(final String folderXlsFiles)
+            throws BiffException, IOException {
+        File file = new File(folderXlsFiles);
+
+        EmpresaDao empresaDao = daoFactory.getEmpresaDao();
+
+        if (file.isDirectory()) {
+            File[] listFiles = file.listFiles();
+
+            for (File fileName : listFiles) {
+                BalancoXlsTranslator balancoTranslator = new BalancoXlsTranslator();
+                DemonstrativoXlsTranslator demonstrativoTranslator = new DemonstrativoXlsTranslator();
+
+                jxl.Workbook workbook = jxl.Workbook.getWorkbook(fileName);
+
+                List<BalancoPatrimonial> decodeBalanco = balancoTranslator.decodeXsl(workbook);
+                List<DemonstrativoResultado> decodeDemonstrativo = demonstrativoTranslator.decodeXsl(workbook);
+                workbook.close();
+
+                String fileNameWithoutExtention = fileName.getName().replaceFirst("[.][^.]+$", "");
+
+                Empresa empresa = empresaDao.findEmpresaBySigla(fileNameWithoutExtention);
+
+                empresaDao.beginTransaction();
+                empresa.setBalancoList(decodeBalanco);
+                empresa.setDemonstrativoList(decodeDemonstrativo);
+                sortCollections(empresa);
+
+                empresaDao.commitTransaction();
+
             }
         }
     }

@@ -1,6 +1,5 @@
 package com.snk.fundamentus.report;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -119,31 +118,30 @@ public class ReportFundamentalista {
      * @return
      */
     public double getEbitUltimoTrimestre() {
+        return getEbitByTrimestre(empresa.getDemonstrativoList().get(0));
+    }
 
+    public double getEbitByTrimestre(final DemonstrativoResultado demonstrativo) {
         double ebit = -1;
-        List<DemonstrativoResultado> demonstrativoList = empresa.getDemonstrativoList();
 
-        if (demonstrativoList.size() > 0) {
-            DemonstrativoResultado resultadoUltimoTrimestre = demonstrativoList.get(0);
+        DemonstrativoResultado resultadoUltimoTrimestre = demonstrativo;
 
-            ebit = resultadoUltimoTrimestre.getResultadoBruto() +
-                    resultadoUltimoTrimestre.getDespesasComVendas() +
-                    resultadoUltimoTrimestre.getDespesasGeraisAdministrativas();
-        }
+        ebit = resultadoUltimoTrimestre.getResultadoBruto() +
+                resultadoUltimoTrimestre.getDespesasComVendas() +
+                resultadoUltimoTrimestre.getDespesasGeraisAdministrativas();
 
         return ebit;
+
     }
 
     /**
      * O Lucro antes de Juros e Impostos (LAJIR ou EBIT) 12 meses
      */
-    public double getEbit12Meses() {
+    public double getEbit(final List<DemonstrativoResultado> demonstrativoList) {
         double ebit = -1;
         double resultadoBruto = 0;
         double despesasComVendas = 0;
         double despesasGerais = 0;
-
-        List<DemonstrativoResultado> demonstrativoList = empresa.getDemonstrativoList();
 
         if (demonstrativoList.size() >= 4) {
             for (int i = 0; i < 4; i++) {
@@ -159,6 +157,17 @@ public class ReportFundamentalista {
 
         return ebit;
 
+    }
+
+    public double getEbitUltimos12Meses() {
+        return getEbit(empresa.getDemonstrativoList());
+    }
+
+    /**
+     * O Lucro antes de Juros e Impostos (LAJIR ou EBIT) 12 meses
+     */
+    public double getEbitByAno(final int ano) {
+        return getEbit(getListaDemonstrativoResultadoPorAno(ano));
     }
 
     /**
@@ -199,19 +208,23 @@ public class ReportFundamentalista {
      * @param ano
      * @return
      */
-    public double getLiquidezCorrentePorAno() {
-        List<BalancoPatrimonial> listaBalancoPorAno = getListaBalancoPorAno(getAno());
+    public double getLiquidezCorrenteUltimos12Meses() {
+        List<BalancoPatrimonial> listaBalancoPorAno = getListaBalancoUltimos12Meses();
         double liquidezCorrente = -1;
 
         if (listaBalancoPorAno != null) {
             double ativosCirculantes = 0;
             double passivosCirculantes = 0;
+            int size = listaBalancoPorAno.size();
 
-            for (BalancoPatrimonial balancoPatrimonial : listaBalancoPorAno) {
-                ativosCirculantes += balancoPatrimonial.getAtivoCirculante();
-                passivosCirculantes += balancoPatrimonial.getPassivoCirculante();
-
+            for (int i = 0; i < size; i++) {
+                ativosCirculantes += listaBalancoPorAno.get(i).getAtivoCirculante();
+                passivosCirculantes += listaBalancoPorAno.get(i).getPassivoCirculante();
             }
+
+            ativosCirculantes = ativosCirculantes / size;
+            passivosCirculantes = passivosCirculantes / size;
+
             liquidezCorrente = ativosCirculantes / passivosCirculantes;
         }
 
@@ -232,7 +245,7 @@ public class ReportFundamentalista {
      * @param ano
      * @return
      */
-    public double getLiquidezSeca() {
+    public double getLiquidezSecaByAno() {
         List<BalancoPatrimonial> listaBalancoPorAno = getListaBalancoPorAno(getAno());
         double liquidezSeca = -1;
 
@@ -349,10 +362,10 @@ public class ReportFundamentalista {
         return indiceLucratividade;
     }
 
-    public double getDividaBruta() {
+    public double getDividaBrutaUltimoTrimestre() {
 
         double dividaBruta = -1;
-        BalancoPatrimonial balanco = getBalancoPatrimonialUltimoTrimestre();
+        BalancoPatrimonial balanco = getBalancoUltimoTrimestre();
 
         if (null != balanco) {
             dividaBruta = balanco.getEmprestimosEFinanciamentos();
@@ -363,9 +376,9 @@ public class ReportFundamentalista {
 
     }
 
-    public double getDividaLiquida() {
-        double dividaBruta = getDividaBruta();
-        double disponivilidades = getDisponibilidades();
+    public double getDividaLiquidaUltimoTrimestre() {
+        double dividaBruta = getDividaBrutaUltimoTrimestre();
+        double disponivilidades = getDisponibilidadesUltimoTrimestre();
         double dividaLiquida = -1;
         if (dividaBruta != -1 && disponivilidades != -1) {
             dividaLiquida = dividaBruta - disponivilidades;
@@ -374,9 +387,9 @@ public class ReportFundamentalista {
         return dividaLiquida;
     }
 
-    public double getDisponibilidades() {
+    public double getDisponibilidadesUltimoTrimestre() {
         double disponivilidades = -1;
-        BalancoPatrimonial balanco = getBalancoPatrimonialUltimoTrimestre();
+        BalancoPatrimonial balanco = getBalancoUltimoTrimestre();
 
         if (null != balanco) {
             double caixaEEquivalentesDeCaixa = balanco.getCaixaEEquivalentesDeCaixa();
@@ -389,10 +402,10 @@ public class ReportFundamentalista {
     }
 
     public double getRelacaoDividaLiquidaPatrimonioLiquido() {
-        BalancoPatrimonial balanco = getBalancoPatrimonialUltimoTrimestre();
+        BalancoPatrimonial balanco = getBalancoUltimoTrimestre();
         double relacao = -1;
         if (null != balanco) {
-            double dividaLiquida = getDividaLiquida();
+            double dividaLiquida = getDividaLiquidaUltimoTrimestre();
             double patrimonioLiquido = balanco.getPatrimonioLiquido();
             relacao = dividaLiquida / patrimonioLiquido;
             logger.debug("Relação divida liquida sobre patrimonio liquido: " + relacao);
@@ -418,6 +431,23 @@ public class ReportFundamentalista {
                 BalancoPatrimonial balancoByDate = getBalancoByDate(calendarFromDate);
                 if (null != balancoByDate) {
                     lista.add(balancoByDate);
+                }
+            }
+        }
+        catch (Exception e) {
+            logger.error(e);
+        }
+
+        return lista;
+    }
+
+    private List<BalancoPatrimonial> getListaBalancoUltimos12Meses() {
+        List<BalancoPatrimonial> lista = new ArrayList<BalancoPatrimonial>();
+
+        try {
+            if (empresa.getBalancoList().size() >= 4) {
+                for (int i = 0; i < 4; i++) {
+                    lista.add(empresa.getBalancoList().get(i));
                 }
             }
         }
@@ -495,29 +525,7 @@ public class ReportFundamentalista {
 
     }
 
-    public double getLiquidezCorrentePorTrimestre(final Trimestre trimestre, final int ano) {
-
-        String data = trimestre.getValue() + "/" + ano;
-        double liquidezCorrente = -1;
-
-        Date formatString;
-        try {
-            formatString = ReportUtil.formatString(data);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(formatString);
-
-            BalancoPatrimonial balancoByDate = getBalancoByDate(calendar);
-
-            liquidezCorrente = getLiquidezCorrente(balancoByDate);
-        }
-        catch (ParseException e) {
-            logger.error("Can't parse date while calling getLiquidezCorrentePorTrimestre() method.", e);
-        }
-
-        return liquidezCorrente;
-    }
-
-    private double getLiquidezCorrente(final BalancoPatrimonial balancoByDate) {
+    private double getLiquidezCorrenteByTrimestre(final BalancoPatrimonial balancoByDate) {
         double liquidezCorrente = -1;
 
         if (balancoByDate != null) {
@@ -536,19 +544,24 @@ public class ReportFundamentalista {
      *
      * @return
      */
-    public double getLiquidezCorrenteUltimoTrimestre() {
+    public double getLiquidezCorrente() {
         double liquidezCorrente = -1;
-        BalancoPatrimonial balancoPatrimonialUltimoTrimestre = getBalancoPatrimonialUltimoTrimestre();
+        BalancoPatrimonial balancoPatrimonialUltimoTrimestre = getBalancoUltimoTrimestre();
 
         if (null != balancoPatrimonialUltimoTrimestre) {
-            liquidezCorrente = getLiquidezCorrente(balancoPatrimonialUltimoTrimestre);
+            liquidezCorrente = getLiquidezCorrenteByTrimestre(balancoPatrimonialUltimoTrimestre);
         }
 
         return liquidezCorrente;
     }
 
     public double getVendasUltimos12Meses() {
-        List<DemonstrativoResultado> listaDemonstrativoResultadoPorAno = getListaDemonstrativoUltimos12Meses();
+        List<DemonstrativoResultado> demonstrativoList = getListaDemonstrativoUltimos12Meses();
+        return getVendas(demonstrativoList);
+    }
+
+    private double getVendas(final List<DemonstrativoResultado> lst) {
+        List<DemonstrativoResultado> listaDemonstrativoResultadoPorAno = lst;
 
         double vendas = 0;
 
@@ -557,34 +570,39 @@ public class ReportFundamentalista {
         }
 
         return vendas;
-
     }
 
-    public double getLucroLiquido() {
-        double lucroAno = 0;
-
-        List<DemonstrativoResultado> demonstrativoList = empresa.getDemonstrativoList();
-
-        for (int i = 0; i < 4; i++) {
-            lucroAno += demonstrativoList.get(0).getLucro_PrejuizoPeriodo();
-        }
-
-        return lucroAno;
+    public double getVendasPorAno() {
+        List<DemonstrativoResultado> listaDemonstrativoResultadoPorAno = getListaDemonstrativoResultadoPorAno(getAno());
+        return getVendas(listaDemonstrativoResultadoPorAno);
     }
 
-    public double getLucroPorAno(final int ano) {
+    public double getLucroLiquido(final List<DemonstrativoResultado> lst) {
         double lucroAno = 0;
 
-        List<DemonstrativoResultado> demonstrativoList = getListaDemonstrativoResultadoPorAno(ano);
+        List<DemonstrativoResultado> demonstrativoList = lst;
 
         if (null != demonstrativoList) {
             for (DemonstrativoResultado demonstrativoResultado : demonstrativoList) {
                 lucroAno += demonstrativoResultado.getLucro_PrejuizoPeriodo();
-
             }
         }
 
         return lucroAno;
+    }
+
+    public double getLucroLiquidoUltimos12Meses() {
+        return getLucroLiquido(getListaDemonstrativoUltimos12Meses());
+    }
+
+    public double getLucroLiquidoPorAno(final int ano) {
+        List<DemonstrativoResultado> demonstrativoLst = getListaDemonstrativoResultadoPorAno(ano);
+        return getLucroLiquido(demonstrativoLst);
+    }
+
+    public double getLucroLiquidoAnual() {
+        List<DemonstrativoResultado> listaDemonstrativoResultadoPorAno = getListaDemonstrativoResultadoPorAno(getAno());
+        return getLucroLiquido(listaDemonstrativoResultadoPorAno);
     }
 
     /**
@@ -597,8 +615,8 @@ public class ReportFundamentalista {
      *
      * @return
      */
-    public double getQdeTobin() {
-        BalancoPatrimonial balanco = getBalancoPatrimonialUltimoTrimestre();
+    public double getQdeTobinUltimoTrimestre() {
+        BalancoPatrimonial balanco = getBalancoUltimoTrimestre();
         double qTobin = 0;
 
         if (null != balanco) {
@@ -611,34 +629,97 @@ public class ReportFundamentalista {
 
     }
 
-    public double getROIC() {
+    public double getROICByAno() {
+        List<BalancoPatrimonial> listaBalancoPorAno = getListaBalancoPorAno(getAno());
 
-        BalancoPatrimonial balancoPatrimonial = empresa.getBalancoList().get(0);
+        double ativoTotal = 0;
+        double caixa = 0;
+        double fornecedores = 0;
+        int size = listaBalancoPorAno.size();
 
-        double roic = getEbit12Meses() /
-                (balancoPatrimonial.getAtivoTotal() -
-                        balancoPatrimonial.getCaixaEEquivalentesDeCaixa() -
-                        balancoPatrimonial.getFornecedores());
+        for (int i = 0; i < size; i++) {
+            BalancoPatrimonial balancoPatrimonial = listaBalancoPorAno.get(i);
+
+            ativoTotal += balancoPatrimonial.getAtivoTotal();
+            caixa += balancoPatrimonial.getCaixaEEquivalentesDeCaixa();
+            fornecedores += balancoPatrimonial.getFornecedores();
+        }
+
+        //MEDIA ANUAL
+        ativoTotal = ativoTotal / size;
+        caixa = caixa / size;
+        fornecedores = fornecedores / size;
+        //MEDIA
+
+        return getROIC(getEbitByAno(ano), ativoTotal, caixa, fornecedores) * 100;
+    }
+
+    public double getROICByTrimestre(final BalancoPatrimonial balanco) {
+        BalancoPatrimonial balancoPatrimonial = balanco;
+
+        double roic = getROIC(
+                getEbitUltimos12Meses(),
+                balancoPatrimonial.getAtivoTotal(),
+                balancoPatrimonial.getCaixaEEquivalentesDeCaixa(),
+                balancoPatrimonial.getFornecedores());
 
         return roic * 100;
     }
 
-    public double getROE() {
-        BalancoPatrimonial balancoPatrimonial = empresa.getBalancoList().get(0);
+    public double getROIC(final double ebit, final double ativos, final double caixa, final double forcenedores) {
+        return ebit / (ativos - caixa - forcenedores);
+    }
 
-        double roe = getLucroLiquido() /
+    public double getROICUltimoTrimestre() {
+        return getROICByTrimestre(getBalancoUltimoTrimestre());
+    }
+
+    public double getROEUltimoTrimestre() {
+        BalancoPatrimonial balancoPatrimonial = getBalancoUltimoTrimestre();
+
+        double roe = getLucroLiquidoUltimos12Meses() /
                 balancoPatrimonial.getPatrimonioLiquido();
 
         return roe * 100;
     }
 
+    public double getAumentoPercentualLucroLiquidoAnoAAno(final int anoAnterior, final int anoSeguinte) {
+        double lucroAnoAnterior = getLucroLiquidoPorAno(anoAnterior);
+        double lucroAnoSeguinte = getLucroLiquidoPorAno(anoSeguinte);
+        double lucroPercentual = 0;
+
+        lucroPercentual = getAumentoPercentual(lucroAnoAnterior, lucroAnoSeguinte);
+
+        return lucroPercentual;
+    }
+
+    public double getAumentoPercentualEbitAnoAAno(final int anoAnterior, final int anoSeguinte) {
+        double ebitSeguinte = getEbitByAno(anoSeguinte);
+        double ebitAnterior = getEbitByAno(anoAnterior);
+
+        return getAumentoPercentual(ebitAnterior, ebitSeguinte);
+
+    }
+
+    private double getAumentoPercentual(final double valor1,
+            final double valor2) {
+        double lucroPercentual;
+        if (valor2 >= valor1) {
+            double diff = valor2 - valor1;
+
+            lucroPercentual = (diff / valor1) * 100;
+        }
+        else {
+            double diff = valor1 - valor2;
+
+            lucroPercentual = ((diff / valor2) * 100) - 1;
+        }
+        return lucroPercentual;
+    }
+
     public boolean isLucroMedio3AnosAcima4PorCento() {
         double percentual = 0;
         int anos = 3;
-        logger.debug("#####################" + empresa.getSigla()
-                + "#######################");
-        logger.debug("Lucro Medio dos últimos [" + anos + "] anos. Começando em ["
-                + getAno() + "]");
 
         for (int i = anos; i > 0; i--) {
             int anoInicial = ano - i;
@@ -646,8 +727,8 @@ public class ReportFundamentalista {
 
             logger.debug("Contabilizando o lucro do ano de [" + anoAnterior
                     + "] menos o ano de [" + anoInicial + "]");
-            double lucroPorAno = getLucroPorAno(anoInicial);
-            double lucroPorAnoAnterior = getLucroPorAno(anoAnterior);
+            double lucroPorAno = getLucroLiquidoPorAno(anoInicial);
+            double lucroPorAnoAnterior = getLucroLiquidoPorAno(anoAnterior);
             logger.debug("Ano: [" + anoAnterior + "] - Lucro: [" + lucroPorAnoAnterior
                     + "]");
             logger.debug("Ano: [" + anoInicial + "] - Lucro: [" + lucroPorAno + "]");
@@ -661,10 +742,8 @@ public class ReportFundamentalista {
         return (percentual / anos) >= 4;
     }
 
-    private BalancoPatrimonial getBalancoPatrimonialUltimoTrimestre() {
-
-        Calendar ultimoTrimestre = ReportUtil.getUltimoTrimestre(Calendar.getInstance());
-        return getBalancoByDate(ultimoTrimestre);
+    private BalancoPatrimonial getBalancoUltimoTrimestre() {
+        return empresa.getBalancoList().get(0);
     }
 
     private BalancoPatrimonial getBalancoByDate(final Calendar ultimoTrimestre) {
@@ -705,5 +784,4 @@ public class ReportFundamentalista {
         }
         return demonstrativoResultado;
     }
-
 }

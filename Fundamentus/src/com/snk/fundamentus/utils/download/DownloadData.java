@@ -184,7 +184,7 @@ public class DownloadData {
         }
     }
 
-    public void updateEmpresaInformation()
+    public void updateInformation()
             throws ClientProtocolException, IOException, XPathExpressionException,
             ParserConfigurationException {
         final String url = "http://fundamentus.com.br/detalhes.php?papel=";

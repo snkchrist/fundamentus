@@ -23,7 +23,7 @@ public class Indices {
     private final double indiceRotatividade;
 
     @ShowOnTable(format = "%1.2f", name = "Liquidez corrente (12 meses)")
-    private final double liquidezCorrentePorAno;
+    private final double liquidezCorrente12Meses;
 
     @ShowOnTable(format = "%1.2f", name = "Liquidez Corrente (trimestre)")
     private final double liquidezCorrenteUltimoTrimestre;
@@ -78,29 +78,29 @@ public class Indices {
 
     public Indices(final Empresa empresa, final int ano) {
         report = new ReportFundamentalista(empresa, ano);
-        disponibilidades = report.getDisponibilidades();
-        dividaBruta = report.getDividaBruta();
-        dividaLiquida = report.getDividaLiquida();
+        disponibilidades = report.getDisponibilidadesUltimoTrimestre();
+        dividaBruta = report.getDividaBrutaUltimoTrimestre();
+        dividaLiquida = report.getDividaLiquidaUltimoTrimestre();
         indiceLucratividade = report.getIndiceLucratividade();
         indiceRotatividade = report.getIndiceRotatividade();
-        liquidezCorrentePorAno = report.getLiquidezCorrentePorAno();
-        liquidezCorrenteUltimoTrimestre = report.getLiquidezCorrenteUltimoTrimestre();
+        liquidezCorrente12Meses = report.getLiquidezCorrenteUltimos12Meses();
+        liquidezCorrenteUltimoTrimestre = report.getLiquidezCorrente();
         liquidezGeral = report.getLiquidezGeral();
         liquidezImediata = report.getLiquidezImediata();
-        liquidezSeca = report.getLiquidezSeca();
+        liquidezSeca = report.getLiquidezSecaByAno();
         lpa = report.getLPA();
         lucratividadePL = report.getLucratividadePL();
         pl = report.getPL();
         pvpa = report.getPVPA();
-        qdeTobin = report.getQdeTobin();
+        qdeTobin = report.getQdeTobinUltimoTrimestre();
         relacaoDividaLiquidaPatrimonioLiquido = report.getRelacaoDividaLiquidaPatrimonioLiquido();
         vendasPorAno = report.getVendasUltimos12Meses();
         vpa = report.getVPA();
         ebitUltimoTrimestre = report.getEbitUltimoTrimestre();
-        ebit12Meses = report.getEbit12Meses();
-        roic = report.getROIC();
-        roe = report.getROE();
-        lucroLiquido = report.getLucroLiquido();
+        ebit12Meses = report.getEbitUltimos12Meses();
+        roic = report.getROICUltimoTrimestre();
+        roe = report.getROEUltimoTrimestre();
+        lucroLiquido = report.getLucroLiquidoUltimos12Meses();
     }
 
     public ReportFundamentalista getReport() {
@@ -128,7 +128,7 @@ public class Indices {
     }
 
     public double getLiquidezCorrentePorAno() {
-        return liquidezCorrentePorAno;
+        return liquidezCorrente12Meses;
     }
 
     public double getLiquidezCorrenteUltimoTrimestre() {

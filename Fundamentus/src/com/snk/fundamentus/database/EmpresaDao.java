@@ -23,4 +23,5 @@ public class EmpresaDao extends Database<Empresa> {
 
         return result;
     }
+
 }
