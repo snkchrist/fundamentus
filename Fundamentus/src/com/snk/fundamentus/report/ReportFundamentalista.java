@@ -167,7 +167,16 @@ public class ReportFundamentalista {
      * O Lucro antes de Juros e Impostos (LAJIR ou EBIT) 12 meses
      */
     public double getEbitByAno(final int ano) {
-        return getEbit(getListaDemonstrativoResultadoPorAno(ano));
+        double ebit = Double.NaN;
+        try {
+            ebit = getEbit(getListaDemonstrativoResultadoPorAno(ano));
+
+        }
+        catch (NullPointerException e) {
+            logger.info("Não foi possivel calcular o ebit da empresa [" + empresa.getSigla() + "] para o ano de [" + ano + "]");
+        }
+
+        return ebit;
     }
 
     /**
@@ -500,6 +509,10 @@ public class ReportFundamentalista {
             logger.error(e);
         }
 
+        if (lista.size() == 0) {
+            throw new NullPointerException("Não há demonstrativos para o ano especificado [" + ano + "]");
+        }
+
         return lista;
     }
 
@@ -596,8 +609,16 @@ public class ReportFundamentalista {
     }
 
     public double getLucroLiquidoPorAno(final int ano) {
-        List<DemonstrativoResultado> demonstrativoLst = getListaDemonstrativoResultadoPorAno(ano);
-        return getLucroLiquido(demonstrativoLst);
+        double lucroLiquido = Double.NaN;
+
+        try {
+            List<DemonstrativoResultado> demonstrativoLst = getListaDemonstrativoResultadoPorAno(ano);
+            lucroLiquido = getLucroLiquido(demonstrativoLst);
+        }
+        catch (NullPointerException e) {
+        }
+
+        return lucroLiquido;
     }
 
     public double getLucroLiquidoAnual() {
@@ -617,6 +638,11 @@ public class ReportFundamentalista {
      */
     public double getQdeTobinUltimoTrimestre() {
         BalancoPatrimonial balanco = getBalancoUltimoTrimestre();
+        return getQdeTobinByTrimestre(balanco);
+    }
+
+    public double getQdeTobinByTrimestre(final BalancoPatrimonial balancoPatrimonial) {
+        BalancoPatrimonial balanco = balancoPatrimonial;
         double qTobin = 0;
 
         if (null != balanco) {
@@ -626,7 +652,27 @@ public class ReportFundamentalista {
         }
 
         return qTobin;
+    }
 
+    /**
+     * Este indice tem um erro por causa do valor de mercado não ser referente
+     * ao trimestre realizado.
+     * TODO
+     *
+     * @return
+     */
+    public double getMediaQdeTobinPorAno() {
+        List<BalancoPatrimonial> listaBalancoPorAno = getListaBalancoPorAno(getAno());
+        int size = listaBalancoPorAno.size();
+        double value = 0;
+
+        for (int i = 0; i < size; i++) {
+            value += getQdeTobinByTrimestre(listaBalancoPorAno.get(i));
+        }
+
+        double mediaQdeTobinAno = value / size;
+
+        return mediaQdeTobinAno;
     }
 
     public double getROICByAno() {
@@ -697,16 +743,41 @@ public class ReportFundamentalista {
         double ebitSeguinte = getEbitByAno(anoSeguinte);
         double ebitAnterior = getEbitByAno(anoAnterior);
 
-        return getAumentoPercentual(ebitAnterior, ebitSeguinte);
+        double aumentoPercentual;
+
+        if (Double.isNaN(ebitSeguinte) || Double.isNaN(ebitAnterior)) {
+            aumentoPercentual = Double.NaN;
+        }
+        else {
+            aumentoPercentual = getAumentoPercentual(ebitAnterior, ebitSeguinte);
+        }
+
+        return aumentoPercentual;
 
     }
 
-    private double getAumentoPercentual(final double valor1,
-            final double valor2) {
-        double lucroPercentual;
-        if (valor2 >= valor1) {
-            double diff = valor2 - valor1;
+    public boolean isGrahansMethod() {
+        boolean vendasSubstanciais = getVendasUltimos12Meses() > 250000000;
+        boolean liquidezCorrente = getLiquidezCorrente() >= 1;
+        boolean relacaoDividaPatrimonio = getRelacaoDividaLiquidaPatrimonioLiquido() <= 0.5;
+        boolean teveLucroUltimos32Semestres = teveLucroUltimos32Semestres();
+        boolean lucroMedio3AnosAcima4PorCento = isLucroMedio3AnosAcima4PorCento();
 
+        if (vendasSubstanciais && liquidezCorrente && relacaoDividaPatrimonio
+                && teveLucroUltimos32Semestres && lucroMedio3AnosAcima4PorCento) {
+            return true;
+        }
+        return false;
+    }
+
+    private double getAumentoPercentual(final Double valor1,
+            final Double valor2) {
+        double lucroPercentual;
+        if (valor1.equals(valor2)) {
+            lucroPercentual = 0;
+        }
+        else if (valor2 >= valor1) {
+            double diff = valor2 - valor1;
             lucroPercentual = (diff / valor1) * 100;
         }
         else {
@@ -714,6 +785,7 @@ public class ReportFundamentalista {
 
             lucroPercentual = ((diff / valor2) * 100) - 1;
         }
+
         return lucroPercentual;
     }
 

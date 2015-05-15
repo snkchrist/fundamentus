@@ -21,8 +21,6 @@ import java.util.TreeMap;
 import javax.swing.JPanel;
 import javax.swing.table.TableModel;
 
-import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
-
 import com.snk.fundamentus.database.DaoFactory;
 import com.snk.fundamentus.enums.DataType;
 import com.snk.fundamentus.enums.MetodoInvestimento;
@@ -34,7 +32,6 @@ import com.snk.fundamentus.models.DemonstrativoResultado;
 import com.snk.fundamentus.models.Empresa;
 import com.snk.fundamentus.models.Indices;
 import com.snk.fundamentus.report.GuruMethod;
-import com.snk.fundamentus.report.ReportFundamentalista;
 
 public class PrincipalController {
     private final ITelaPrincipal view;
@@ -248,42 +245,6 @@ public class PrincipalController {
 
     private void updateIndicesViewByEmpresaObject(final Empresa empresa)
             throws IllegalAccessException {
-
-        List<Empresa> listAllElements = daoFactory.getEmpresaDao().listAllElements();
-
-        double[][] matrix = new double[listAllElements.size()][8];
-
-        for (int i = 0; i < listAllElements.size(); i++) {
-            Empresa emp = listAllElements.get(i);
-
-            int ano = 2014;
-            ReportFundamentalista report = new ReportFundamentalista(emp, ano);
-
-            List<BalancoPatrimonial> balancoLst = report.getListaBalancoPorAno(ano);
-            List<DemonstrativoResultado> demonstrativoLst = report.getListaDemonstrativoResultadoPorAno(ano);
-
-            double rentabilidadeAno14 = emp.getOscilacoes().getAno2014();
-            double roicAno = report.getROICByAno();
-            double liquidezCorrentePorAno = report.getLiquidezCorrenteUltimos12Meses();
-            double dividaLiquida = report.getDividaLiquidaUltimoTrimestre();
-            double vendasPorAno = report.getVendasPorAno();
-            double aumentoPercentualLucroLiquidoAnoAAno = report.getAumentoPercentualLucroLiquidoAnoAAno(ano - 1, ano);
-            double ebitByAno = report.getEbitByAno(ano);
-            double aumentoEbitAnoAAno = report.getAumentoPercentualEbitAnoAAno(ano - 1, ano);
-
-            matrix[i][0] = rentabilidadeAno14;
-            matrix[i][1] = roicAno;
-            matrix[i][2] = liquidezCorrentePorAno;
-            matrix[i][3] = dividaLiquida;
-            matrix[i][4] = vendasPorAno;
-            matrix[i][5] = aumentoPercentualLucroLiquidoAnoAAno;
-            matrix[i][6] = ebitByAno;
-            matrix[i][7] = aumentoEbitAnoAAno;
-        }
-
-        PearsonsCorrelation correlation = new PearsonsCorrelation(matrix);
-        double entry = correlation.computeCorrelationMatrix(matrix).getEntry(0, 7);
-
         Indices indices = new Indices(empresa, Calendar.getInstance().get(Calendar.YEAR) - 1);
 
         if (null != indices) {
