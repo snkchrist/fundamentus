@@ -2,6 +2,7 @@ package com.snk.fundamentus.models;
 
 import com.snk.fundamentus.enums.DataType;
 import com.snk.fundamentus.enums.ShowOnTable;
+import com.snk.fundamentus.report.LiquidezIndice;
 import com.snk.fundamentus.report.ReportFundamentalista;
 
 public class Indices {
@@ -22,7 +23,7 @@ public class Indices {
     @ShowOnTable(format = "%1.2f", name = "Indice Rotatividade")
     private final double indiceRotatividade;
 
-    @ShowOnTable(format = "%1.2f", name = "Liquidez corrente (12 meses)")
+    @ShowOnTable(format = "%1.2f", name = "Liquidez corrente (Média 12 meses)")
     private final double liquidezCorrente12Meses;
 
     @ShowOnTable(format = "%1.2f", name = "Liquidez Corrente (trimestre)")
@@ -73,21 +74,29 @@ public class Indices {
     @ShowOnTable(format = "%1.2f", name = "ROE-Retorno sobre o Patrimônio Líquido", type = DataType.Percentage)
     private final double roe;
 
-    @ShowOnTable(format = "%1.2f", name = "Lucro Líquido", type = DataType.Currency)
+    @ShowOnTable(format = "%1.2f", name = "Lucro Líquido (12 meses)", type = DataType.Currency)
     private final double lucroLiquido;
+
+    @ShowOnTable(format = "%1.2f", name = "Dividendos (12 meses)", type = DataType.Currency)
+    private final double dividendos;
+
+    @ShowOnTable(name = "Trimestre")
+    private final String trimestre;
 
     public Indices(final Empresa empresa, final int ano) {
         report = new ReportFundamentalista(empresa, ano);
+        LiquidezIndice liquidez = new LiquidezIndice(report);
+
         disponibilidades = report.getDisponibilidadesUltimoTrimestre();
         dividaBruta = report.getDividaBrutaUltimoTrimestre();
         dividaLiquida = report.getDividaLiquidaUltimoTrimestre();
         indiceLucratividade = report.getIndiceLucratividade();
         indiceRotatividade = report.getIndiceRotatividade();
-        liquidezCorrente12Meses = report.getLiquidezCorrenteUltimos12Meses();
-        liquidezCorrenteUltimoTrimestre = report.getLiquidezCorrente();
-        liquidezGeral = report.getLiquidezGeral();
-        liquidezImediata = report.getLiquidezImediata();
-        liquidezSeca = report.getLiquidezSecaByAno();
+        liquidezCorrente12Meses = liquidez.getMediaLiquidezCorrenteUltimos12Meses();
+        liquidezCorrenteUltimoTrimestre = liquidez.getLiquidezCorrenteUltimoTrimestre();
+        liquidezGeral = liquidez.getLiquidezGeralUltimoTrimestre();
+        liquidezImediata = liquidez.getLiquidezImediataUltimoTrimestre();
+        liquidezSeca = liquidez.getLiquidezSecaUltimoTrimestre();
         lpa = report.getLPA();
         lucratividadePL = report.getLucratividadePL();
         pl = report.getPL();
@@ -101,6 +110,8 @@ public class Indices {
         roic = report.getROICUltimoTrimestre();
         roe = report.getROEUltimoTrimestre();
         lucroLiquido = report.getLucroLiquidoUltimos12Meses();
+        dividendos = report.getDividendosDistribuidosUltimos12Meses();
+        trimestre = report.getTrimestreStrByDate(empresa.getUltimoBalancoRegistrado());
     }
 
     public ReportFundamentalista getReport() {

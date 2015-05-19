@@ -12,7 +12,7 @@ import com.snk.fundamentus.models.Empresa;
 
 public class GuruMethod {
 
-    private final DaoFactory daoFactory = new DaoFactory();
+    private DaoFactory daoFactory;
     private final List<Empresa> lstEmpresa;
     private final Logger logger = Logger.getLogger(GuruMethod.class);
 
@@ -37,39 +37,62 @@ public class GuruMethod {
             anoCorrente = ano;
         }
 
-        if (MetodoInvestimento.Grahan.equals(method)) {
-            guru = new GuruMethod();
-            guru.buildGrahansMethod(anoCorrente);
-        }
-        else if (MetodoInvestimento.Ultimos5AP.equals(method)) {
-            guru = new GuruMethod();
-            guru.buildLast5PositiveYeards();
-        }
+        guru = new GuruMethod();
+        guru.buildMethod(method, anoCorrente);
 
         return guru;
     }
 
-    private void buildLast5PositiveYeards() {
-        List<Empresa> empresaList = daoFactory.getEmpresaDao().listAllElements();
-
-        for (Empresa empresa : empresaList) {
-            ReportFundamentalista report = new ReportFundamentalista(empresa);
-
-            if (true == report.teveLucroAcoesUltimos5Anos()) {
-                getLstEmpresa().add(empresa);
-            }
+    private DaoFactory getDaoFactory() {
+        if (null == daoFactory) {
+            daoFactory = new DaoFactory();
         }
+
+        return daoFactory;
     }
 
-    private void buildGrahansMethod(final int ano) {
-
-        List<Empresa> empresaList = daoFactory.getEmpresaDao().listAllElements();
+    private void buildMethod(final MetodoInvestimento metodo, final int ano) {
+        List<Empresa> empresaList = getDaoFactory().getEmpresaDao().listAllElements();
 
         for (Empresa empresa : empresaList) {
             ReportFundamentalista report = new ReportFundamentalista(empresa, ano);
-            if (report.isGrahansMethod()) {
-                empresaList.add(empresa);
+
+            if (MetodoInvestimento.RentabilidadeAcumulada5A.equals(metodo)) {
+                if (report.getRentabilidadeAcumuladaUltimos5Anos() > 200) {
+                    getLstEmpresa().add(empresa);
+                }
+            }
+
+            else if (MetodoInvestimento.QdeTobin.equals(metodo)) {
+                if (report.getQdeTobinUltimoTrimestre() > 1) {
+                    getLstEmpresa().add(empresa);
+                }
+            }
+
+            else if (MetodoInvestimento.Ultimos5AP.equals(metodo)) {
+                if (true == report.teveLucroAcoesUltimos5Anos()) {
+                    getLstEmpresa().add(empresa);
+                }
+            }
+
+            else if (MetodoInvestimento.Grahan.equals(metodo)) {
+                if (report.isGrahansMethod()) {
+                    getLstEmpresa().add(empresa);
+                }
+            }
+
+            else if (MetodoInvestimento.MaiorVPA.equals(metodo)) {
+                if (report.isVPAMaiorQueCotacao()) {
+                    getLstEmpresa().add(empresa);
+                }
+            }
+
+            else if (MetodoInvestimento.Filipe.equals(metodo)) {
+                if (report.isFilipesMethod()) {
+                    getLstEmpresa().add(empresa);
+                }
             }
         }
     }
+
 }

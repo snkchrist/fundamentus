@@ -5,12 +5,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-
 public class ReportUtil {
 
     private static final String DD_MM_YYYY = "dd/MM/yyyy";
 
-    public static double somaTodosValores(double... valores) {
+    public static double somaTodosValores(final double... valores) {
         double soma = 0;
 
         for (double d : valores) {
@@ -21,24 +20,53 @@ public class ReportUtil {
 
     }
 
-    public static Calendar getCalendarFromDate(Date date) {
+    public static Calendar getCalendarFromDate(final Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
 
         return calendar;
     }
 
-    public static String formatDate(Date date) {
+    public static String formatDate(final Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat(DD_MM_YYYY);
         return sdf.format(date.getTime());
     }
 
-    public static Date formatString(String date) throws ParseException {
+    public static Date formatString(final String date)
+            throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat(DD_MM_YYYY);
         return sdf.parse(date);
     }
 
-    public static Calendar getUltimoTrimestre(Calendar date) {
+    public static String getTrimestreStr(final Calendar date) {
+        date.add(Calendar.DAY_OF_MONTH, 1);
+
+        int month = date.get(Calendar.MONTH);
+        String year = new SimpleDateFormat("yy").format(date.getTime());
+        date.add(Calendar.YEAR, -1);
+        String yearBefore = new SimpleDateFormat("yy").format(date.getTime());
+
+        float quarter = month / 3F;
+
+        String trimestre = null;
+        if (quarter < 1.0) {
+
+            trimestre = "4T" + yearBefore;
+        }
+        else if (quarter < 2.0) {
+            trimestre = "1T" + year;
+        }
+        else if (quarter < 3.0) {
+            trimestre = "2T" + year;
+        }
+        else {
+            trimestre = "3T" + year;
+        }
+
+        return trimestre;
+    }
+
+    public static Calendar getUltimoTrimestre(final Calendar date) {
 
         int month = date.get(Calendar.MONTH);
         int year = date.get(Calendar.YEAR);

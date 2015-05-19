@@ -3,8 +3,11 @@ package com.snk.fundamentus.enums;
 public enum MetodoInvestimento {
     None,
     Grahan,
-    Fisher,
     Buffet,
+    Filipe,
+    Fisher,
+    MaiorVPA,
+    QdeTobin,
+    RentabilidadeAcumulada5A,
     Ultimos5AP,
-    QdeTobin
 }
