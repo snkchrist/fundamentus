@@ -32,10 +32,15 @@ public class ReportUtil {
         return sdf.format(date.getTime());
     }
 
+    public static Date formatString(final String date, final String format)
+            throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        return sdf.parse(date);
+    }
+
     public static Date formatString(final String date)
             throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat(DD_MM_YYYY);
-        return sdf.parse(date);
+        return formatString(date, DD_MM_YYYY);
     }
 
     public static String getTrimestreStr(final Calendar date) {

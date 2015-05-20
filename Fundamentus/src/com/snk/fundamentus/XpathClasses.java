@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.xml.namespace.QName;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -15,6 +16,7 @@ import org.htmlcleaner.CleanerProperties;
 import org.htmlcleaner.DomSerializer;
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
+import org.w3c.dom.Node;
 
 public class XpathClasses {
 
@@ -99,22 +101,43 @@ public class XpathClasses {
         return str.replace(".", "").replace("%", "").replace(",", ".");
     }
 
-    public static String getFieldFromXpath(final String html, final String x)
+    public static Object getFieldFromXpath(final String html, final String x, final QName contant)
             throws ParserConfigurationException, XPathExpressionException {
         TagNode tagNode = new HtmlCleaner().clean(html);
         org.w3c.dom.Document doc = new DomSerializer(new CleanerProperties()).createDOM(tagNode);
 
-        String str = "";
+        Object object = null;
         try {
             XPath xpath = XPathFactory.newInstance().newXPath();
-            str = (String) xpath.evaluate(x, doc, XPathConstants.STRING);
-            str = removeInvalidChars(str);
+            object = xpath.evaluate(x, doc, contant);
         }
         catch (Exception exp) {
             System.out.println(exp.getMessage());
         }
 
+        return object;
+    }
+
+    public static String getFieldFromXpath(final String html, final String x)
+            throws XPathExpressionException, ParserConfigurationException {
+        String str = (String) getFieldFromXpath(html, x, XPathConstants.STRING);
+        str = removeInvalidChars(str);
+
         return str;
+    }
+
+    public static String getAttributeFromXPath(final String html, final String x, final String attribute)
+            throws XPathExpressionException, ParserConfigurationException {
+
+        try {
+            Node node = (Node) getFieldFromXpath(html, x, XPathConstants.NODE);
+            return node.getAttributes().getNamedItem(attribute).getNodeValue();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public static Date getDateFieldFromXpath(final String html, final String x)

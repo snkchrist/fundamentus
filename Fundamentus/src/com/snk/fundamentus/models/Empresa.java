@@ -66,6 +66,9 @@ public class Empresa {
     @Embedded
     private List<BalancoPatrimonial> balancoList;
 
+    @Embedded
+    private List<Cotacao> cotacaoList;
+
     @ShowOnTableRecursive
     @Embedded
     private Balanco balanco;
@@ -232,6 +235,14 @@ public class Empresa {
 
     public void setBalancoList(final List<BalancoPatrimonial> balancoList) {
         this.balancoList = balancoList;
+    }
+
+    public List<Cotacao> getCotacaoList() {
+        return cotacaoList;
+    }
+
+    public void setCotacaoList(final List<Cotacao> cotacaoList) {
+        this.cotacaoList = cotacaoList;
     }
 
     public List<DemonstrativoResultado> getDemonstrativoList() {

@@ -2,10 +2,16 @@ package com.snk.fundamentus.utils.download;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -21,14 +27,16 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
+import com.snk.fundamentus.XpathClasses;
 import com.snk.fundamentus.database.DaoFactory;
 import com.snk.fundamentus.database.Database;
 import com.snk.fundamentus.database.EmpresaDao;
 import com.snk.fundamentus.enums.EmpEnum;
+import com.snk.fundamentus.models.Cotacao;
 import com.snk.fundamentus.models.Empresa;
+import com.snk.fundamentus.report.ReportUtil;
 import com.snk.fundamentus.utils.transform.HtmlConverter;
 
 public class DownloadData {
@@ -48,7 +56,13 @@ public class DownloadData {
 
         DownloadData data = new DownloadData();
         //data.downloadXlsFiles(destFolder);
+        data.collectInformationStockPriceYahoo();
 
+        //unzipFiles(destFolder, zipDestFolder, data);
+    }
+
+    private static void unzipFiles(final String destFolder, final String zipDestFolder, final DownloadData data)
+            throws IOException {
         File files = new File(destFolder);
         if (files.isDirectory()) {
             File[] listFiles = files.listFiles();
@@ -87,11 +101,40 @@ public class DownloadData {
 
     public String downloadHtml(final String url)
             throws ClientProtocolException, IOException {
-        HttpEntity download = download(url);
-        String string = EntityUtils.toString(download);
-        download.consumeContent();
+        InputStream is = null;
+        BufferedReader br;
+        String line;
+        StringBuilder builder = new StringBuilder();
 
-        return string;
+        HttpEntity download = download(url);
+
+        InputStream content = download.getContent();
+
+        try {
+            br = new BufferedReader(new InputStreamReader(content));
+
+            while ((line = br.readLine()) != null) {
+                builder.append(line);
+                builder.append("\n");
+            }
+        }
+        catch (MalformedURLException mue) {
+            mue.printStackTrace();
+        }
+        catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+        finally {
+            try {
+                if (is != null) {
+                    is.close();
+                }
+            }
+            catch (IOException ioe) {
+            }
+        }
+
+        return builder.toString();
     }
 
     public void downloadXlsFiles(final String destFolder)
@@ -122,7 +165,7 @@ public class DownloadData {
             }
         }
 
-        System.out.println("DownloadedCompleted");
+        logger.info("DownloadedCompleted");
     }
 
     private void UnzipFundamentFiles(final File folderToGetFiles, final String folderToExtract)
@@ -152,7 +195,8 @@ public class DownloadData {
         ZipEntry entry;
 
         while ((entry = zis.getNextEntry()) != null) {
-            System.out.println("Extracting: " + entry.getName());
+            logger.info("Extracting: " + entry.getName());
+
             int count;
             byte data[] = new byte[1024];
             String xlsFileName = "balanco.xls";
@@ -225,6 +269,73 @@ public class DownloadData {
             final String downloadHtml = downloadHtml(url + empEnum.name());
             final HtmlConverter obj = new HtmlConverter(downloadHtml);
             base.add(obj.getEmpresa());
+        }
+    }
+
+    public void collectInformationStockPriceYahoo()
+            throws ClientProtocolException, IOException, XPathExpressionException, ParserConfigurationException {
+        EmpresaDao empresaDao = daoFactory.getEmpresaDao();
+        List<Empresa> listAllElements = empresaDao.listAllElements();
+
+        for (Empresa empresa : listAllElements) {
+            String url = "http://finance.yahoo.com/q/hp?s=" + empresa.getSigla() + ".SA";
+            String downloadHtml = downloadHtml(url);
+
+            String verificationStr = XpathClasses.getFieldFromXpath(
+                    downloadHtml,
+                    "//*[@id=\"yfi_rt_quote_summary\"]/div[1]/div/span[1]/text()");
+
+            if (verificationStr.contains("Sao Paolo")) {
+                String field = XpathClasses.getAttributeFromXPath(
+                        downloadHtml,
+                        "//*[@id=\"yfncsumtab\"]/tbody/tr[2]/td[1]/p[1]/a",
+                        "href");
+
+                if (null != field && false == field.isEmpty()) {
+                    String downloadHtml2 = downloadHtml(field);
+
+                    String[] split = downloadHtml2.split("\n");
+
+                    List<Cotacao> cotacaoList = new ArrayList<Cotacao>();
+
+                    for (int i = 1; i < split.length; i++) {
+                        try {
+                            String[] split2 = split[i].split(",");
+
+                            Cotacao cotacao = new Cotacao();
+                            Date dataCotacao = ReportUtil.formatString(split2[0], "yyyy-MM-dd");
+
+                            cotacao.setData(dataCotacao);
+                            cotacao.setAbertura(Double.parseDouble(split2[1]));
+                            cotacao.setMaxima(Double.parseDouble(split2[2]));
+                            cotacao.setMinima(Double.parseDouble(split2[3]));
+                            cotacao.setFechamento(Double.parseDouble(split2[4]));
+                            cotacao.setVolume(Long.parseLong(split2[5]));
+                            cotacao.setFechamentoAdj(Double.parseDouble(split2[6]));
+
+                            if (false == cotacaoList.contains(cotacao)) {
+                                logger.info("At.. Cotacao empresa ["
+                                        + empresa.getSigla()
+                                        + "] dia ["
+                                        + dataCotacao.toGMTString()
+                                        + "]");
+
+                                cotacaoList.add(cotacao);
+                            }
+                        }
+                        catch (Exception e) {
+                            logger.error("ERROR", e);
+                        }
+                    }
+
+                    empresaDao.beginTransaction();
+                    empresa.setCotacaoList(cotacaoList);
+                    empresaDao.commitTransaction();
+                }
+                else {
+                    logger.info("Não foi possivel baixar cotacoes para empresa [" + empresa.getSigla() + "]");
+                }
+            }
         }
     }
 }
