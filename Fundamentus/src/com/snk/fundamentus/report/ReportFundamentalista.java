@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 
 import com.snk.fundamentus.enums.Trimestre;
 import com.snk.fundamentus.models.BalancoPatrimonial;
+import com.snk.fundamentus.models.Cotacao;
 import com.snk.fundamentus.models.DemonstrativoResultado;
 import com.snk.fundamentus.models.Empresa;
 import com.snk.fundamentus.models.Oscilacoes;
@@ -880,5 +881,74 @@ public class ReportFundamentalista {
         }
 
         return vendas;
+    }
+
+    public double getDesvioPadraoHistorico() {
+        List<Cotacao> cotacaoList = empresa.getCotacaoList();
+        double desvio = 0;
+
+        if (null != cotacaoList) {
+
+            List<Double> listDouble = new ArrayList<Double>();
+
+            for (Cotacao cotacao : cotacaoList) {
+                listDouble.add(cotacao.getFechamento());
+            }
+
+            Double[] array = new Double[listDouble.size()];
+            listDouble.toArray(array);
+
+            desvio = getDesvioPadrao(array);
+
+        }
+
+        return desvio;
+    }
+
+    public double getDesvioPadraoUltimos5Anos() {
+        List<Cotacao> cotacaoList = empresa.getCotacaoList();
+        List<Double> listDouble = new ArrayList<Double>();
+        double desvio = 0;
+
+        if (null != cotacaoList) {
+            for (Cotacao cotacao : cotacaoList) {
+
+                Calendar instance = Calendar.getInstance();
+                instance.add(Calendar.YEAR, -5);
+
+                Date data = cotacao.getData();
+
+                if (data.after(instance.getTime())) {
+                    listDouble.add(cotacao.getFechamento());
+                }
+            }
+
+            Double[] array = new Double[listDouble.size()];
+            listDouble.toArray(array);
+            desvio = getDesvioPadrao(array);
+        }
+
+        return desvio;
+
+    }
+
+    public double getDesvioPadrao(final Double[] objetos) {
+        double mediaAritimetica = getMediaAritimetica(objetos);
+
+        double somatorio = 0;
+        for (int i = 0; i < objetos.length; i++) {
+            double diferenca = objetos[i] - mediaAritimetica;
+            somatorio += diferenca * diferenca;
+        }
+        somatorio = somatorio / objetos.length;
+        return Math.sqrt(somatorio);
+    }
+
+    public double getMediaAritimetica(final Double[] doubleA) {
+        double somatorio = 0l;
+        for (Double d : doubleA) {
+            somatorio += d;
+        }
+        return somatorio / doubleA.length;
     }
 }

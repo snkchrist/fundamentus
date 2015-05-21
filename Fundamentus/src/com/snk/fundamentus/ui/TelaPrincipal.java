@@ -124,9 +124,8 @@ public class TelaPrincipal implements ITelaPrincipal {
         if (null != controller.getStockModel(null)) {
             tblAcoes = new JTable(controller.getStockModel(null));
         }
-
-        tblAcoes.addMouseListener(controller.getTblAcoesMouseAdapter());
         tblAcoes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tblAcoes.getSelectionModel().addListSelectionListener(controller.getTblAcoesListSelectionListener());
 
         pnlTable.setPreferredSize(tblAcoes.getPreferredSize());
         scrollPane.add(pnlTable);
@@ -253,6 +252,7 @@ public class TelaPrincipal implements ITelaPrincipal {
         tblAcoes.setModel(tblModel);
         fireTableDataChange(tblModel);
         pnlTable.setPreferredSize(tblAcoes.getPreferredSize());
+
     }
 
     @Override

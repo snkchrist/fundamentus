@@ -4,8 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.NumberFormat;
@@ -19,6 +17,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import javax.swing.JPanel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
 
 import com.snk.fundamentus.database.DaoFactory;
@@ -193,18 +193,21 @@ public class PrincipalController {
         try {
             view.clearUiTabs();
             int selectedRowAtTblAcoes = view.getSelectedRowAtTblAcoes();
-            String empSigla = (String) view.getSelectedObjectAtTblAcoes(selectedRowAtTblAcoes, 1);
-            Empresa empresa = daoFactory.getEmpresaDao().findEmpresaBySigla(empSigla);
+            if (selectedRowAtTblAcoes != -1) {
 
-            buildBasicDetailsTableModel = buildObjectTableModel(empresa);
+                String empSigla = (String) view.getSelectedObjectAtTblAcoes(selectedRowAtTblAcoes, 1);
+                Empresa empresa = daoFactory.getEmpresaDao().findEmpresaBySigla(empSigla);
 
-            updateBalancoViewByEmpresaObject(empresa);
+                buildBasicDetailsTableModel = buildObjectTableModel(empresa);
 
-            updateDemonstrativoViewByEmpresaObject(empresa);
+                updateBalancoViewByEmpresaObject(empresa);
 
-            updateIndicesViewByEmpresaObject(empresa);
+                updateDemonstrativoViewByEmpresaObject(empresa);
 
-            view.setTblDetalhesBasicosModel(buildBasicDetailsTableModel);
+                updateIndicesViewByEmpresaObject(empresa);
+
+                view.setTblDetalhesBasicosModel(buildBasicDetailsTableModel);
+            }
 
         }
         catch (IllegalArgumentException | IllegalAccessException e) {
@@ -282,15 +285,13 @@ public class PrincipalController {
         return btnActionListener;
     }
 
-    public MouseAdapter getTblAcoesMouseAdapter() {
-        MouseAdapter mouseAdapter = new MouseAdapter() {
-            @Override
-            public void mouseClicked(final MouseEvent arg0) {
+    public ListSelectionListener getTblAcoesListSelectionListener() {
+        ListSelectionListener mouseAdapter = new ListSelectionListener() {
+            public void valueChanged(final ListSelectionEvent e) {
                 updateViewByEmpresaObject();
-
             }
-
         };
+
         return mouseAdapter;
     }
 }

@@ -29,13 +29,13 @@ public class Indices {
     @ShowOnTable(format = "%1.2f", name = "Liquidez Corrente (trimestre)")
     private final double liquidezCorrenteUltimoTrimestre;
 
-    @ShowOnTable(format = "%1.2f", name = "Liquidez Geral")
+    @ShowOnTable(format = "%1.2f", name = "Liquidez Geral (trimestre)")
     private final double liquidezGeral;
 
-    @ShowOnTable(format = "%1.2f", name = "Liquidez Imediata")
+    @ShowOnTable(format = "%1.2f", name = "Liquidez Imediata (trimestre)")
     private final double liquidezImediata;
 
-    @ShowOnTable(format = "%1.2f", name = "Liquidez seca")
+    @ShowOnTable(format = "%1.2f", name = "Liquidez seca (trimestre)")
     private final double liquidezSeca;
 
     @ShowOnTable(format = "%1.2f", name = "Lucro por ação")
@@ -83,6 +83,12 @@ public class Indices {
     @ShowOnTable(name = "Trimestre")
     private final String trimestre;
 
+    @ShowOnTable(format = "%1.2f", name = "Desvio padrão histórico")
+    private final double desvioPadrao;
+
+    @ShowOnTable(format = "%1.2f", name = "Desvio padrão últimos 5 anos")
+    private final double desvioPadraoUltimos5Anos;
+
     public Indices(final Empresa empresa, final int ano) {
         report = new ReportFundamentalista(empresa, ano);
         LiquidezIndice liquidez = new LiquidezIndice(report);
@@ -112,82 +118,8 @@ public class Indices {
         lucroLiquido = report.getLucroLiquidoUltimos12Meses();
         dividendos = report.getDividendosDistribuidosUltimos12Meses();
         trimestre = report.getTrimestreStrByDate(empresa.getUltimoBalancoRegistrado());
-    }
-
-    public ReportFundamentalista getReport() {
-        return report;
-    }
-
-    public double getDisponibilidades() {
-        return disponibilidades;
-    }
-
-    public double getDividaBruta() {
-        return dividaBruta;
-    }
-
-    public double getDividaLiquida() {
-        return dividaLiquida;
-    }
-
-    public double getIndiceLucratividade() {
-        return indiceLucratividade;
-    }
-
-    public double getIndiceRotatividade() {
-        return indiceRotatividade;
-    }
-
-    public double getLiquidezCorrentePorAno() {
-        return liquidezCorrente12Meses;
-    }
-
-    public double getLiquidezCorrenteUltimoTrimestre() {
-        return liquidezCorrenteUltimoTrimestre;
-    }
-
-    public double getLiquidezGeral() {
-        return liquidezGeral;
-    }
-
-    public double getLiquidezImediata() {
-        return liquidezImediata;
-    }
-
-    public double getLiquidezSeca() {
-        return liquidezSeca;
-    }
-
-    public double getLpa() {
-        return lpa;
-    }
-
-    public double getLucratividadePL() {
-        return lucratividadePL;
-    }
-
-    public double getPl() {
-        return pl;
-    }
-
-    public double getPvpa() {
-        return pvpa;
-    }
-
-    public double getQdeTobin() {
-        return qdeTobin;
-    }
-
-    public double getRelacaoDividaLiquidaPatrimonioLiquido() {
-        return relacaoDividaLiquidaPatrimonioLiquido;
-    }
-
-    public double getVendasPorAno() {
-        return vendasPorAno;
-    }
-
-    public double getVpa() {
-        return vpa;
+        desvioPadrao = report.getDesvioPadraoHistorico();
+        desvioPadraoUltimos5Anos = report.getDesvioPadraoUltimos5Anos();
     }
 
 }
