@@ -16,6 +16,7 @@ import com.snk.fundamentus.models.Oscilacoes;
 
 public class ReportFundamentalista {
 
+    private static final String BANCOS = "Bancos";
     private static Logger logger = Logger.getLogger(ReportFundamentalista.class);
     private final int ano;
 
@@ -201,17 +202,25 @@ public class ReportFundamentalista {
 
         if (listaDemonstrativoPorAno != null) {
             double receitaLiquidaVendasServicos = 0;
+            double receitaLiquidaBank = 0;
             double ativoTotal = 0;
 
             for (DemonstrativoResultado demonstrativoResultado : listaDemonstrativoPorAno) {
                 receitaLiquidaVendasServicos += demonstrativoResultado.getReceitaLiquidaVendasServicos();
+                receitaLiquidaBank += demonstrativoResultado.getReceitasIntermediaçaoFinanceira();
+
             }
 
             for (BalancoPatrimonial balancoPatrimonial : listaBalancoPorAno) {
                 ativoTotal += balancoPatrimonial.getAtivoTotal();
             }
 
-            indiceRotatividade = ativoTotal / receitaLiquidaVendasServicos;
+            if (receitaLiquidaVendasServicos > 0) {
+                indiceRotatividade = ativoTotal / receitaLiquidaVendasServicos;
+            }
+            else {
+                indiceRotatividade = ativoTotal / receitaLiquidaBank;
+            }
 
         }
 
@@ -232,14 +241,20 @@ public class ReportFundamentalista {
 
         if (listaDemonstrativoPorAno != null) {
             double lucro_PrejuizoPeriodo = 0;
-            double receitaLiquidaVendasServicos = 0;
+            double receitaLiquida = 0;
 
             for (DemonstrativoResultado balancoPatrimonial : listaDemonstrativoPorAno) {
                 lucro_PrejuizoPeriodo += balancoPatrimonial.getLucro_PrejuizoPeriodo();
-                receitaLiquidaVendasServicos += balancoPatrimonial.getReceitaLiquidaVendasServicos();
+
+                if (balancoPatrimonial.getReceitaLiquidaVendasServicos() > 0) {
+                    receitaLiquida += balancoPatrimonial.getReceitaLiquidaVendasServicos();
+                }
+                else {
+                    receitaLiquida += balancoPatrimonial.getReceitasIntermediaçaoFinanceira();
+                }
             }
 
-            indiceLucratividade = lucro_PrejuizoPeriodo / receitaLiquidaVendasServicos;
+            indiceLucratividade = lucro_PrejuizoPeriodo / receitaLiquida;
         }
 
         return indiceLucratividade;
@@ -597,11 +612,11 @@ public class ReportFundamentalista {
         double roic = getROIC(
                 getEbitUltimos12MesesAnteriorAoDemonstrativo(demonstrativo),
                 balancoPatrimonial.getAtivoTotal() -
-                balancoPatrimonial.getCaixaEEquivalentesDeCaixa() -
-                balancoPatrimonial.getFornecedores() -
-                balancoPatrimonial.getAplicacoesFinanceiras() -
-                balancoPatrimonial.getAplicacoesFinanceirasAvaliadasAoCustoAmortizado() -
-                balancoPatrimonial.getAplicacoesFinanceirasAvaliadasAValorJusto());
+                        balancoPatrimonial.getCaixaEEquivalentesDeCaixa() -
+                        balancoPatrimonial.getFornecedores() -
+                        balancoPatrimonial.getAplicacoesFinanceiras() -
+                        balancoPatrimonial.getAplicacoesFinanceirasAvaliadasAoCustoAmortizado() -
+                        balancoPatrimonial.getAplicacoesFinanceirasAvaliadasAValorJusto());
 
         return roic * 100;
     }
@@ -685,12 +700,12 @@ public class ReportFundamentalista {
 
         if (vendasSubstanciais && liquidezCorrente && relacaoDividaPatrimonio
                 && teveLucroUltimos32Semestres && lucroMedio3AnosAcima4PorCento) {
-            logger.info("Empresa: [" + empresa.getSigla() + "]");
-            logger.info("vendasSubstanciais: [" + getVendasUltimos12Meses() + "]");
-            logger.info("liquidezCorrente: [" + liquidez.getLiquidezCorrenteUltimoTrimestre() + "]");
-            logger.info("relacaoDividaPatrimonio: [" + (getRelacaoDividaLiquidaPatrimonioLiquido()) + "]");
-            logger.info("teveLucroUltimos32Semestres: [" + teveLucroUltimos32Semestres() + "]");
-            logger.info("lucroMedio3AnosAcima4PorCento: [" + isLucroMedio3AnosAcima4Porcento() + "]");
+            logger.debug("Empresa: [" + empresa.getSigla() + "]");
+            logger.debug("vendasSubstanciais: [" + getVendasUltimos12Meses() + "]");
+            logger.debug("liquidezCorrente: [" + liquidez.getLiquidezCorrenteUltimoTrimestre() + "]");
+            logger.debug("relacaoDividaPatrimonio: [" + (getRelacaoDividaLiquidaPatrimonioLiquido()) + "]");
+            logger.debug("teveLucroUltimos32Semestres: [" + teveLucroUltimos32Semestres() + "]");
+            logger.debug("lucroMedio3AnosAcima4PorCento: [" + isLucroMedio3AnosAcima4Porcento() + "]");
 
             return true;
         }
@@ -706,7 +721,7 @@ public class ReportFundamentalista {
         boolean liquidezBoolean = liquidez.getLiquidezCorrenteUltimoTrimestre() > 1;
 
         if (isQTobinAnoAcima15 && vendas && roic15 && aumentoEbit && aumentoLucro && liquidezBoolean) {
-            logger.info("Empresa [" + empresa.getSigla() + "]");
+            logger.debug("Empresa [" + empresa.getSigla() + "]");
             return true;
         }
         return false;
@@ -875,12 +890,23 @@ public class ReportFundamentalista {
         List<DemonstrativoResultado> listaDemonstrativoResultadoPorAno = lst;
 
         double vendas = 0;
+        double vendasBank = 0;
 
         for (DemonstrativoResultado demonstrativoResultado : listaDemonstrativoResultadoPorAno) {
             vendas += demonstrativoResultado.getReceitaLiquidaVendasServicos();
+            vendasBank += demonstrativoResultado.getReceitasIntermediaçaoFinanceira();
         }
 
-        return vendas;
+        if (vendas > 0) {
+            return vendas;
+        }
+        else {
+            return vendasBank;
+        }
+    }
+
+    private boolean isBanco(final Empresa empresa) {
+        return BANCOS.equals(empresa.getSubSetor());
     }
 
     public double getDesvioPadraoHistorico() {

@@ -57,8 +57,8 @@ public class GuruMethod {
         for (Empresa empresa : empresaList) {
             ReportFundamentalista report = new ReportFundamentalista(empresa, ano);
 
-            if (MetodoInvestimento.RentabilidadeAcumulada5A.equals(metodo)) {
-                if (report.getRentabilidadeAcumuladaUltimos5Anos() > 200) {
+            if (MetodoInvestimento.Rentabilidade100Porcento5Anos.equals(metodo)) {
+                if (report.getRentabilidadeAcumuladaUltimos5Anos() > 100) {
                     getLstEmpresa().add(empresa);
                 }
             }
@@ -69,7 +69,7 @@ public class GuruMethod {
                 }
             }
 
-            else if (MetodoInvestimento.Ultimos5AP.equals(metodo)) {
+            else if (MetodoInvestimento.PositivoUltimos5Anos.equals(metodo)) {
                 if (true == report.teveLucroAcoesUltimos5Anos()) {
                     getLstEmpresa().add(empresa);
                 }
@@ -81,7 +81,7 @@ public class GuruMethod {
                 }
             }
 
-            else if (MetodoInvestimento.MaiorVPA.equals(metodo)) {
+            else if (MetodoInvestimento.VPAMaiorQueValorDaAcao.equals(metodo)) {
                 if (report.isVPAMaiorQueCotacao()) {
                     getLstEmpresa().add(empresa);
                 }

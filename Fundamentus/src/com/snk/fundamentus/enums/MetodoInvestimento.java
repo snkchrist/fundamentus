@@ -6,8 +6,8 @@ public enum MetodoInvestimento {
     Buffet,
     Filipe,
     Fisher,
-    MaiorVPA,
+    VPAMaiorQueValorDaAcao,
     QdeTobin,
-    RentabilidadeAcumulada5A,
-    Ultimos5AP,
+    Rentabilidade100Porcento5Anos,
+    PositivoUltimos5Anos,
 }
