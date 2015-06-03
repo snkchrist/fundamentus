@@ -6,6 +6,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.lang.reflect.Field;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -34,6 +36,7 @@ import com.snk.fundamentus.models.Indices;
 import com.snk.fundamentus.report.GuruMethod;
 
 public class PrincipalController {
+    private static final Locale LOCALE_BR = new Locale("pt", "BR");
     private final ITelaPrincipal view;
     private final DaoFactory daoFactory;
 
@@ -140,19 +143,30 @@ public class PrincipalController {
                     field.setAccessible(true);
                     Object value = field.get(obj);
 
-                    if (null != format && false == format.isEmpty()) {
-
-                        try {
+                    try {
+                        if (DataType.Date.equals(type)) {
                             DateFormat dateformat = DateFormat.getDateInstance();
                             Date parse = dateformat.parse(value.toString());
-                            value = String.format(format, parse);
+                            if (null != format && false == format.isEmpty()) {
+                                value = String.format(format, parse);
+                            }
                         }
-                        catch (ParseException e) {
-                            if (DataType.Currency.equals(type) && value instanceof Double) {
-                                NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+                        else if (DataType.Currency.equals(type)) {
+                            if (value instanceof Double || value instanceof Long) {
+                                NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(LOCALE_BR);
                                 value = currencyFormatter.format(value);
                             }
-                            else {
+                        }
+                        else if (DataType.Decimal.equals(type)) {
+                            DecimalFormat decimalFormatter = (DecimalFormat) NumberFormat.getCurrencyInstance(LOCALE_BR);
+                            DecimalFormatSymbols symbols = decimalFormatter.getDecimalFormatSymbols();
+                            symbols.setCurrencySymbol("");
+                            decimalFormatter.setDecimalFormatSymbols(symbols);
+
+                            value = decimalFormatter.format(value);
+                        }
+                        else {
+                            if (null != format && false == format.isEmpty()) {
                                 value = String.format(format, value);
 
                                 if (DataType.Percentage.equals(type)) {
@@ -160,6 +174,8 @@ public class PrincipalController {
                                 }
                             }
                         }
+                    }
+                    catch (ParseException e) {
                     }
 
                     map.put(name, value);

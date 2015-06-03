@@ -38,16 +38,16 @@ public class Indices {
     @ShowOnTable(format = "%1.2f", name = "Liquidez seca (trimestre)")
     private final double liquidezSeca;
 
-    @ShowOnTable(format = "%1.2f", name = "LPA - Lucro por ação")
+    @ShowOnTable(format = "%1.2f", name = "[LPA] - Lucro por ação")
     private final double lpa;
 
     @ShowOnTable(format = "%1.2f", name = "Lucratividade sobre P/L")
     private final double lucratividadePL;
 
-    @ShowOnTable(format = "%1.2f", name = "P/L - Preço sobre Lucro por Ação")
+    @ShowOnTable(format = "%1.2f", name = "[P/L] - Preço sobre Lucro por Ação")
     private final double pl;
 
-    @ShowOnTable(format = "%1.2f", name = "P/VPA - Preço sobre Valor Patrimonial por Ação")
+    @ShowOnTable(format = "%1.2f", name = "[P/VPA] - Preço sobre Valor Patrimonial por Ação")
     private final double pvpa;
 
     @ShowOnTable(format = "%1.2f", name = "Q de Tobin")
@@ -59,19 +59,19 @@ public class Indices {
     @ShowOnTable(format = "%1.2f", name = "Vendas (12 Meses)", type = DataType.Currency)
     private final double vendasPorAno;
 
-    @ShowOnTable(format = "%1.2f", name = "VPA - Valor Patrimonial por Ação")
+    @ShowOnTable(format = "%1.2f", name = "[VPA] - Valor Patrimonial por Ação")
     private final double vpa;
 
-    @ShowOnTable(format = "%1.2f", name = "EBIT - Lucro antes de Juros e Impostos (trimestre)", type = DataType.Currency)
+    @ShowOnTable(format = "%1.2f", name = "[EBIT] - Lucro antes de Juros e Impostos (trimestre)", type = DataType.Currency)
     private final double ebitUltimoTrimestre;
 
-    @ShowOnTable(format = "%1.2f", name = "EBIT - Lucro antes de Juros e Impostos (12 Meses)", type = DataType.Currency)
+    @ShowOnTable(format = "%1.2f", name = "[EBIT] - Lucro antes de Juros e Impostos (12 Meses)", type = DataType.Currency)
     private final double ebit12Meses;
 
-    @ShowOnTable(format = "%1.2f", name = "ROIC - Retorno sobre Capital Investido", type = DataType.Percentage)
+    @ShowOnTable(format = "%1.2f", name = "[ROIC] - Retorno sobre Capital Investido", type = DataType.Percentage)
     private final double roic;
 
-    @ShowOnTable(format = "%1.2f", name = "ROE - Retorno sobre o Patrimônio Líquido", type = DataType.Percentage)
+    @ShowOnTable(format = "%1.2f", name = "[ROE] - Retorno sobre o Patrimônio Líquido", type = DataType.Percentage)
     private final double roe;
 
     @ShowOnTable(format = "%1.2f", name = "Lucro Líquido (12 meses)", type = DataType.Currency)
@@ -88,6 +88,15 @@ public class Indices {
 
     @ShowOnTable(format = "%1.2f", name = "Desvio padrão últimos 5 anos")
     private final double desvioPadraoUltimos5Anos;
+
+    @ShowOnTable(format = "%1.2f", name = "[LPA] - Média LPA últimos 5 anos")
+    private final double mediaLPAUltimos5Anos;
+
+    @ShowOnTable(format = "%1.2f", name = "[LPA] - Mediana LPA últimos 5 anos")
+    private final double medianaLPAUltimos5Anos;
+
+    @ShowOnTable(format = "%1.2f", name = "[Caixa] - Caixa atual da empresa", type = DataType.Currency)
+    private final double caixaAtual;
 
     public Indices(final Empresa empresa, final int ano) {
         report = new ReportFundamentalista(empresa, ano);
@@ -120,6 +129,9 @@ public class Indices {
         trimestre = report.getTrimestreStrByDate(empresa.getUltimoBalancoRegistrado());
         desvioPadrao = report.getDesvioPadraoHistorico();
         desvioPadraoUltimos5Anos = report.getDesvioPadraoUltimos5Anos();
+        mediaLPAUltimos5Anos = report.getMediaLPAUltimos5Anos();
+        medianaLPAUltimos5Anos = report.getMedianaLPAUltimos5Anos();
+        caixaAtual = report.getCaixaAtual();
     }
 
 }

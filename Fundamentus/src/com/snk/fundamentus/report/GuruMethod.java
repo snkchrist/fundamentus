@@ -31,7 +31,7 @@ public class GuruMethod {
         int anoCorrente;
 
         if (null == ano) {
-            anoCorrente = Calendar.getInstance().get(Calendar.YEAR) - 1;
+            anoCorrente = Calendar.getInstance().get(Calendar.YEAR);
         }
         else {
             anoCorrente = ano;
@@ -70,7 +70,7 @@ public class GuruMethod {
             }
 
             else if (MetodoInvestimento.PositivoUltimos5Anos.equals(metodo)) {
-                if (true == report.teveLucroAcoesUltimos5Anos()) {
+                if (true == report.teveAumentoRentabilidadeUltimos5Anos()) {
                     getLstEmpresa().add(empresa);
                 }
             }

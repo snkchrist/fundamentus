@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+import com.snk.fundamentus.enums.DataType;
 import com.snk.fundamentus.enums.ShowOnTable;
 import com.snk.fundamentus.enums.ShowOnTableRecursive;
 
@@ -35,15 +36,15 @@ public class Empresa {
     @ShowOnTable(name = "Cotação")
     private Double cotacao;
 
-    @ShowOnTable(name = "Data da última cotação", format = "%1$te/%1$tm/%1$tY")
+    @ShowOnTable(name = "Data da última cotação", format = "%1$te/%1$tm/%1$tY", type = DataType.Date)
     private String dataUltimaCotacao;
 
     private Date ultimaCotacaoRegistrada;
 
-    @ShowOnTable(name = "Valor mínimo nas últimas 52 semanas")
+    @ShowOnTable(name = "Valor mínimo nas últimas 52 semanas", type = DataType.Currency, format = "%1.0f")
     private Double minimo52Semanas;
 
-    @ShowOnTable(name = "Valor máximo nas últimas 52 semanas")
+    @ShowOnTable(name = "Valor máximo nas últimas 52 semanas", type = DataType.Currency, format = "%1.0f")
     private Double maximo52Semanas;
 
     private Long volumeMedio2Meses;
@@ -51,13 +52,13 @@ public class Empresa {
     @ShowOnTable(name = "Último balanço registrado", format = "%1$te/%1$tm/%1$tY")
     private Date ultimoBalancoRegistrado;
 
-    @ShowOnTable(name = "Numero total de ações emitidas")
+    @ShowOnTable(name = "Numero total de ações emitidas", type = DataType.Decimal)
     private Long numeroDeAcoes;
 
-    @ShowOnTable(name = "Valor de Mercado")
+    @ShowOnTable(name = "Valor de Mercado", type = DataType.Currency, format = "%1.0f")
     private Long valorMercado;
 
-    @ShowOnTable(name = "Valor da Empresa")
+    @ShowOnTable(name = "Valor da Empresa", type = DataType.Currency, format = "%1.0f")
     private Long valorEmpresa;
 
     @Embedded

@@ -1,6 +1,7 @@
 package com.snk.fundamentus.report;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -118,7 +119,7 @@ public class ReportFundamentalista {
         return acumulado;
     }
 
-    public boolean teveLucroAcoesUltimos5Anos() {
+    public boolean teveAumentoRentabilidadeUltimos5Anos() {
         Oscilacoes oscilacoes = empresa.getOscilacoes();
 
         if (oscilacoes.getAno2010() > 0 &&
@@ -131,6 +132,26 @@ public class ReportFundamentalista {
         }
 
         return false;
+    }
+
+    public boolean pagouDividendosUltimos5Anos() {
+
+        int ano = getAno();
+        List<BalancoPatrimonial> balancoList = new ArrayList<BalancoPatrimonial>();
+
+        do {
+            balancoList.addAll(getBalancoListPorAno(ano));
+            ano--;
+        }
+        while (ano >= getAno() - 5);
+
+        for (BalancoPatrimonial balancoPatrimonial : balancoList) {
+            if (balancoPatrimonial.getDividendosEJCPAPagar() <= 0) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -503,6 +524,11 @@ public class ReportFundamentalista {
         return lucroLiquido;
     }
 
+    public double getCaixaAtual() {
+        BalancoPatrimonial balancoUltimoTrimestre = getBalancoUltimoTrimestre();
+        return balancoUltimoTrimestre.getCaixaEEquivalentesDeCaixa() + balancoUltimoTrimestre.getAplicacoesFinanceiras();
+    }
+
     public double getDividendosDistribuidosUltimos12Meses() {
         List<BalancoPatrimonial> listaBalancoUltimos12Meses = getBalancoListUltimos12Meses();
         double dividendosEJCPAPagar = 0;
@@ -545,6 +571,35 @@ public class ReportFundamentalista {
         }
 
         return qTobin;
+    }
+
+    public double getMediaLPAUltimos5Anos() {
+        int ano = getAno();
+
+        double soma = 0;
+
+        for (int i = 1; i <= 5; i++) {
+            soma += getLucroLiquidoPorAno(ano) / empresa.getNumeroDeAcoes();
+            ano--;
+        }
+
+        return soma / 5;
+    }
+
+    public double getMedianaLPAUltimos5Anos() {
+        int ano = getAno();
+
+        List<Double> lpaMedian = new ArrayList<Double>();
+
+        for (int i = 1; i <= 5; i++) {
+            lpaMedian.add(getLucroLiquidoPorAno(ano) / empresa.getNumeroDeAcoes());
+            ano--;
+        }
+
+        Double[] median = new Double[lpaMedian.size()];
+        lpaMedian.toArray(median);
+
+        return getMedianaAritimetica(median);
     }
 
     /**
@@ -612,11 +667,11 @@ public class ReportFundamentalista {
         double roic = getROIC(
                 getEbitUltimos12MesesAnteriorAoDemonstrativo(demonstrativo),
                 balancoPatrimonial.getAtivoTotal() -
-                        balancoPatrimonial.getCaixaEEquivalentesDeCaixa() -
-                        balancoPatrimonial.getFornecedores() -
-                        balancoPatrimonial.getAplicacoesFinanceiras() -
-                        balancoPatrimonial.getAplicacoesFinanceirasAvaliadasAoCustoAmortizado() -
-                        balancoPatrimonial.getAplicacoesFinanceirasAvaliadasAValorJusto());
+                balancoPatrimonial.getCaixaEEquivalentesDeCaixa() -
+                balancoPatrimonial.getFornecedores() -
+                balancoPatrimonial.getAplicacoesFinanceiras() -
+                balancoPatrimonial.getAplicacoesFinanceirasAvaliadasAoCustoAmortizado() -
+                balancoPatrimonial.getAplicacoesFinanceirasAvaliadasAValorJusto());
 
         return roic * 100;
     }
@@ -639,8 +694,10 @@ public class ReportFundamentalista {
     }
 
     public double getAumentoPercentualLucroLiquidoAnoAAno() {
-        double lucroAnoAnterior = getLucroLiquidoPorAno(getAno() - 1);
-        double lucroAnoSeguinte = getLucroLiquidoPorAno(getAno());
+        int ano = getAno() - 1;
+
+        double lucroAnoAnterior = getLucroLiquidoPorAno(ano - 1);
+        double lucroAnoSeguinte = getLucroLiquidoPorAno(ano);
         double lucroPercentual = 0;
 
         lucroPercentual = getAumentoPercentual(lucroAnoAnterior, lucroAnoSeguinte);
@@ -649,9 +706,10 @@ public class ReportFundamentalista {
     }
 
     public double getAumentoPercentualEbitAnoAAno() {
+        int ano = getAno() - 1;
 
-        double ebitSeguinte = getEbitByAno(getAno());
-        double ebitAnterior = getEbitByAno(getAno() - 1);
+        double ebitSeguinte = getEbitByAno(ano);
+        double ebitAnterior = getEbitByAno(ano - 1);
 
         double aumentoPercentual;
 
@@ -704,7 +762,7 @@ public class ReportFundamentalista {
             logger.debug("vendasSubstanciais: [" + getVendasUltimos12Meses() + "]");
             logger.debug("liquidezCorrente: [" + liquidez.getLiquidezCorrenteUltimoTrimestre() + "]");
             logger.debug("relacaoDividaPatrimonio: [" + (getRelacaoDividaLiquidaPatrimonioLiquido()) + "]");
-            logger.debug("teveLucroUltimos32Semestres: [" + teveLucroUltimos32Semestres() + "]");
+            logger.debug("teveLucroUltimos32Semestres: [" + pagouDividendosUltimos5Anos() + "]");
             logger.debug("lucroMedio3AnosAcima4PorCento: [" + isLucroMedio3AnosAcima4Porcento() + "]");
 
             return true;
@@ -715,7 +773,7 @@ public class ReportFundamentalista {
     public boolean isFilipesMethod() {
         boolean isQTobinAnoAcima15 = getQdeTobinUltimoTrimestre() > 1.5;
         boolean roic15 = getROICUltimoTrimestre() > 10;
-        boolean vendas = (getVendasPorAno() > 250000000);
+        boolean vendas = (getVendasUltimos12Meses() > 250000000);
         boolean aumentoEbit = getAumentoPercentualEbitAnoAAno() > 7;
         boolean aumentoLucro = getAumentoPercentualLucroLiquidoAnoAAno() > 7;
         boolean liquidezBoolean = liquidez.getLiquidezCorrenteUltimoTrimestre() > 1;
@@ -758,7 +816,7 @@ public class ReportFundamentalista {
     public boolean isLucroMedio3AnosAcima4Porcento() {
         double percentual = 0;
         int anos = 3;
-
+        int ano = getAno() - 1;
         for (int i = anos; i > 0; i--) {
             int anoInicial = ano - i;
             int anoAnterior = ano - (i - 1);
@@ -872,15 +930,24 @@ public class ReportFundamentalista {
         double despesasComVendas = 0;
         double despesasGerais = 0;
 
+        double resultadoOperacional = 0;
+
         for (DemonstrativoResultado demonstrativoResultado : demonstrativoList) {
             resultadoBruto += demonstrativoResultado.getResultadoBruto();
             despesasComVendas += demonstrativoResultado.getDespesasComVendas();
             despesasGerais += demonstrativoResultado.getDespesasGeraisAdministrativas();
+
+            resultadoOperacional += demonstrativoResultado.getResultadoOperacional();
         }
 
-        ebit = resultadoBruto +
-                despesasComVendas +
-                despesasGerais;
+        if (resultadoBruto > 0) {
+            ebit = resultadoBruto +
+                    despesasComVendas +
+                    despesasGerais;
+        }
+        else {
+            ebit = resultadoOperacional;
+        }
 
         return ebit;
 
@@ -968,6 +1035,22 @@ public class ReportFundamentalista {
         }
         somatorio = somatorio / objetos.length;
         return Math.sqrt(somatorio);
+    }
+
+    public double getMedianaAritimetica(final Double[] l) {
+        Arrays.sort(l);
+        int middle = l.length / 2;
+        if (l.length % 2 == 0)
+        {
+            double left = l[middle - 1];
+            double right = l[middle];
+            return (left + right) / 2;
+        }
+        else
+        {
+            return l[middle];
+        }
+
     }
 
     public double getMediaAritimetica(final Double[] doubleA) {
