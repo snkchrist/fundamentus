@@ -55,9 +55,14 @@ public class PrincipalController {
                 listAllElements.addAll(this.daoFactory.getEmpresaDao().listAllElements());
             }
             else {
-                Empresa empresa = this.daoFactory.getEmpresaDao().findEmpresaBySigla(search);
-                if (null != empresa) {
-                    listAllElements.add(empresa);
+
+                String[] split = search.split(",");
+
+                for (String string : split) {
+                    Empresa empresa = this.daoFactory.getEmpresaDao().findEmpresaBySigla(string);
+                    if (null != empresa) {
+                        listAllElements.add(empresa);
+                    }
                 }
             }
         }

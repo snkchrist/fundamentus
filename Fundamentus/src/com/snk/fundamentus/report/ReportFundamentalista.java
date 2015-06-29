@@ -902,6 +902,43 @@ public class ReportFundamentalista {
         return demonstrativoResultado;
     }
 
+    /**
+     * Índice de giro de ativos fixos (ou imobilizados)
+     *
+     * O índice de giro de ativos imobilizados mede a eficiência da empresa em
+     * relação ao uso de seu
+     *
+     * imobilizado. Ela indica como a empresa está usando seus ativos fixos,
+     * isto é, suas máquinas e
+     *
+     * equipamentos. Sua fórmula é a seguinte:
+     *
+     * Índice de giro de ativos fixos = Receitas / Ativos imobilizado
+     *
+     * O índice de giro do ativo imobilizado indica quanto à empresa vendeu para
+     * cada $ 1,00 de investimento
+     *
+     * total. Quanto maior seu valor melhor, pois indica que a empresa é
+     * eficiente em usar seus ativos
+     *
+     * permanentes para gerar receita.
+     *
+     * @return
+     */
+    public double getIndiceGiroAtivosImobilizados() {
+
+        BalancoPatrimonial balanco = getBalancoUltimoTrimestre();
+        double imobilizado = balanco.getImobilizado() + balanco.getImobilizadoArrendamento() + balanco.getImobilizadoUso();
+
+        DemonstrativoResultado dem = getDemonstrativoUltimoTrimestre();
+        double receitas = dem.getReceitaLiquidaVendasServicos()
+                + dem.getReceitasFinanceiras()
+                + dem.getReceitasIntermediaçaoFinanceira()
+                + dem.getReceitasPrestaçaoServicos();
+
+        return receitas / imobilizado;
+    }
+
     private double getAumentoPercentual(final Double valor1,
             final Double valor2) {
         double lucroPercentual;

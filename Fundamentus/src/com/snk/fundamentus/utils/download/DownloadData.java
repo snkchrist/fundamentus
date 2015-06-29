@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -272,12 +272,49 @@ public class DownloadData {
         }
     }
 
+    public boolean containsCotacao(final Cotacao cotacao, final Empresa empresa) {
+        if (null != empresa) {
+
+            List<Cotacao> cotacaoList = empresa.getCotacaoList();
+
+            for (Cotacao cotacao2 : cotacaoList) {
+                if (cotacao2.getData().equals(cotacao.getData())) {
+                    return true;
+                }
+            }
+
+        }
+
+        return false;
+
+    }
+
+    public void sortCotacoes() {
+        EmpresaDao empresaDao = daoFactory.getEmpresaDao();
+        List<Empresa> listAllElements = empresaDao.listAllElements();
+
+        empresaDao.beginTransaction();
+        for (Empresa empresa : listAllElements) {
+            if (null != empresa.getCotacaoList() && empresa.getCotacaoList().size() > 0) {
+                Collections.sort(empresa.getCotacaoList());
+                Collections.reverse(empresa.getCotacaoList());
+                Cotacao cotacao = empresa.getCotacaoList().get(0);
+                empresa.setCotacao(cotacao.getFechamento());
+                empresa.setDataUltimaCotacao(ReportUtil.formatDate(cotacao.getData()));
+
+                logger.info("Sort cotacoes para empresa [" + empresa.getNome() + "]");
+            }
+        }
+        empresaDao.commitTransaction();
+    }
+
     public void collectInformationStockPriceYahoo()
             throws ClientProtocolException, IOException, XPathExpressionException, ParserConfigurationException {
         EmpresaDao empresaDao = daoFactory.getEmpresaDao();
         List<Empresa> listAllElements = empresaDao.listAllElements();
 
         for (Empresa empresa : listAllElements) {
+
             String url = "http://finance.yahoo.com/q/hp?s=" + empresa.getSigla() + ".SA";
             String downloadHtml = downloadHtml(url);
 
@@ -296,8 +333,6 @@ public class DownloadData {
 
                     String[] split = downloadHtml2.split("\n");
 
-                    List<Cotacao> cotacaoList = new ArrayList<Cotacao>();
-
                     for (int i = 1; i < split.length; i++) {
                         try {
                             String[] split2 = split[i].split(",");
@@ -313,14 +348,17 @@ public class DownloadData {
                             cotacao.setVolume(Long.parseLong(split2[5]));
                             cotacao.setFechamentoAdj(Double.parseDouble(split2[6]));
 
-                            if (false == cotacaoList.contains(cotacao)) {
+                            if (false == containsCotacao(cotacao, empresa)) {
                                 logger.info("At.. Cotacao empresa ["
                                         + empresa.getSigla()
                                         + "] dia ["
                                         + dataCotacao.toGMTString()
                                         + "]");
+                                logger.info("New cotação adicionada para o dia [" + cotacao.getData() + "]");
+                                empresaDao.beginTransaction();
+                                empresa.getCotacaoList().add(cotacao);
+                                empresaDao.commitTransaction();
 
-                                cotacaoList.add(cotacao);
                             }
                         }
                         catch (Exception e) {
@@ -328,14 +366,14 @@ public class DownloadData {
                         }
                     }
 
-                    empresaDao.beginTransaction();
-                    empresa.setCotacaoList(cotacaoList);
-                    empresaDao.commitTransaction();
                 }
                 else {
                     logger.info("Não foi possivel baixar cotacoes para empresa [" + empresa.getSigla() + "]");
                 }
+
             }
         }
+
+        sortCotacoes();
     }
 }

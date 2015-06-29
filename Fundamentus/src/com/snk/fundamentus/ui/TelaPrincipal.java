@@ -238,7 +238,7 @@ public class TelaPrincipal implements ITelaPrincipal {
 
     @Override
     public String getTextSearch() {
-        return txtSearch.getText();
+        return txtSearch.getText().toUpperCase();
     }
 
     @Override

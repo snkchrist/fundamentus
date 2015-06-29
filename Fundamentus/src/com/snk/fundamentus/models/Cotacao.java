@@ -5,7 +5,7 @@ import java.util.Date;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class Cotacao {
+public class Cotacao implements Comparable<Cotacao> {
     private Date data;
     private Double abertura;
     private Double maxima;
@@ -68,6 +68,18 @@ public class Cotacao {
 
     public void setVolume(final Long volume) {
         this.volume = volume;
+    }
+
+    @Override
+    public int compareTo(final Cotacao o) {
+        int compare = 0;
+
+        if (null != o) {
+            compare = this.getData().compareTo(o.getData());
+        }
+
+        return compare;
+
     }
 
 }

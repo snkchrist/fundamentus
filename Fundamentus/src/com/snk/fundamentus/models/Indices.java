@@ -17,11 +17,14 @@ public class Indices {
     @ShowOnTable(format = "%1.2f", name = "Divida Liquida", type = DataType.Currency)
     private final double dividaLiquida;
 
-    @ShowOnTable(format = "%1.2f", name = "Indice Lucratividade")
+    @ShowOnTable(format = "%1.2f", name = "Índice Lucratividade")
     private final double indiceLucratividade;
 
-    @ShowOnTable(format = "%1.2f", name = "Indice Rotatividade")
+    @ShowOnTable(format = "%1.2f", name = "Índice Rotatividade")
     private final double indiceRotatividade;
+
+    @ShowOnTable(format = "%1.2f", name = "Índice de giro de ativos fixos (ou imobilizados)")
+    private final double indiceGiroAtivosImobilizados;
 
     @ShowOnTable(format = "%1.2f", name = "Liquidez Corrente (12 meses)")
     private final double liquidezCorrente12Meses;
@@ -132,6 +135,7 @@ public class Indices {
         mediaLPAUltimos5Anos = report.getMediaLPAUltimos5Anos();
         medianaLPAUltimos5Anos = report.getMedianaLPAUltimos5Anos();
         caixaAtual = report.getCaixaAtual();
+        indiceGiroAtivosImobilizados = report.getIndiceGiroAtivosImobilizados();
     }
 
 }
